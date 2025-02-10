@@ -22,10 +22,9 @@ public class Constants {
 	//Diameter of colson swerve wheels
 	public static final double WHEEL_DIAMETER = 4;
 
-	//TODO Gear ratios!!!
-	public static final double STEERING_RATIO = 12.8d;
+	//public static final double STEERING_RATIO = 12.8d;
 
-	public static final double DRIVE_RATIO = 6.75d;
+	//public static final double DRIVE_RATIO = 6.75d;
 
 	/** Settings are {kF, kP, kI, kD} *///		kV  kP	 kI  kD
 	//Mainly pay attention to kP
@@ -68,4 +67,11 @@ public class Constants {
 
 	//Limits change in the overall movement of the robot
 	public static final double DRIVE_ACCELERATION_LIMIT = 0.003d;
+
+	public static final double[] CANCODER_OFFSETS = new double[] {
+		-0.08154296875,
+		-0.16357421875,
+		-0.761962890625,
+		0.471923828125
+	};
 }
