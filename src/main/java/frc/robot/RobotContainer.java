@@ -26,6 +26,9 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 public class RobotContainer {
 
   AHRS gyro = new AHRS(NavXComType.kMXP_SPI);
+
+  Drive drive;
+
   // The robot's subsystems and commands are defined here...
   private final Drivetrain drivetrain = new Drivetrain(gyro);
 
@@ -55,10 +58,13 @@ public class RobotContainer {
     //new Trigger(m_exampleSubsystem::exampleCondition)
     //    .onTrue(new ExampleCommand(m_exampleSubsystem));
 
-    drivetrain.setDefaultCommand(new Drive(drivetrain, driverController));
+    drive = new Drive(drivetrain, driverController);
+
+    drivetrain.setDefaultCommand(drive);
     // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,
     // cancelling on release.
     //driverController.b().whileTrue(m_exampleSubsystem.exampleMethodCommand());
+
   }
 
   /**

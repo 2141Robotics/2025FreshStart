@@ -45,8 +45,11 @@ public class QuailSwerveDrive extends SwerveDrive<QuailSwerveModule>{
     }
 
 	public void drive(RobotMovement robotMovement){
+
 		//TODO gyrooffset
+		System.out.println("Movement: " + robotMovement.translation.x + "||||" + robotMovement.translation.y);
 		move(robotMovement, 0);
+
 	}
 
 	/**
@@ -74,6 +77,9 @@ public class QuailSwerveDrive extends SwerveDrive<QuailSwerveModule>{
 		return angle;
 	}
 
+	public void XLock(){
+		XLockModules();
+	}
 
 	public void stop(){
 		for(QuailSwerveModule module : this.modules) {

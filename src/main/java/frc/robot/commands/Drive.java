@@ -44,7 +44,7 @@ public class Drive extends Command {
     this.driverController = driverController;
 
     // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements();
+    addRequirements(drivetrain);
   }
 
   // Called when the command is initially scheduled.
@@ -57,49 +57,51 @@ public class Drive extends Command {
   @Override
   public void execute() {
 
-    //Gets Joystick values
-    double leftX = driverController.getLeftX();
-    double leftY = -driverController.getLeftY(); // Y UP is negative
-    double rightX = driverController.getRightX();
-    double rightY = -driverController.getRightY();
-
-    double rightTrigger = driverController.getRightTriggerAxis();
-    
-    //Makes joystick values into Vectors
-    Vec2d leftStickVector = new Vec2d(leftX, leftY);
-    Vec2d rightStickVector = new Vec2d(rightX, rightY);
-
-    //Updates accelerationLimitedVector(s) and acceleration limits current vectors
-    Vec2d leftStick = a_leftStickVector.update(leftStickVector);
-    Vec2d rightStick = a_rightStickVector.update(rightStickVector);
-    //double a_rtriggerValue = a_rtrigger.update(rightTrigger);
-    
-
-    double scaledSpeed = Constants.BASE_SPEED + ((1 - Constants.BASE_SPEED) * rightTrigger);
-
-    if (leftStick.getLength() < Constants.JOYSTICK_DEAD_ZONE) {
-        leftStickVector = new Vec2d(0,0);
+    if(driverController.x().getAsBoolean()){
+      drivetrain.XLock();
     }
-    if (rightStick.getLength() < Constants.JOYSTICK_DEAD_ZONE) {
-        rightStickVector = new Vec2d(0,0);
-    }
+    else{
+      //Gets Joystick values
+      double leftX = driverController.getLeftX();
+      double leftY = -driverController.getLeftY(); // Y UP is negative
+      double rightX = driverController.getRightX();
+      double rightY = -driverController.getRightY();
 
-    Vec2d driveVector = leftStickVector.normalize().scale(scaledSpeed);
-    Vec2d newDriveVector = a_driveVector.update(driveVector);
+      double rightTrigger = driverController.getRightTriggerAxis();
+      
+      //Makes joystick values into Vectors
+      Vec2d leftStickVector = new Vec2d(leftX, leftY);
+      Vec2d rightStickVector = new Vec2d(rightX, rightY);
 
-    System.out.println(newDriveVector.getLength());
+      //Updates accelerationLimitedVector(s) and acceleration limits current vectors
+      Vec2d leftStick = a_leftStickVector.update(leftStickVector);
+      Vec2d rightStick = a_rightStickVector.update(rightStickVector);
+      //double a_rtriggerValue = a_rtrigger.update(rightTrigger);
+      
 
+      double scaledSpeed = Constants.BASE_SPEED + ((1 - Constants.BASE_SPEED) * rightTrigger);
 
-    if ((Math.abs(rightStick.x) < Constants.JOYSTICK_DEAD_ZONE) && (leftStick.getLength() < Constants.JOYSTICK_DEAD_ZONE)){
-        drivetrain.stop();
-    }
-    else {
+      if (leftStick.getLength() < Constants.JOYSTICK_DEAD_ZONE) {
+          leftStickVector = new Vec2d(0,0);
+      }
+      if (rightStick.getLength() < Constants.JOYSTICK_DEAD_ZONE) {
+          rightStickVector = new Vec2d(0,0);
+      }
 
-        RobotMovement movement = new RobotMovement(rightStickVector.x / Constants.ROTATION_SPEED_INVERSE_SCALE, newDriveVector);
-        drivetrain.drive(movement);
+      Vec2d driveVector = leftStickVector.normalize().scale(scaledSpeed);
+      Vec2d newDriveVector = a_driveVector.update(driveVector);
 
-        System.out.println("Rotation: "+ movement.rotation + "|||||" + "DriveX: " + newDriveVector.x + "|DriveY: " + newDriveVector.y);
+      if ((Math.abs(rightStick.x) < Constants.JOYSTICK_DEAD_ZONE) && (leftStick.getLength() < Constants.JOYSTICK_DEAD_ZONE)){
+          drivetrain.stop();
+      }
+      else {
 
+          RobotMovement movement = new RobotMovement(rightStickVector.x / Constants.ROTATION_SPEED_INVERSE_SCALE, newDriveVector);
+          drivetrain.drive(movement);
+
+          System.out.println("Rotation: "+ movement.rotation + "|||||" + "DriveX: " + newDriveVector.x + "|DriveY: " + newDriveVector.y);
+
+      }
     }
   }
 

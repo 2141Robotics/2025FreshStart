@@ -65,6 +65,7 @@ public class QuailSwerveModule extends SwerveModuleBase {
 
 
 		this.canCoder.getConfigurator().apply(encoderConfig);
+	
 		// Miscellaneous settings.
 		
 		
@@ -138,6 +139,10 @@ public class QuailSwerveModule extends SwerveModuleBase {
 	@Override
 	public void setRawSpeed(double speed) {
 		this.drivingMotor.set(speed);
+	}
+
+	public void setRawSteeringSpeed(double speed) {
+		this.steeringMotor.set(speed);
 	}
 
     public void setBrake(ControlRequest brake) {

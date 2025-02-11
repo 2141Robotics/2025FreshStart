@@ -22,9 +22,9 @@ public class Constants {
 	//Diameter of colson swerve wheels
 	public static final double WHEEL_DIAMETER = 4;
 
-	//public static final double STEERING_RATIO = 12.8d;
+	public static final double STEERING_RATIO = 12.8d;
 
-	//public static final double DRIVE_RATIO = 6.75d;
+	public static final double DRIVE_RATIO = 6.75d;
 
 	/** Settings are {kF, kP, kI, kD} *///		kV  kP	 kI  kD
 	//Mainly pay attention to kP
@@ -73,5 +73,12 @@ public class Constants {
 		-0.16357421875,
 		-0.761962890625,
 		0.471923828125
+	};
+
+	public static final int[] CANCODER_IDS = new int[]{
+		21,
+		22,
+		23,
+		24
 	};
 }
