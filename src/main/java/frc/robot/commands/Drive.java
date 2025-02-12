@@ -32,6 +32,8 @@ public class Drive extends Command {
 
 
   private Drivetrain drivetrain;
+
+  private int cooldown;
   
   private CommandXboxController driverController;
 
@@ -59,8 +61,14 @@ public class Drive extends Command {
 
     if(driverController.x().getAsBoolean()){
       drivetrain.XLock();
+    }else if(driverController.y().getAsBoolean() && cooldown == 0){
+      drivetrain.reset();
+      cooldown = Constants.RESET_COOLDOWN;
     }
     else{
+      if(cooldown > 0){
+        cooldown--;
+      }
       //Gets Joystick values
       double leftX = driverController.getLeftX();
       double leftY = -driverController.getLeftY(); // Y UP is negative
@@ -98,9 +106,7 @@ public class Drive extends Command {
 
           RobotMovement movement = new RobotMovement(rightStickVector.x / Constants.ROTATION_SPEED_INVERSE_SCALE, newDriveVector);
           drivetrain.drive(movement);
-
-          System.out.println("Rotation: "+ movement.rotation + "|||||" + "DriveX: " + newDriveVector.x + "|DriveY: " + newDriveVector.y);
-
+          
       }
     }
   }

@@ -4,6 +4,9 @@
 
 package frc.robot;
 
+import static edu.wpi.first.units.Units.Degrees;
+import static edu.wpi.first.units.Units.Radian;
+
 import java.util.ArrayList;
 
 import com.mineinjava.quail.RobotMovement;
@@ -36,7 +39,7 @@ public class Drivetrain extends SubsystemBase {
     modules.add(new QuailSwerveModule(new Vec2d(-Constants.CENTER_TO_SWERVE_DIST, -Constants.CENTER_TO_SWERVE_DIST), 5, 6, Constants.CANCODER_IDS[2], Constants.CANCODER_OFFSETS[2]));
     modules.add(new QuailSwerveModule(new Vec2d(-Constants.CENTER_TO_SWERVE_DIST, Constants.CENTER_TO_SWERVE_DIST), 7, 8, Constants.CANCODER_IDS[3], Constants.CANCODER_OFFSETS[3]));
 
-    this.quailSwerveDrive = new QuailSwerveDrive(gyro, modules);
+    this.quailSwerveDrive = new QuailSwerveDrive(modules);
   }
 
   /**
@@ -49,14 +52,20 @@ public class Drivetrain extends SubsystemBase {
 		return !this.gyro.isCalibrating();
 	}
 
+  public void reset(){
+    quailSwerveDrive.reset();
+    resetGyro();
+    System.out.println("RESET DRIVETRAIN");
+  }
+
   public void init(){
     quailSwerveDrive.initModules();
-
+    resetGyro();
   }
 
   public void drive(RobotMovement robotMovement){
     if(canDrive()){
-      quailSwerveDrive.drive(robotMovement);
+      quailSwerveDrive.drive(robotMovement, this.getGyroAngle());
     }
   }
 
@@ -67,6 +76,23 @@ public class Drivetrain extends SubsystemBase {
   public void stop(){
     quailSwerveDrive.stop();
   }
+
+
+	public Angle getGyroAngle(){
+    double gyroAngle = this.gyro.getAngle();
+    Angle angle = Angle.ofBaseUnits(gyroAngle, Degrees);
+    System.out.println("Gyro Angle: " + gyroAngle);
+    return angle;
+  }
+
+  
+	/**
+	 * Reset the gyro to 0°.
+	 */
+	public void resetGyro()
+	{
+		this.gyro.reset();
+	}
 
   /**
    * Example command factory method.

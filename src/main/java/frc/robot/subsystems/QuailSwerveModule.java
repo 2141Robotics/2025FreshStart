@@ -1,7 +1,6 @@
 package frc.robot.subsystems;
 
-import static edu.wpi.first.units.Units.Radian;
-import static edu.wpi.first.units.Units.Rotations;
+import static edu.wpi.first.units.Units.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,7 +23,6 @@ import com.mineinjava.quail.util.geometry.Vec2d;
 
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import frc.robot.math.Constants;
 
 import frc.robot.math.Constants;
 
@@ -40,6 +38,10 @@ public class QuailSwerveModule extends SwerveModuleBase {
 	/** The can coder's rotational offset. This value must be manually set through phoenix tuner. */
 	private final double canOffset;
 
+	private int steeringMotorID;
+
+	private int resets;
+
     public QuailSwerveModule(Vec2d position, int driveMotorID, int steeringMotorID, int canCoderID, double canCoderOffset){
 
         super(position, steeringMotorID, canCoderOffset, true);
@@ -48,16 +50,30 @@ public class QuailSwerveModule extends SwerveModuleBase {
 		this.canCoder = new CANcoder(canCoderID);
 		this.canOffset = canCoderOffset;
 
+		this.steeringMotorID = steeringMotorID;
+		
+		resets = 0;
     }
 
     public void init()
     {
+
+		System.out.println("Initializing Module");
 		// Reset the steering motor.
         MotorOutputConfigs motorConfig = new MotorOutputConfigs().withInverted(InvertedValue.CounterClockwise_Positive);
-		TalonFXConfiguration talonConfig = new TalonFXConfiguration().withMotorOutput(motorConfig);
 
-		this.steeringMotor.getConfigurator().apply(talonConfig);
-		this.drivingMotor.getConfigurator().apply(talonConfig);
+
+		TalonFXConfiguration driveTalonConfig = new TalonFXConfiguration().withMotorOutput(motorConfig);
+
+		TalonFXConfiguration steeringTalonConfig = new TalonFXConfiguration().withMotorOutput(motorConfig);
+
+		//PID tunes the steering motor
+		steeringTalonConfig.Slot0.kV = Constants.PID_SETTINGS[0];
+		steeringTalonConfig.Slot0.kP = Constants.PID_SETTINGS[1];
+		steeringTalonConfig.Slot0.kI = Constants.PID_SETTINGS[2];
+
+		this.steeringMotor.getConfigurator().apply(steeringTalonConfig);
+		this.drivingMotor.getConfigurator().apply(driveTalonConfig);
 		MagnetSensorConfigs encoderConfig = new MagnetSensorConfigs();
 		encoderConfig.AbsoluteSensorDiscontinuityPoint = 1;
 		encoderConfig.MagnetOffset = this.canOffset;
@@ -110,6 +126,8 @@ public class QuailSwerveModule extends SwerveModuleBase {
         Angle currentPos = this.canCoder.getAbsolutePosition(true).getValue();
         this.steeringMotor.setControl(new PositionDutyCycle(currentPos.unaryMinus().times(Constants.STEERING_RATIO)));
         this.steeringMotor.setPosition(0);
+		resets++;
+		System.out.println("Module: " + steeringMotorID + " is on reset: " + resets);
 	}
 
 	/*public Vec2d getCurrentMovement() {
@@ -132,8 +150,13 @@ public class QuailSwerveModule extends SwerveModuleBase {
 	@Override
 	public void setRawAngle(double angleInRad)
 	{
+
         Angle angle = Angle.ofBaseUnits(angleInRad, Radian);
-        this.steeringMotor.setControl(new PositionDutyCycle(angle.times(Constants.STEERING_RATIO)));
+		Angle trueAngle = angle.plus(Constants.ENCODER_OFFSET);
+        this.steeringMotor.setControl(new PositionDutyCycle(trueAngle.times(Constants.STEERING_RATIO)));
+
+		System.out.println("Module " + steeringMotorID + ": " + angle.in(Degree));
+
 	}
 
 	@Override

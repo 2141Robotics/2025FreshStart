@@ -1,5 +1,9 @@
 package frc.robot.math;
 
+import static edu.wpi.first.units.Units.*;
+
+import edu.wpi.first.units.measure.Angle;
+
 public class Constants {
 	/*AUTHOR'S NOTE
 
@@ -68,6 +72,7 @@ public class Constants {
 	//Limits change in the overall movement of the robot
 	public static final double DRIVE_ACCELERATION_LIMIT = 0.003d;
 
+	//Individual canCoder offsets that are determined by the Phoenix Tuner X
 	public static final double[] CANCODER_OFFSETS = new double[] {
 		-0.08154296875,
 		-0.16357421875,
@@ -75,10 +80,21 @@ public class Constants {
 		0.471923828125
 	};
 
+	//The CAN IDs of the canCoders
 	public static final int[] CANCODER_IDS = new int[]{
 		21,
 		22,
 		23,
 		24
 	};
+
+	//The offset of the roboRio gyro
+	//Factored in when moving the entire drivetrain
+    public static final Angle GYRO_OFFSET = Angle.ofBaseUnits(PI_OVER_TWO, Radian);
+	
+	//The offset of each individual encoder
+	//Factored in when rotating each steering motor
+    public static final Angle ENCODER_OFFSET = Angle.ofBaseUnits(PI_OVER_TWO, Radian);
+
+	public static final int RESET_COOLDOWN = 40;
 }

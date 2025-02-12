@@ -1,6 +1,7 @@
 package frc.robot.subsystems;
 
 import static edu.wpi.first.units.Units.Degrees;
+import static edu.wpi.first.units.Units.Radians;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,7 +21,6 @@ import frc.robot.math.Constants;
 public class QuailSwerveDrive extends SwerveDrive<QuailSwerveModule>{
 
 	/** The gryoscope used for rotaiton measurements. */
-	private final AHRS gyro;
 	/** A list of all of the swerve modules on the drivetrain. */
 	private final List<QuailSwerveModule> modules;
 	
@@ -31,10 +31,9 @@ public class QuailSwerveDrive extends SwerveDrive<QuailSwerveModule>{
 	 * @param gyroscope the swerve drive's gyroscope
 	 * @param QuailSwerveModules the swerve drive's wheel modules
 	 */
-	public QuailSwerveDrive(AHRS gyroscope, List<QuailSwerveModule> modules)
+	public QuailSwerveDrive(List<QuailSwerveModule> modules)
 	{
 		super(modules);
-		this.gyro = gyroscope;
 		this.modules = modules;
 		initModules();
 	}
@@ -44,38 +43,22 @@ public class QuailSwerveDrive extends SwerveDrive<QuailSwerveModule>{
         this.setBrake(new StaticBrake());
     }
 
-	public void drive(RobotMovement robotMovement){
-
-		//TODO gyrooffset
-		System.out.println("Movement: " + robotMovement.translation.x + "||||" + robotMovement.translation.y);
-		move(robotMovement, 0);
+	public void reset(){
+        this.modules.forEach(m -> m.reset());
 
 	}
 
-	/**
-	 * Reset the gyro to 0°.
-	 */
-	public void resetGyro()
-	{
-		this.gyro.reset();
-	}
-	
+	public void drive(RobotMovement robotMovement, Angle gyroAngle){
 
-	public AHRS getGyro()
-	{
-		return this.gyro;
+		move(robotMovement, gyroAngle.in(Radians) + Constants.GYRO_OFFSET.in(Radians));
 	}
+
     
 	public List<QuailSwerveModule> getModules()
 	{
 		return this.modules;
 	}
 
-	
-	public Angle getAngle(){
-        Angle angle = Angle.ofBaseUnits(this.gyro.getAngle(), Degrees);
-		return angle;
-	}
 
 	public void XLock(){
 		XLockModules();
