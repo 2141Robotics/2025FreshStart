@@ -4,8 +4,7 @@
 
 package frc.robot;
 
-import static edu.wpi.first.units.Units.Degrees;
-import static edu.wpi.first.units.Units.Radian;
+import static edu.wpi.first.units.Units.*;
 
 import java.util.ArrayList;
 
@@ -65,7 +64,8 @@ public class Drivetrain extends SubsystemBase {
 
   public void drive(RobotMovement robotMovement){
     if(canDrive()){
-      quailSwerveDrive.drive(robotMovement, this.getGyroAngle());
+      quailSwerveDrive.drive(robotMovement, this.gyro.getAngle());
+      System.out.println("GYRO " + this.gyro.getAngle());
     }
   }
 
@@ -79,9 +79,9 @@ public class Drivetrain extends SubsystemBase {
 
 
 	public Angle getGyroAngle(){
-    double gyroAngle = this.gyro.getAngle();
-    Angle angle = Angle.ofBaseUnits(gyroAngle, Degrees);
-    System.out.println("Gyro Angle: " + gyroAngle);
+    Angle angle = Angle.ofBaseUnits(this.gyro.getAngle(), Radians);
+    System.out.println("Gyro Angle: " + this.gyro.getAngle());
+    System.out.println("Angle Object Value: " + angle.in(Radians));
     return angle;
   }
 

@@ -48,9 +48,9 @@ public class QuailSwerveDrive extends SwerveDrive<QuailSwerveModule>{
 
 	}
 
-	public void drive(RobotMovement robotMovement, Angle gyroAngle){
-
-		move(robotMovement, gyroAngle.in(Radians) + Constants.GYRO_OFFSET.in(Radians));
+	public void drive(RobotMovement robotMovement, double gyroAngleDeg){
+		System.out.println("PASSED THRU ANGLE " + gyroAngleDeg);
+		move(robotMovement, Math.toRadians(gyroAngleDeg) + Constants.GYRO_OFFSET.in(Radians));
 	}
 
     
