@@ -123,11 +123,12 @@ public class QuailSwerveModule extends SwerveModuleBase {
 	public void reset()
 	{
 		System.out.println("RESET");
-        Angle currentPos = this.canCoder.getAbsolutePosition(true).getValue();
-        this.steeringMotor.setControl(new PositionDutyCycle(currentPos.unaryMinus().times(Constants.STEERING_RATIO)));
-        this.steeringMotor.setPosition(0);
-		resets++;
-		System.out.println("Module: " + steeringMotorID + " is on reset: " + resets);
+        //Angle currentPos = this.canCoder.getAbsolutePosition(true).getValue();
+        //this.steeringMotor.setControl(new PositionDutyCycle(currentPos.unaryMinus().times(Constants.STEERING_RATIO)));
+        //this.steeringMotor.setPosition(0);
+		
+		this.drivingMotor.stopMotor();
+		this.steeringMotor.stopMotor();
 	}
 
 	/*public Vec2d getCurrentMovement() {

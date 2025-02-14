@@ -76,6 +76,7 @@ public class Drive extends Command {
       double rightY = -driverController.getRightY();
 
       double rightTrigger = driverController.getRightTriggerAxis();
+      double leftTrigger = driverController.getLeftTriggerAxis();
       
       //Makes joystick values into Vectors
       Vec2d leftStickVector = new Vec2d(leftX, leftY);
@@ -87,7 +88,18 @@ public class Drive extends Command {
       //double a_rtriggerValue = a_rtrigger.update(rightTrigger);
       
 
-      double scaledSpeed = Constants.BASE_SPEED + ((1 - Constants.BASE_SPEED) * rightTrigger);
+      double scaledSpeed = Constants.BASE_SPEED;
+      if(rightTrigger > 0.08 && leftTrigger > 0.08){
+        scaledSpeed = Constants.BASE_SPEED - (Constants.BASE_SPEED * leftTrigger);
+      }else if(rightTrigger > 0){
+        scaledSpeed = Constants.BASE_SPEED + ((1 - Constants.BASE_SPEED) * rightTrigger);
+      }else if(leftTrigger > 0){
+        scaledSpeed = Constants.BASE_SPEED - (Constants.BASE_SPEED * leftTrigger);
+      }
+
+      if(scaledSpeed < Constants.MINIMUM_SPEED){
+        scaledSpeed = Constants.MINIMUM_SPEED;
+      }
 
       if (leftStick.getLength() < Constants.JOYSTICK_DEAD_ZONE) {
           leftStickVector = new Vec2d(0,0);
