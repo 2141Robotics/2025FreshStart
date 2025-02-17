@@ -71,6 +71,7 @@ public class RobotContainer {
     // Elevator & Arm Controls
     driverController.y().whileTrue(new elevatorMovement(elevator, .1));
     driverController.a().whileTrue(new elevatorMovement(elevator, -.1));
+    driverController.x().onTrue(this.elevator.setPositionHigh());
 
     // Schedule `exampleMethodCommand` when the Xbox con                                         2222troller's B button is pressed,
     // cancelling on release.

@@ -7,14 +7,18 @@ import com.ctre.phoenix6.configs.MotorOutputConfigs;
 import com.ctre.phoenix6.configs.SoftwareLimitSwitchConfigs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.DutyCycleOut;
+import com.ctre.phoenix6.controls.Follower;
+import com.ctre.phoenix6.controls.PositionDutyCycle;
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
+import com.ctre.phoenix6.signals.GravityTypeValue;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.mineinjava.quail.util.geometry.Vec2d;
 
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.math.Constants;
 
@@ -36,19 +40,25 @@ public void init(){
     .withReverseSoftLimitThreshold(Constants.ELEVATOR_MIN_ROTS);
 
     MotorOutputConfigs leftMotorConfig = new MotorOutputConfigs().withInverted(InvertedValue.Clockwise_Positive);
-    TalonFXConfiguration leftDriveTalonConfig = new TalonFXConfiguration().withMotorOutput(leftMotorConfig).withSoftwareLimitSwitch(elevatorMotorSoftwareLimitSwitchConfig);
+    TalonFXConfiguration leftTalonConfig = new TalonFXConfiguration()
+        .withMotorOutput(leftMotorConfig)
+        .withSoftwareLimitSwitch(elevatorMotorSoftwareLimitSwitchConfig);
 
-    MotorOutputConfigs rightMotorConfig = new MotorOutputConfigs().withInverted(InvertedValue.Clockwise_Positive);
-    TalonFXConfiguration rightDriveTalonConfig = new TalonFXConfiguration().withMotorOutput(rightMotorConfig).withSoftwareLimitSwitch(elevatorMotorSoftwareLimitSwitchConfig);;
+    leftTalonConfig.Slot0.kP = 0.2;
+    leftTalonConfig.Slot0.kI = 0.0;
+    leftTalonConfig.Slot0.kD = 0.0;
+    leftTalonConfig.Slot0.kS = 0.0;
+    leftTalonConfig.Slot0.GravityType = GravityTypeValue.Elevator_Static;
+    leftTalonConfig.Slot0.kG = 0.01;
 
-    this.leftMotor.getConfigurator().apply(leftDriveTalonConfig);
-    this.rightMotor.getConfigurator().apply(rightDriveTalonConfig);
+
+    this.leftMotor.getConfigurator().apply(leftTalonConfig);
+    this.rightMotor.setControl(new Follower(this.leftMotor.getDeviceID(), false));
 
     // TODO: Right follow left
 
     // 0 the positions
     this.leftMotor.setPosition(0);
-    this.rightMotor.setPosition(0);
 }
 
     public elevator(int leftMotorID, int rightMotorID) {
@@ -63,7 +73,10 @@ public void init(){
 
     public void setRawSpeed(double speed) {
         this.leftMotor.setControl(new DutyCycleOut(speed));
-        this.rightMotor.setControl(new DutyCycleOut(speed));
+    }
+
+    public void setRawPos(double pos) {
+        this.leftMotor.setControl(new PositionDutyCycle(pos));
     }
 
     @Override
@@ -82,11 +95,6 @@ public void init(){
     public void initSendable(SendableBuilder builder) {
         super.initSendable(builder);
         // To the dashboard, push current position, speed
-
-
-
-
-
         //builder.addBooleanProperty("extended", () -> m_hatchSolenoid.get() == this.speed, null);
     }
 
@@ -100,4 +108,11 @@ public void init(){
 
     }
 
+    public Command setPositionHigh(){
+        return this.runOnce(() -> {
+            this.setRawPos(30);;
+        }).handleInterrupt(() -> {
+            this.stop();
+        });
+    }
 }
