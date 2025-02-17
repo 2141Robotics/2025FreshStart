@@ -7,12 +7,16 @@ package frc.robot;
 import frc.robot.commands.Autos;
 import frc.robot.commands.Drive;
 import frc.robot.commands.ExampleCommand;
+import frc.robot.commands.elevatorMovement;
+import frc.robot.commands.elevatorMovement;
 import frc.robot.math.Constants;
+import frc.robot.subsystems.elevator;
 
 import com.mineinjava.quail.util.geometry.Vec2d;
 import com.studica.frc.AHRS;
 import com.studica.frc.AHRS.NavXComType;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -30,16 +34,18 @@ public class RobotContainer {
   Drive drive;
 
   // The robot's subsystems and commands are defined here...
-  private final Drivetrain drivetrain = new Drivetrain(gyro);
-
+  // private final Drivetrain drivetrain = new Drivetrain(gyro);
+  public final elevator elevator = new elevator(Constants.ELEVATOR_IDS[0], Constants.ELEVATOR_IDS[1]);
   // Replace with CommandPS4Controller or CommandJoystick if needed
   private final CommandXboxController driverController =
       new CommandXboxController(Constants.DRIVER_PORT);
-  private final CommandXboxController operatorController =
-      new CommandXboxController(Constants.OPERATOR_PORT);
+  // private final CommandXboxController operatorController =
+  //     new CommandXboxController(Constants.OPERATOR_PORT);
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
+
+    SmartDashboard.putData(elevator);
     // Configure the trigger bindings
     configureBindings();
   }
@@ -58,10 +64,15 @@ public class RobotContainer {
     //new Trigger(m_exampleSubsystem::exampleCondition)
     //    .onTrue(new ExampleCommand(m_exampleSubsystem));
 
-    drive = new Drive(drivetrain, driverController);
+    // drive = new Drive(drivetrain, driverController);
 
-    drivetrain.setDefaultCommand(drive);
-    // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,
+    // drivetrain.setDefaultCommand(drive);
+
+    // Elevator & Arm Controls
+    driverController.y().whileTrue(new elevatorMovement(elevator, .1));
+    driverController.a().whileTrue(new elevatorMovement(elevator, -.1));
+
+    // Schedule `exampleMethodCommand` when the Xbox con                                         2222troller's B button is pressed,
     // cancelling on release.
     //driverController.b().whileTrue(m_exampleSubsystem.exampleMethodCommand());
 

@@ -7,9 +7,11 @@ import edu.wpi.first.units.measure.Angle;
 public class Constants {
 	/*AUTHOR'S NOTE
 
-	For all degree/radians/rotation unit conversions (ex. radians to degrees), use:
+	For all degree/radians/rotation unit conversions (ex. radians to degrees), use Angle objects
 	
+	angle.in(units)
 	Angle.ofBaseUnits();
+
 
 	*/
 
@@ -52,10 +54,10 @@ public class Constants {
 
 	//The dead zone of the joystick
 	//(The zone where we round down to 0 to combat stick drift)
-    public static final double JOYSTICK_DEAD_ZONE = 0.1;
+    public static final double JOYSTICK_DEAD_ZONE = 0.1d;
 
 	//Speed without the trigger
-	public static final double BASE_SPEED = 0.08;
+	public static final double BASE_SPEED = 0.08d;
 
 	//The slowest speed the robot can go
 	public static final double MINIMUM_SPEED = 0.05d;
@@ -75,14 +77,23 @@ public class Constants {
 	//Limits change in the overall movement of the robot
 	public static final double DRIVE_ACCELERATION_LIMIT = 0.003d;
 
-
-	//Individual canCoder offsets that are determined by the Phoenix Tuner X
-	public static final double[] CANCODER_OFFSETS = new double[] {
-		-0.08154296875,
-		-0.16357421875,
-		-0.761962890625,
-		0.471923828125
+	//The IDs of the drive motors
+	public static final int[] DRIVE_MOTOR_IDS = new int[]{
+		1,
+		3,
+		5,
+		7
 	};
+
+	//The IDs of the drive motors
+	public static final int[] STEER_MOTOR_IDS = new int[]{
+		2,
+		4,
+		6,
+		8
+	};
+	
+
 
 	//The CAN IDs of the canCoders
 	public static final int[] CANCODER_IDS = new int[]{
@@ -90,6 +101,30 @@ public class Constants {
 		22,
 		23,
 		24
+	};
+
+	// The CAN IDs of the Elevator motors
+	public static final int[] ELEVATOR_IDS  = new int[]{
+		21,
+		22,
+	};
+
+	//  CAN IDs of the elevator CAN Coders
+	public static final int[] ELEVATOR_CAN_IDS = new int[]{
+		23,
+		24,
+	};
+
+	// Bounds for the elevator in rotations
+	public static final double ELEVATOR_MIN_ROTS = 0d;
+	public static final double ELEVATOR_MAX_ROTS = 42d;
+
+	//Individual canCoder offsets that are determined by the Phoenix Tuner X
+	public static final double[] CANCODER_OFFSETS = new double[] {
+		-0.08154296875,
+		-0.16357421875,
+		-0.761962890625,
+		0.471923828125
 	};
 
 	//The offset of the roboRio gyro

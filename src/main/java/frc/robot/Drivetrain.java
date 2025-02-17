@@ -33,10 +33,10 @@ public class Drivetrain extends SubsystemBase {
     ArrayList<QuailSwerveModule> modules = new ArrayList<>();
 
     //TODO Set cancoder offsets
-    modules.add(new QuailSwerveModule(new Vec2d(Constants.CENTER_TO_SWERVE_DIST, Constants.CENTER_TO_SWERVE_DIST), 1, 2, Constants.CANCODER_IDS[0], Constants.CANCODER_OFFSETS[0]));
-    modules.add(new QuailSwerveModule(new Vec2d(Constants.CENTER_TO_SWERVE_DIST, -Constants.CENTER_TO_SWERVE_DIST), 3, 4, Constants.CANCODER_IDS[1], Constants.CANCODER_OFFSETS[1]));
-    modules.add(new QuailSwerveModule(new Vec2d(-Constants.CENTER_TO_SWERVE_DIST, -Constants.CENTER_TO_SWERVE_DIST), 5, 6, Constants.CANCODER_IDS[2], Constants.CANCODER_OFFSETS[2]));
-    modules.add(new QuailSwerveModule(new Vec2d(-Constants.CENTER_TO_SWERVE_DIST, Constants.CENTER_TO_SWERVE_DIST), 7, 8, Constants.CANCODER_IDS[3], Constants.CANCODER_OFFSETS[3]));
+    modules.add(new QuailSwerveModule(new Vec2d(Constants.CENTER_TO_SWERVE_DIST, Constants.CENTER_TO_SWERVE_DIST), Constants.DRIVE_MOTOR_IDS[0], Constants.STEER_MOTOR_IDS[0], Constants.CANCODER_IDS[0], Constants.CANCODER_OFFSETS[0]));
+    modules.add(new QuailSwerveModule(new Vec2d(Constants.CENTER_TO_SWERVE_DIST, -Constants.CENTER_TO_SWERVE_DIST), Constants.DRIVE_MOTOR_IDS[1], Constants.STEER_MOTOR_IDS[1], Constants.CANCODER_IDS[1], Constants.CANCODER_OFFSETS[1]));
+    modules.add(new QuailSwerveModule(new Vec2d(-Constants.CENTER_TO_SWERVE_DIST, -Constants.CENTER_TO_SWERVE_DIST), Constants.DRIVE_MOTOR_IDS[2], Constants.STEER_MOTOR_IDS[2], Constants.CANCODER_IDS[2], Constants.CANCODER_OFFSETS[2]));
+    modules.add(new QuailSwerveModule(new Vec2d(-Constants.CENTER_TO_SWERVE_DIST, Constants.CENTER_TO_SWERVE_DIST), Constants.DRIVE_MOTOR_IDS[3], Constants.STEER_MOTOR_IDS[3], Constants.CANCODER_IDS[3], Constants.CANCODER_OFFSETS[3]));
 
     this.quailSwerveDrive = new QuailSwerveDrive(modules);
   }
