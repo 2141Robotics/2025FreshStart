@@ -26,7 +26,7 @@ import frc.robot.math.Constants;
 // 2. Configure talons
 // 3. Up and down commands
 
-public class elevator extends SubsystemBase {
+public class Elevator extends SubsystemBase {
     private final TalonFX leftMotor;
 
     private final TalonFX rightMotor;
@@ -35,9 +35,9 @@ public void init(){
     System.out.println("Initializing elevator!");
 
     SoftwareLimitSwitchConfigs elevatorMotorSoftwareLimitSwitchConfig = new SoftwareLimitSwitchConfigs().      withForwardSoftLimitEnable(true).
-    withForwardSoftLimitThreshold(Constants.ELEVATOR_MAX_ROTS)
+    withForwardSoftLimitThreshold(Constants.ELEVATOR_MAX_ROTATIONS)
     .withReverseSoftLimitEnable(true)
-    .withReverseSoftLimitThreshold(Constants.ELEVATOR_MIN_ROTS);
+    .withReverseSoftLimitThreshold(Constants.ELEVATOR_MIN_ROTATIONS);
 
     MotorOutputConfigs leftMotorConfig = new MotorOutputConfigs().withInverted(InvertedValue.Clockwise_Positive);
     TalonFXConfiguration leftTalonConfig = new TalonFXConfiguration()
@@ -61,7 +61,7 @@ public void init(){
     this.leftMotor.setPosition(0);
 }
 
-    public elevator(int leftMotorID, int rightMotorID) {
+    public Elevator(int leftMotorID, int rightMotorID) {
         this.leftMotor = new TalonFX(leftMotorID);
         this.rightMotor = new TalonFX(rightMotorID);
     }

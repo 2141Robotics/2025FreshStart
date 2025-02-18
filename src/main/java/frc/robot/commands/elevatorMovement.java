@@ -1,14 +1,13 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.Drivetrain;
-import frc.robot.subsystems.elevator;
+import frc.robot.subsystems.Elevator;
 
-public class elevatorMovement extends Command {
-    elevator m_elevator;
+public class ElevatorMovement extends Command {
+    Elevator m_elevator;
     double speed;
 
-    public elevatorMovement(elevator elevator, double speed) {
+    public ElevatorMovement(Elevator elevator, double speed) {
         m_elevator = elevator;
         addRequirements(m_elevator);
         this.speed = speed;

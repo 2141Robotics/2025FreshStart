@@ -7,12 +7,12 @@ package frc.robot;
 import frc.robot.commands.Autos;
 import frc.robot.commands.Drive;
 import frc.robot.commands.ExampleCommand;
-import frc.robot.commands.elevatorMovement;
-import frc.robot.commands.elevatorMovement;
+import frc.robot.commands.ElevatorMovement;
 import frc.robot.math.Constants;
-import frc.robot.subsystems.elevator;
+import frc.robot.subsystems.Elevator;
 
 import com.mineinjava.quail.util.geometry.Vec2d;
+
 import com.studica.frc.AHRS;
 import com.studica.frc.AHRS.NavXComType;
 
@@ -35,7 +35,7 @@ public class RobotContainer {
 
   // The robot's subsystems and commands are defined here...
   // private final Drivetrain drivetrain = new Drivetrain(gyro);
-  public final elevator elevator = new elevator(Constants.ELEVATOR_IDS[0], Constants.ELEVATOR_IDS[1]);
+  public final Elevator elevator = new Elevator(Constants.ELEVATOR_IDS[0], Constants.ELEVATOR_IDS[1]);
   // Replace with CommandPS4Controller or CommandJoystick if needed
   private final CommandXboxController driverController =
       new CommandXboxController(Constants.DRIVER_PORT);
@@ -69,11 +69,11 @@ public class RobotContainer {
     // drivetrain.setDefaultCommand(drive);
 
     // Elevator & Arm Controls
-    driverController.y().whileTrue(new elevatorMovement(elevator, .1));
-    driverController.a().whileTrue(new elevatorMovement(elevator, -.1));
+    driverController.y().whileTrue(new ElevatorMovement(elevator, Constants.ELEVATOR_MANUAL_SPEED));
+    driverController.a().whileTrue(new ElevatorMovement(elevator, -Constants.ELEVATOR_MANUAL_SPEED));
     driverController.x().onTrue(this.elevator.setPositionHigh());
 
-    // Schedule `exampleMethodCommand` when the Xbox con                                         2222troller's B button is pressed,
+    // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,
     // cancelling on release.
     //driverController.b().whileTrue(m_exampleSubsystem.exampleMethodCommand());
 

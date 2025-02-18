@@ -116,8 +116,8 @@ public class Constants {
 	};
 
 	// Bounds for the elevator in rotations
-	public static final double ELEVATOR_MIN_ROTS = 0d;
-	public static final double ELEVATOR_MAX_ROTS = 42d;
+	public static final double ELEVATOR_MIN_ROTATIONS = 0d;
+	public static final double ELEVATOR_MAX_ROTATIONS = 42d;
 
 	//Individual canCoder offsets that are determined by the Phoenix Tuner X
 	public static final double[] CANCODER_OFFSETS = new double[] {
@@ -136,4 +136,6 @@ public class Constants {
     public static final Angle ENCODER_OFFSET = Angle.ofBaseUnits(0, Radian);
 
 	public static final int RESET_COOLDOWN = 40;
+
+	public static final double ELEVATOR_MANUAL_SPEED = 0.1;
 }

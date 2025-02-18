@@ -32,7 +32,6 @@ public class Drivetrain extends SubsystemBase {
     
     ArrayList<QuailSwerveModule> modules = new ArrayList<>();
 
-    //TODO Set cancoder offsets
     modules.add(new QuailSwerveModule(new Vec2d(Constants.CENTER_TO_SWERVE_DIST, Constants.CENTER_TO_SWERVE_DIST), Constants.DRIVE_MOTOR_IDS[0], Constants.STEER_MOTOR_IDS[0], Constants.CANCODER_IDS[0], Constants.CANCODER_OFFSETS[0]));
     modules.add(new QuailSwerveModule(new Vec2d(Constants.CENTER_TO_SWERVE_DIST, -Constants.CENTER_TO_SWERVE_DIST), Constants.DRIVE_MOTOR_IDS[1], Constants.STEER_MOTOR_IDS[1], Constants.CANCODER_IDS[1], Constants.CANCODER_OFFSETS[1]));
     modules.add(new QuailSwerveModule(new Vec2d(-Constants.CENTER_TO_SWERVE_DIST, -Constants.CENTER_TO_SWERVE_DIST), Constants.DRIVE_MOTOR_IDS[2], Constants.STEER_MOTOR_IDS[2], Constants.CANCODER_IDS[2], Constants.CANCODER_OFFSETS[2]));
