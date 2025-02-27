@@ -106,19 +106,12 @@ public class Constants {
 	// The CAN IDs of the Elevator motors
 	public static final int[] ELEVATOR_IDS  = new int[]{
 		21,
-		22,
+		22
 	};
 
-	//  CAN IDs of the elevator CAN Coders
-	public static final int[] ELEVATOR_CAN_IDS = new int[]{
-		23,
-		24,
-	};
+	public static final int ARM_MOTOR_ID = 31;
 
-	// Bounds for the elevator in rotations
-	public static final double ELEVATOR_MIN_ROTATIONS = 0d;
-	public static final double ELEVATOR_MAX_ROTATIONS = 42d;
-
+	
 	//Individual canCoder offsets that are determined by the Phoenix Tuner X
 	public static final double[] CANCODER_OFFSETS = new double[] {
 		-0.08154296875,
@@ -137,5 +130,46 @@ public class Constants {
 
 	public static final int RESET_COOLDOWN = 40;
 
-	public static final double ELEVATOR_MANUAL_SPEED = 0.1;
+//////////// ELEVATOR / ARM Constants
+
+	public static final double ELEVATOR_MANUAL_SPEED = 0.2;
+
+	// Bounds for the elevator in rotations
+	public static final double ELEVATOR_MIN_ROTATIONS = 0d;
+	public static final double ELEVATOR_MAX_ROTATIONS = 50d;
+
+	public static final double ELEVATOR_MAX_SPEED = 0.2d;
+	public static final double ARM_MAX_SPEED = 0.3d;
+
+	public static final double ARM_MAX_ROTATIONS = 0.25;
+	public static final double ARM_MIN_ROTATIONS = -0.35;
+
+	public static final double ARM_GEAR_RATIO = 81;
+
+	public static final double ARM_TOLERANCE = 0.03;
+	public static final double ELEVATOR_TOLERANCE = 0.05;
+
+	public static final double ELEVATOR_L1 = 10;
+	public static final double ELEVATOR_L2 = 15;
+	public static final double ELEVATOR_L3 = 20;
+	public static final double ELEVATOR_L4 = 30;
+
+	public static final double ELEVATOR_STOW = 0;
+	public static final double ELEVATOR_TRANSITION = 22;
+	public static final double ELEVATOR_PICKUP = 17;
+
+	public static final double ARM_STOW = 0.25;
+
+	public static final double ARM_OUT = 0;
+	public static final double ARM_DOWN = -0.3;
+
+	public static final double ARM_UPPER_ELEVATOR_CLEARANCE = 0.13;
+	public static final double ARM_LOWER_ELEVATOR_CLEARANCE = 0.13;
+
+
+
+
+
+
+
 }
