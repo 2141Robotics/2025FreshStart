@@ -164,7 +164,7 @@ public class Constants {
 	public static final double ARM_DOWN = -0.3;
 
 	public static final double ARM_UPPER_ELEVATOR_CLEARANCE = 0.13;
-	public static final double ARM_LOWER_ELEVATOR_CLEARANCE = 0.13;
+	public static final double ARM_LOWER_ELEVATOR_CLEARANCE = -0.1;
 
 
 
