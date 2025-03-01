@@ -71,7 +71,7 @@ public class RobotContainer {
     // Elevator & Arm Controls
     driverController.y().whileTrue(this.elevator.setElevatorPositionL1());
     driverController.a().whileTrue(this.elevator.setElevatorPositionL2());
-    driverController.x().onTrue(this.elevator.setArmPositionDown());
+    driverController.x().onTrue(this.elevator.pickupSequence());
     driverController.b().onTrue(this.elevator.setArmPositionOUT());
     driverController.rightBumper().onTrue(this.elevator.setElevatorPositionStow());
     driverController.leftBumper().onTrue(this.elevator.setArmPositionStow());

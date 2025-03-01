@@ -2,7 +2,7 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot;
+package frc.robot.subsystems;
 
 import static edu.wpi.first.units.Units.*;
 
@@ -15,8 +15,6 @@ import com.studica.frc.AHRS;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.subsystems.QuailSwerveDrive;
-import frc.robot.subsystems.QuailSwerveModule;
 import frc.robot.math.Constants;
 
 public class Drivetrain extends SubsystemBase {
