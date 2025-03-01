@@ -132,22 +132,22 @@ public class Constants {
 
 //////////// ELEVATOR / ARM Constants
 
-	public static final double ELEVATOR_MANUAL_SPEED = 0.2;
+	public static final double ELEVATOR_MANUAL_SPEED = 0.1;
 
 	// Bounds for the elevator in rotations
 	public static final double ELEVATOR_MIN_ROTATIONS = 0d;
 	public static final double ELEVATOR_MAX_ROTATIONS = 50d;
 
-	public static final double ELEVATOR_MAX_SPEED = 0.2d;
-	public static final double ARM_MAX_SPEED = 0.3d;
+	public static final double ELEVATOR_MAX_SPEED = 0.1d;
+	public static final double ARM_MAX_SPEED = 0.2d;
 
 	public static final double ARM_MAX_ROTATIONS = 0.25;
-	public static final double ARM_MIN_ROTATIONS = -0.35;
+	public static final double ARM_MIN_ROTATIONS = -0.25;
 
 	public static final double ARM_GEAR_RATIO = 81;
 
-	public static final double ARM_TOLERANCE = 0.03;
-	public static final double ELEVATOR_TOLERANCE = 0.05;
+	public static final double ARM_TOLERANCE = 0.05;
+	public static final double ELEVATOR_TOLERANCE = 0.3;
 
 	public static final double ELEVATOR_L1 = 10;
 	public static final double ELEVATOR_L2 = 15;
@@ -155,21 +155,16 @@ public class Constants {
 	public static final double ELEVATOR_L4 = 30;
 
 	public static final double ELEVATOR_STOW = 0;
-	public static final double ELEVATOR_TRANSITION = 22;
-	public static final double ELEVATOR_PICKUP = 17;
+	public static final double ELEVATOR_TRANSITION = 15;
+	public static final double ELEVATOR_PICKUP = 11;
 
 	public static final double ARM_STOW = 0.25;
 
 	public static final double ARM_OUT = 0;
-	public static final double ARM_DOWN = -0.3;
+	public static final double ARM_DOWN = -0.25;
+	public static final double ARM_SCORE_HIGH = 0.6;
+	public static final double ARM_SCORE_LOW = 0.15;
 
 	public static final double ARM_UPPER_ELEVATOR_CLEARANCE = 0.13;
 	public static final double ARM_LOWER_ELEVATOR_CLEARANCE = -0.1;
-
-
-
-
-
-
-
 }

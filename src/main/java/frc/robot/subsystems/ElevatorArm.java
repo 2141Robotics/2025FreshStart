@@ -166,6 +166,7 @@ public void init(){
         super.periodic();
         Angle elevatorPositions = this.leftMotor.getPosition().getValue();
         SmartDashboard.putNumber("Elevator Position", elevatorPositions.in(Rotations));
+        SmartDashboard.putNumber("Arm Position: ", armMotor.getPosition().getValueAsDouble());
 
     }
 
@@ -219,7 +220,7 @@ public void init(){
 
     public Command setElevatorPositionPickup(){
         return this.runOnce(() -> {
-            this.setRawElevatorPos(Constants.ELEVATOR_TRANSITION);
+            this.setRawElevatorPos(Constants.ELEVATOR_PICKUP);
         }).handleInterrupt(() -> {
             this.stopElevator();
         });
@@ -236,6 +237,22 @@ public void init(){
     public Command setArmPositionOUT(){
         return this.runOnce(() -> {
             this.setRawArmPos(Constants.ARM_OUT);
+        }).handleInterrupt(() -> {
+            this.stopArm();
+        });
+    }
+
+    public Command setArmPositionSCORE_LOW(){
+        return this.runOnce(() -> {
+            this.setRawArmPos(Constants.ARM_SCORE_LOW);
+        }).handleInterrupt(() -> {
+            this.stopArm();
+        });
+    }
+
+    public Command setArmPositionSCORE_HIGH(){
+        return this.runOnce(() -> {
+            this.setRawArmPos(Constants.ARM_SCORE_HIGH);
         }).handleInterrupt(() -> {
             this.stopArm();
         });
@@ -266,14 +283,14 @@ public void init(){
     public Command WaitForElevatorAbove(double angle){
         return this.run(()->{})
         .until(()->{
-            return this.leftMotor.getPosition().getValueAsDouble() >= angle+Constants.ARM_TOLERANCE;
+            return this.leftMotor.getPosition().getValueAsDouble() >= angle-Constants.ELEVATOR_TOLERANCE;
         });
     }
 
     public Command WaitForElevatorBelow(double angle){
         return this.run(()->{})
         .until(()->{
-            return this.leftMotor.getPosition().getValueAsDouble() <= angle+Constants.ARM_TOLERANCE;
+            return this.leftMotor.getPosition().getValueAsDouble() <= angle+Constants.ELEVATOR_TOLERANCE;
         });
     }
 
@@ -293,6 +310,36 @@ public void init(){
             this.WaitForArmAbove(Constants.ARM_LOWER_ELEVATOR_CLEARANCE),
             this.setElevatorPositionStow(),
             this.setArmPositionStow()
+        );
+    }
+
+    public Command L1Sequence() {
+        return Commands.sequence(
+            this.setArmPositionSCORE_LOW(),
+            this.WaitForArmBelow(Constants.ARM_UPPER_ELEVATOR_CLEARANCE),
+            this.setElevatorPositionL1()
+        );
+    }
+
+    public Command L2Sequence() {
+        return Commands.sequence(
+            this.setArmPositionSCORE_LOW(),
+            this.WaitForArmBelow(Constants.ARM_UPPER_ELEVATOR_CLEARANCE),
+            this.setElevatorPositionL2()
+        );
+    }
+    public Command L3Sequence() {
+        return Commands.sequence(
+            this.setArmPositionSCORE_LOW(),
+            this.WaitForArmBelow(Constants.ARM_UPPER_ELEVATOR_CLEARANCE),
+            this.setElevatorPositionL3()
+        );
+    }
+    public Command L4Sequence() {
+        return Commands.sequence(
+            this.setArmPositionSCORE_HIGH(),
+            this.WaitForArmBelow(Constants.ARM_UPPER_ELEVATOR_CLEARANCE),
+            this.setElevatorPositionL4()
         );
     }
 }
