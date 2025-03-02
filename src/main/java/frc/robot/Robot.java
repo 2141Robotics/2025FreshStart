@@ -49,6 +49,7 @@ public class Robot extends TimedRobot {
   @Override
   public void robotInit() {
     m_robotContainer.elevator.init();
+    m_robotContainer.drivetrain.init();
   }
 
   /** This function is called once each time the robot enters Disabled mode. */

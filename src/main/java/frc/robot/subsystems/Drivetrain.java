@@ -13,6 +13,8 @@ import com.mineinjava.quail.util.geometry.Vec2d;
 import com.studica.frc.AHRS;
 
 import edu.wpi.first.units.measure.Angle;
+import edu.wpi.first.util.sendable.SendableBuilder;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.math.Constants;
@@ -23,12 +25,14 @@ public class Drivetrain extends SubsystemBase {
 
   private QuailSwerveDrive quailSwerveDrive;
 
+  private ArrayList<QuailSwerveModule> modules;
+
   /** Creates a new ExampleSubsystem. */
   public Drivetrain(AHRS gyro) {
 
     this.gyro = gyro;
     
-    ArrayList<QuailSwerveModule> modules = new ArrayList<>();
+    modules = new ArrayList<>();
 
     modules.add(new QuailSwerveModule(new Vec2d(Constants.CENTER_TO_SWERVE_DIST, Constants.CENTER_TO_SWERVE_DIST), Constants.DRIVE_MOTOR_IDS[0], Constants.STEER_MOTOR_IDS[0], Constants.CANCODER_IDS[0], Constants.CANCODER_OFFSETS[0]));
     modules.add(new QuailSwerveModule(new Vec2d(Constants.CENTER_TO_SWERVE_DIST, -Constants.CENTER_TO_SWERVE_DIST), Constants.DRIVE_MOTOR_IDS[1], Constants.STEER_MOTOR_IDS[1], Constants.CANCODER_IDS[1], Constants.CANCODER_OFFSETS[1]));
@@ -57,12 +61,13 @@ public class Drivetrain extends SubsystemBase {
   public void init(){
     quailSwerveDrive.initModules();
     resetGyro();
+    reset();
   }
 
   public void drive(RobotMovement robotMovement){
     if(canDrive()){
       quailSwerveDrive.drive(robotMovement, this.gyro.getAngle());
-      System.out.println("GYRO " + this.gyro.getAngle());
+      // System.out.println("GYRO " + this.gyro.getAngle());
     }
   }
 
@@ -77,8 +82,8 @@ public class Drivetrain extends SubsystemBase {
 
 	public Angle getGyroAngle(){
     Angle angle = Angle.ofBaseUnits(this.gyro.getAngle(), Radians);
-    System.out.println("Gyro Angle: " + this.gyro.getAngle());
-    System.out.println("Angle Object Value: " + angle.in(Radians));
+    // System.out.println("Gyro Angle: " + this.gyro.getAngle());
+    // System.out.println("Angle Object Value: " + angle.in(Radians));
     return angle;
   }
 
@@ -117,11 +122,22 @@ public class Drivetrain extends SubsystemBase {
 
   @Override
   public void periodic() {
+    super.periodic();
     // This method will be called once per scheduler run
+    for (int i = 0; i < 4; i++) {
+      SmartDashboard.putNumber("Module " + (i+1) + " raw angle:", this.modules.get(i).getRawAngle());
+      SmartDashboard.putNumber("Module " + (i+1) + " angle:", this.modules.get(i).getAngle());
+    }
   }
 
   @Override
   public void simulationPeriodic() {
     // This method will be called once per scheduler run during simulation
+  }
+
+  @Override
+  public void initSendable(SendableBuilder builder) {
+    super.initSendable(builder);
+
   }
 }

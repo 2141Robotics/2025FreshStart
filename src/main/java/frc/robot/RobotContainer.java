@@ -6,10 +6,12 @@ package frc.robot;
 
 import frc.robot.commands.Autos;
 import frc.robot.commands.Drive;
+import frc.robot.commands.DriveForward;
 import frc.robot.commands.ExampleCommand;
 import frc.robot.commands.ElevatorMovement;
 import frc.robot.math.Constants;
 import frc.robot.subsystems.ElevatorArm;
+import frc.robot.subsystems.Drivetrain;
 
 import com.mineinjava.quail.util.geometry.Vec2d;
 
@@ -34,11 +36,13 @@ public class RobotContainer {
   Drive drive;
 
   // The robot's subsystems and commands are defined here...
-  // private final Drivetrain drivetrain = new Drivetrain(gyro);
-  public final ElevatorArm elevator = new ElevatorArm(Constants.ELEVATOR_IDS[0], Constants.ELEVATOR_IDS[1], Constants.ARM_MOTOR_ID);
+  public final Drivetrain drivetrain = new Drivetrain(gyro);
   // Replace with CommandPS4Controller or CommandJoystick if needed
   private final CommandXboxController driverController =
       new CommandXboxController(Constants.DRIVER_PORT);
+
+      
+  public final ElevatorArm elevator = new ElevatorArm(Constants.ELEVATOR_IDS[0], Constants.ELEVATOR_IDS[1], Constants.ARM_MOTOR_ID);
   // private final CommandXboxController operatorController =
   //     new CommandXboxController(Constants.OPERATOR_PORT);
 
@@ -64,17 +68,21 @@ public class RobotContainer {
     //new Trigger(m_exampleSubsystem::exampleCondition)
     //    .onTrue(new ExampleCommand(m_exampleSubsystem));
 
-    // drive = new Drive(drivetrain, driverController);
+    drive = new Drive(drivetrain, driverController);
 
-    // drivetrain.setDefaultCommand(drive);
+    drivetrain.setDefaultCommand(drive);
 
+    // TODO: Comment out, used for debugging only
+    driverController.a().whileTrue(new DriveForward(drivetrain));
+
+    // fixme: uncomment
     // Elevator & Arm Controls
-    driverController.y().whileTrue(this.elevator.setElevatorPositionL1());
-    driverController.a().whileTrue(this.elevator.setElevatorPositionL2());
-    driverController.x().onTrue(this.elevator.pickupSequence());
-    driverController.b().onTrue(this.elevator.setArmPositionOUT());
-    driverController.rightBumper().onTrue(this.elevator.setElevatorPositionStow());
-    driverController.leftBumper().onTrue(this.elevator.setArmPositionStow());
+    // driverController.y().whileTrue(this.elevator.setElevatorPositionL1());
+    // driverController.a().whileTrue(this.elevator.setElevatorPositionL2());
+    // driverController.x().onTrue(this.elevator.pickupSequence());
+    // driverController.b().onTrue(this.elevator.setArmPositionOUT());
+    // driverController.rightBumper().onTrue(this.elevator.setElevatorPositionStow());
+    // driverController.leftBumper().onTrue(this.elevator.setArmPositionStow());
 
     // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,
     // cancelling on release.
