@@ -126,7 +126,8 @@ public class Drivetrain extends SubsystemBase {
     // This method will be called once per scheduler run
     for (int i = 0; i < 4; i++) {
       SmartDashboard.putNumber("Module " + (i+1) + " raw angle:", this.modules.get(i).getRawAngle());
-      SmartDashboard.putNumber("Module " + (i+1) + " angle:", this.modules.get(i).getAngle());
+      SmartDashboard.putNumber("Module " + (i+1) + " meep:", this.modules.get(i).meep());
+      SmartDashboard.putNumber("Module " + (i+1) + " angle:", this.modules.get(i).getRotations().in(Rotation));
     }
   }
 

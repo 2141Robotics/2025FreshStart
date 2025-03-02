@@ -116,10 +116,10 @@ public class Constants {
 
 	// Individual canCoder offsets that are determined by the Phoenix Tuner X
 	public static final double[] CANCODER_OFFSETS = new double[] {
-			-0.8286132812500001,
-			-0.903076171875,
-			-0.527099609375,
-			-0.274658203125,
+			-.83,
+			-.92,
+			-.52,
+			-.27
 	};
 
 	// The offset of the roboRio gyro

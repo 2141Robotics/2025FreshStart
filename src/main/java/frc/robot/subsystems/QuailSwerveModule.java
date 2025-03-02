@@ -2,26 +2,19 @@ package frc.robot.subsystems;
 
 import static edu.wpi.first.units.Units.*;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.ctre.phoenix6.configs.MagnetSensorConfigs;
 import com.ctre.phoenix6.configs.MotorOutputConfigs;
-import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
-import com.ctre.phoenix6.controls.CoastOut;
 import com.ctre.phoenix6.controls.ControlRequest;
 import com.ctre.phoenix6.controls.PositionDutyCycle;
-import com.ctre.phoenix6.controls.StaticBrake;
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.SensorDirectionValue;
-import com.mineinjava.quail.SwerveDrive;
 import com.mineinjava.quail.SwerveModuleBase;
 import com.mineinjava.quail.util.geometry.Vec2d;
 
-import edu.wpi.first.units.AngleUnit;
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -92,16 +85,10 @@ public class QuailSwerveModule extends SwerveModuleBase {
 	 */
 	public void reset() {
 		System.out.println("Resetting steering module ID: " + this.steeringMotorID);
-
-		// Offset the current position by the cancoder offsets
-		System.out.println(this.steeringMotorID + " started at " + this.getAngle());
-		Angle currentPos = this.canCoder.getAbsolutePosition(true).getValue(); 
-		System.out.println("Current motor canCoder pos for SID " + this.steeringMotorID +  " is " + currentPos.in(Rotation));
-		currentPos = currentPos.minus(Angle.ofBaseUnits(this.canOffset, Rotation));
-		System.out.println("Post rotation offset: " + currentPos.in(Rotation));
-		this.steeringMotor.setPosition(currentPos);
-		System.out.println(this.steeringMotorID + " is now at " + this.getAngle());
-
+		this.steeringMotor.setPosition(
+			this.getRawAngle() * Constants.STEERING_RATIO
+		);
+		this.currentAngle = this.getRawAngle() * Math.PI * 2;
 		this.drivingMotor.stopMotor();
 		this.steeringMotor.stopMotor();
 	}
@@ -130,22 +117,27 @@ public class QuailSwerveModule extends SwerveModuleBase {
 
 	@Override
 	public void setRawAngle(double angleInRad) {
-
 		Angle angle = Angle.ofBaseUnits(angleInRad, Radian);
 		this.steeringMotor.setControl(new PositionDutyCycle(angle.times(Constants.STEERING_RATIO)));
 		SmartDashboard.putNumber("Module " + steeringMotorID + " target angle: ", angle.in(Rotations));
 	}
 
 	// Returns the position of the canencoder attached to this module
-	public double getRawAngle()  {
+	public double getRawAngle() {
+		double currentPos = this.canCoder.getAbsolutePosition().refresh().getValue().in(Rotation);
+		currentPos = (currentPos + 1) % 1;
+		return currentPos;
+	}
+
+	public double meep() {
 		return this.canCoder.getAbsolutePosition().refresh().getValue().in(Rotation);
 	}
 
-
 	// Returns the position of the steering motor
-	public double getAngle() {
-		return this.steeringMotor.getPosition().refresh().getValueAsDouble() / Constants.STEERING_RATIO;
+	public Angle getRotations() {
+		return (this.steeringMotor.getPosition().refresh().getValue().div(Constants.STEERING_RATIO));
 	}
+
 
 	@Override
 	public void setRawSpeed(double speed) {
