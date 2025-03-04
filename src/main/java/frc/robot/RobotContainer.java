@@ -40,6 +40,9 @@ public class RobotContainer {
   // Replace with CommandPS4Controller or CommandJoystick if needed
   private final CommandXboxController driverController =
       new CommandXboxController(Constants.DRIVER_PORT);
+  
+  private final CommandXboxController operatorController =
+      new CommandXboxController(Constants.OPERATOR_PORT);
 
       
   public final ElevatorArm elevator = new ElevatorArm(Constants.ELEVATOR_IDS[0], Constants.ELEVATOR_IDS[1], Constants.ARM_MOTOR_ID);
@@ -71,18 +74,35 @@ public class RobotContainer {
     drive = new Drive(drivetrain, driverController);
 
     drivetrain.setDefaultCommand(drive);
+    driverController.back().onTrue(drivetrain.resetGyroCommand());
 
-    // TODO: Comment out, used for debugging only
-    driverController.a().whileTrue(new DriveForward(drivetrain));
+    //Debugging only
+    //driverController.a().whileTrue(new DriveForward(drivetrain));
 
     // fixme: uncomment
     // Elevator & Arm Controls
-    // driverController.y().whileTrue(this.elevator.setElevatorPositionL1());
-    // driverController.a().whileTrue(this.elevator.setElevatorPositionL2());
-    // driverController.x().onTrue(this.elevator.pickupSequence());
-    // driverController.b().onTrue(this.elevator.setArmPositionOUT());
-    // driverController.rightBumper().onTrue(this.elevator.setElevatorPositionStow());
-    // driverController.leftBumper().onTrue(this.elevator.setArmPositionStow());
+    operatorController.y().whileTrue(this.elevator.L4Sequence());
+    operatorController.a().whileTrue(this.elevator.L1Sequence());
+    operatorController.x().onTrue(this.elevator.L2Sequence());
+    operatorController.b().onTrue(this.elevator.L3Sequence());
+
+    operatorController.back().onTrue(this.elevator.pickupSequence());
+
+    operatorController.rightBumper().onTrue(this.elevator.setElevatorPositionStow());
+    operatorController.leftBumper().onTrue(this.elevator.setArmPositionStow());
+
+    operatorController.povUp().whileTrue(this.elevator.elevatorUp());
+    operatorController.povDown().whileTrue(this.elevator.elevatorDown());
+    operatorController.povLeft().whileTrue(this.elevator.armDown());
+    operatorController.povRight().whileTrue(this.elevator.armUp());
+    
+    operatorController.povUp().onFalse(this.elevator.stopElevatorCommand());
+    operatorController.povDown().onFalse(this.elevator.stopElevatorCommand());
+    operatorController.povLeft().onFalse(this.elevator.stopArmCommand());
+    operatorController.povRight().onFalse(this.elevator.stopArmCommand());
+
+  
+
 
     // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,
     // cancelling on release.

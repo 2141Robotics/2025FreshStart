@@ -110,6 +110,10 @@ public class Drivetrain extends SubsystemBase {
         });
   }
 
+  public Command resetGyroCommand(){
+    return this.runOnce(() -> this.resetGyro());
+  }
+
   /**
    * An example method querying a boolean state of the subsystem (for example, a digital sensor).
    *

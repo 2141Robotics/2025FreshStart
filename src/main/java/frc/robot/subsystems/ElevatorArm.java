@@ -110,6 +110,7 @@ public void init(){
 
     this.armMotor.getConfigurator().apply(armMotorConfig);
     this.armMotor.setPosition(Constants.ARM_STOW);
+    this.armMotor.setNeutralMode(NeutralModeValue.Brake);
 }
 
     public ElevatorArm(int leftMotorID, int rightMotorID, int armMotorID) {
@@ -170,6 +171,52 @@ public void init(){
         SmartDashboard.putNumber("Arm Position: ", armMotor.getPosition().getValueAsDouble());
 
     }
+
+    public Command stopElevatorCommand(){
+        //TODO:REMOVE ME PLZ
+        return this.runOnce(() -> {
+            this.stopElevator();
+        });
+    }
+
+    public Command stopArmCommand(){
+        return this.runOnce(() -> {
+            this.stopArm();
+        });
+    }
+
+    public Command elevatorUp(){
+        return this.runOnce(() -> {
+            this.setRawElevatorSpeed(Constants.ELEVATOR_MANUAL_SPEED);
+        }).handleInterrupt(() -> {
+            this.stopElevator();
+        });
+
+    }
+
+    public Command elevatorDown(){
+        return this.runOnce(() -> {
+            this.setRawElevatorSpeed(-0.1d);;
+        }).handleInterrupt(() -> {
+            this.stopElevator();
+        });
+    }
+
+    public Command armUp(){
+        return this.runOnce(() -> {
+            this.setRawArmSpeed(0.1d);;
+        }).handleInterrupt(() -> {
+            this.stopArm();
+        });
+    }
+    public Command armDown(){
+        return this.runOnce(() -> {
+            this.setRawArmSpeed(-0.1d);;
+        }).handleInterrupt(() -> {
+            this.stopArm();
+        });
+    }
+
 
     public Command setElevatorPositionL1(){
         return this.runOnce(() -> {
