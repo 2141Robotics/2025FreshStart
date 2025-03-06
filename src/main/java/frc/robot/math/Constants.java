@@ -137,7 +137,7 @@ public class Constants {
 	public static final double ELEVATOR_MIN_ROTATIONS = 0d;
 	public static final double ELEVATOR_MAX_ROTATIONS = 41d;
 
-	public static final double ELEVATOR_MAX_SPEED = 0.1d;
+	public static final double ELEVATOR_MAX_SPEED = 0.2d;
 	public static final double ARM_MAX_SPEED = 0.2d;
 
 	public static final double ARM_MAX_ROTATIONS = 0.25;
@@ -149,7 +149,7 @@ public class Constants {
 	public static final double ELEVATOR_TOLERANCE = 0.3;
 
 	public static final double ELEVATOR_L1 = 0;
-	public static final double ELEVATOR_L2 = 10;
+	public static final double ELEVATOR_L2 = 9;
 	public static final double ELEVATOR_L3 = 22;
 	public static final double ELEVATOR_L4 = 41;
 
@@ -166,4 +166,7 @@ public class Constants {
 
 	public static final double ARM_UPPER_ELEVATOR_CLEARANCE = 0.2;
 	public static final double ARM_LOWER_ELEVATOR_CLEARANCE = -0.05;
+
+	public static final double ELEVATOR_TIME_TO_MAX_SPEED = 1;
+	public static final double ARM_TIME_TO_MAX_SPEED = 1;
 }

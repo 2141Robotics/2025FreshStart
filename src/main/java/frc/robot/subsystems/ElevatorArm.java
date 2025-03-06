@@ -3,9 +3,11 @@ package frc.robot.subsystems;
 import static edu.wpi.first.units.Units.Rotations;
 
 import com.ctre.phoenix6.StatusSignal;
+import com.ctre.phoenix6.configs.ClosedLoopRampsConfigs;
 import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
 import com.ctre.phoenix6.configs.FeedbackConfigs;
 import com.ctre.phoenix6.configs.MotorOutputConfigs;
+import com.ctre.phoenix6.configs.OpenLoopRampsConfigs;
 import com.ctre.phoenix6.configs.SoftwareLimitSwitchConfigs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.DutyCycleOut;
@@ -55,13 +57,16 @@ public void init(){
         .withSoftwareLimitSwitch(elevatorMotorSoftwareLimitSwitchConfig)
         .withCurrentLimits(leftTaloncCurrentLimitsConfigs);
 
+    leftTalonConfig.OpenLoopRamps = new OpenLoopRampsConfigs().withDutyCycleOpenLoopRampPeriod(Constants.ELEVATOR_TIME_TO_MAX_SPEED);
+    leftTalonConfig.ClosedLoopRamps = new ClosedLoopRampsConfigs().withDutyCycleClosedLoopRampPeriod(Constants.ELEVATOR_TIME_TO_MAX_SPEED);
+
 
     leftTalonConfig.Slot0.kP = 0.2;
     leftTalonConfig.Slot0.kI = 0.0;
-    leftTalonConfig.Slot0.kD = 0.0;
+    leftTalonConfig.Slot0.kD = 0.01;
     leftTalonConfig.Slot0.kS = 0.0;
     leftTalonConfig.Slot0.GravityType = GravityTypeValue.Elevator_Static;
-    leftTalonConfig.Slot0.kG = 0.01;
+    leftTalonConfig.Slot0.kG = 0.02;
 
     leftTalonConfig.MotorOutput.PeakForwardDutyCycle = Constants.ELEVATOR_MAX_SPEED;
     leftTalonConfig.MotorOutput.PeakReverseDutyCycle = -Constants.ELEVATOR_MAX_SPEED;
@@ -100,13 +105,17 @@ public void init(){
 
     armMotorConfig.Slot0.kP = 3.2;
     armMotorConfig.Slot0.kI = 0.05;
-    armMotorConfig.Slot0.kD = 0.01;
+    armMotorConfig.Slot0.kD = 0.20;
     armMotorConfig.Slot0.kS = 0.0;
     armMotorConfig.Slot0.GravityType = GravityTypeValue.Arm_Cosine;
     armMotorConfig.Slot0.kG = 0.02;
 
     armMotorConfig.MotorOutput.PeakForwardDutyCycle = Constants.ARM_MAX_SPEED;
     armMotorConfig.MotorOutput.PeakReverseDutyCycle = -Constants.ARM_MAX_SPEED;
+
+    armMotorConfig.OpenLoopRamps = new OpenLoopRampsConfigs().withDutyCycleOpenLoopRampPeriod(Constants.ARM_TIME_TO_MAX_SPEED);
+    armMotorConfig.ClosedLoopRamps = new ClosedLoopRampsConfigs().withDutyCycleClosedLoopRampPeriod(Constants.ARM_TIME_TO_MAX_SPEED);
+
 
     this.armMotor.getConfigurator().apply(armMotorConfig);
     this.armMotor.setPosition(Constants.ARM_STOW);
