@@ -1,4 +1,3 @@
-
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
@@ -6,35 +5,24 @@ package frc.robot.subsystems;
 
 import static edu.wpi.first.units.Units.*;
 
-import java.util.ArrayList;
-
 import com.ctre.phoenix6.controls.DutyCycleOut;
-import com.ctre.phoenix6.controls.PositionDutyCycle;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.NeutralModeValue;
-import com.mineinjava.quail.RobotMovement;
-import com.mineinjava.quail.util.geometry.Vec2d;
-import com.studica.frc.AHRS;
-
-import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.util.sendable.SendableBuilder;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.math.Constants;
 
 public class Climber extends SubsystemBase {
 
-    private final TalonFX climberMotor;
+  private final TalonFX climberMotor;
 
   /** Creates a new ExampleSubsystem. */
-  public Climber(){
+  public Climber() {
 
     climberMotor = new TalonFX(Constants.CLIMBER_MOTOR_ID);
     climberMotor.setNeutralMode(NeutralModeValue.Brake);
-
   }
-
 
   /**
    * Example command factory method.
@@ -63,18 +51,18 @@ public class Climber extends SubsystemBase {
   @Override
   public void periodic() {
     super.periodic();
-    
   }
-  
-    public void setRawSpeed(double speed) {
-        this.climberMotor.setControl(new DutyCycleOut(speed));
-    }
 
-    public Command setSpeed(double speed){
-        return this.runOnce(() -> {
-            this.setRawSpeed(speed);
+  public void setRawSpeed(double speed) {
+    this.climberMotor.setControl(new DutyCycleOut(speed));
+  }
+
+  public Command setSpeed(double speed) {
+    return this.runOnce(
+        () -> {
+          this.setRawSpeed(speed);
         });
-    }
+  }
 
   @Override
   public void simulationPeriodic() {
@@ -84,6 +72,5 @@ public class Climber extends SubsystemBase {
   @Override
   public void initSendable(SendableBuilder builder) {
     super.initSendable(builder);
-
   }
 }

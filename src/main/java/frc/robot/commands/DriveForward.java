@@ -5,14 +5,8 @@
 package frc.robot.commands;
 
 import com.mineinjava.quail.RobotMovement;
-import com.mineinjava.quail.util.geometry.AccelerationLimitedDouble;
-import com.mineinjava.quail.util.geometry.AccelerationLimitedVector;
 import com.mineinjava.quail.util.geometry.Vec2d;
-
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import frc.robot.math.Constants;
 import frc.robot.subsystems.Drivetrain;
 
 /** An example command that uses an example subsystem. */
@@ -20,9 +14,7 @@ public class DriveForward extends Command {
 
   private Drivetrain drivetrain;
 
-  /**
-   * Creates a new ExampleCommand.
-   */
+  /** Creates a new ExampleCommand. */
   public DriveForward(Drivetrain drivetrain) {
 
     this.drivetrain = drivetrain;
