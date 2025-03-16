@@ -6,13 +6,16 @@ package frc.robot;
 
 import frc.robot.commands.Autos;
 import frc.robot.commands.Drive;
+import frc.robot.commands.DriveForward;
 import frc.robot.commands.ExampleCommand;
-import frc.robot.commands.elevatorMovement;
-import frc.robot.commands.elevatorMovement;
+import frc.robot.commands.ElevatorMovement;
 import frc.robot.math.Constants;
-import frc.robot.subsystems.elevator;
+import frc.robot.subsystems.ElevatorArm;
+import frc.robot.subsystems.Climber;
+import frc.robot.subsystems.Drivetrain;
 
 import com.mineinjava.quail.util.geometry.Vec2d;
+
 import com.studica.frc.AHRS;
 import com.studica.frc.AHRS.NavXComType;
 
@@ -20,6 +23,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -34,11 +38,18 @@ public class RobotContainer {
   Drive drive;
 
   // The robot's subsystems and commands are defined here...
-  // private final Drivetrain drivetrain = new Drivetrain(gyro);
-  public final elevator elevator = new elevator(Constants.ELEVATOR_IDS[0], Constants.ELEVATOR_IDS[1]);
+  public final Drivetrain drivetrain = new Drivetrain(gyro);
+  public final Climber climber = new Climber();
+
   // Replace with CommandPS4Controller or CommandJoystick if needed
   private final CommandXboxController driverController =
       new CommandXboxController(Constants.DRIVER_PORT);
+  
+  private final CommandXboxController operatorController =
+      new CommandXboxController(Constants.OPERATOR_PORT);
+
+      
+  public final ElevatorArm elevator = new ElevatorArm(Constants.ELEVATOR_IDS[0], Constants.ELEVATOR_IDS[1], Constants.ARM_MOTOR_ID);
   // private final CommandXboxController operatorController =
   //     new CommandXboxController(Constants.OPERATOR_PORT);
 
@@ -64,15 +75,47 @@ public class RobotContainer {
     //new Trigger(m_exampleSubsystem::exampleCondition)
     //    .onTrue(new ExampleCommand(m_exampleSubsystem));
 
-    // drive = new Drive(drivetrain, driverController);
+    drive = new Drive(drivetrain, driverController);
 
-    // drivetrain.setDefaultCommand(drive);
+    drivetrain.setDefaultCommand(drive);
+    driverController.back().onTrue(drivetrain.resetGyroCommand());
 
+    //Debugging only
+    //driverController.a().whileTrue(new DriveForward(drivetrain));
+
+    // fixme: uncomment
     // Elevator & Arm Controls
-    driverController.y().whileTrue(new elevatorMovement(elevator, .1));
-    driverController.a().whileTrue(new elevatorMovement(elevator, -.1));
+    operatorController.y().whileTrue(this.elevator.L4Sequence());
+    operatorController.a().whileTrue(this.elevator.L1Sequence());
+    operatorController.x().onTrue(this.elevator.L2Sequence());
+    operatorController.b().onTrue(this.elevator.L3Sequence());
 
-    // Schedule `exampleMethodCommand` when the Xbox con                                         2222troller's B button is pressed,
+    operatorController.back().onTrue(this.elevator.pickupSequence());
+
+    //TODO reinstate
+    //operatorController.rightBumper().onTrue(this.elevator.setElevatorPositionStow());
+    //operatorController.leftBumper().onTrue(this.elevator.setArmPositionStow());
+
+    operatorController.povUp().whileTrue(this.elevator.elevatorUp());
+    operatorController.povDown().whileTrue(this.elevator.elevatorDown());
+    operatorController.povLeft().whileTrue(this.elevator.armDown());
+    operatorController.povRight().whileTrue(this.elevator.armUp());
+    
+    operatorController.povUp().onFalse(this.elevator.stopElevatorCommand());
+    operatorController.povDown().onFalse(this.elevator.stopElevatorCommand());
+    operatorController.povLeft().onFalse(this.elevator.stopArmCommand());
+    operatorController.povRight().onFalse(this.elevator.stopArmCommand());
+
+    driverController.rightBumper().onTrue(this.climber.setSpeed(Constants.CLIMBER_SPEED));
+    driverController.rightBumper().onFalse(this.climber.setSpeed(0));
+
+    driverController.leftBumper().onTrue(this.climber.setSpeed(-Constants.CLIMBER_SPEED));
+    driverController.leftBumper().onFalse(this.climber.setSpeed(0));
+
+  
+
+
+    // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,
     // cancelling on release.
     //driverController.b().whileTrue(m_exampleSubsystem.exampleMethodCommand());
 

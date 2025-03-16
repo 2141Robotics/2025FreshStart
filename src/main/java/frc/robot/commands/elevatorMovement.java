@@ -1,14 +1,13 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.Drivetrain;
-import frc.robot.subsystems.elevator;
+import frc.robot.subsystems.ElevatorArm;
 
-public class elevatorMovement extends Command {
-    elevator m_elevator;
+public class ElevatorMovement extends Command {
+    ElevatorArm m_elevator;
     double speed;
 
-    public elevatorMovement(elevator elevator, double speed) {
+    public ElevatorMovement(ElevatorArm elevator, double speed) {
         m_elevator = elevator;
         addRequirements(m_elevator);
         this.speed = speed;
@@ -23,14 +22,14 @@ public class elevatorMovement extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-        this.m_elevator.setRawSpeed(speed);
+        this.m_elevator.setRawElevatorSpeed(speed);
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
     System.out.println("Finished elevator movement @ speed: " + this.speed);
-    this.m_elevator.stop();
+    this.m_elevator.stopElevator();
   }
 
   // Returns true when the command should end.
