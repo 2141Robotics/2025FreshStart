@@ -147,5 +147,24 @@ public class Constants {
   public static final double ELEVATOR_TIME_TO_MAX_SPEED = 1;
   public static final double ARM_TIME_TO_MAX_SPEED = 1;
 
-  public static final double CLIMBER_SPEED = 0.2;
+    public static final double CLIMBER_SPEED = 0.2;
+    
+    // PID Constants for Elevator motor
+    public static final double ELEVATOR_PID_P = 0.2;
+    public static final double ELEVATOR_PID_I = 0.0;
+    public static final double ELEVATOR_PID_D = 0.01;
+    public static final double ELEVATOR_PID_S = 0.0;
+    public static final double ELEVATOR_PID_G = 0.02;
+    
+    // PID Constants for Arm motor
+    public static final double ARM_PID_P = 3.2;
+    public static final double ARM_PID_I = 0.05;
+    public static final double ARM_PID_D = 0.20;
+    public static final double ARM_PID_S = 0.0;
+    public static final double ARM_PID_G = 0.02;
+    
+    // Manual control speeds for arm and elevator
+    public static final double ARM_MANUAL_UP_SPEED = 0.1;
+    public static final double ARM_MANUAL_DOWN_SPEED = -0.1;
+    public static final double ELEVATOR_MANUAL_DOWN_SPEED = -0.1;
 }

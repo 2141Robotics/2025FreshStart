@@ -48,6 +48,10 @@ public class Robot extends TimedRobot {
   public void robotInit() {
     m_robotContainer.elevator.init();
     m_robotContainer.drivetrain.init();
+    
+    // Add the CommandScheduler data to the SmartDashboard
+    // This single line gives us visualization of all commands and subsystems
+    SmartDashboard.putData(CommandScheduler.getInstance());
   }
 
   /** This function is called once each time the robot enters Disabled mode. */

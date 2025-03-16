@@ -75,17 +75,16 @@ public class RobotContainer {
     // driverController.a().whileTrue(new DriveForward(drivetrain));
 
     // fixme: uncomment
-    // Elevator & Arm Controls
-    operatorController.y().whileTrue(this.elevator.L4Sequence());
-    operatorController.a().whileTrue(this.elevator.L1Sequence());
-    operatorController.x().onTrue(this.elevator.L2Sequence());
-    operatorController.b().onTrue(this.elevator.L3Sequence());
+    // Elevator & Arm Controls - explicitly name sequences for dashboard visibility
+    operatorController.y().whileTrue(this.elevator.L4Sequence().withName("L4Sequence"));
+    operatorController.a().whileTrue(this.elevator.L1Sequence().withName("L1Sequence"));
+    operatorController.x().onTrue(this.elevator.L2Sequence().withName("L2Sequence"));
+    operatorController.b().onTrue(this.elevator.L3Sequence().withName("L3Sequence"));
 
-    operatorController.back().onTrue(this.elevator.pickupSequence());
+    operatorController.back().onTrue(this.elevator.pickupSequence().withName("PickupSequence"));
 
-    // TODO reinstate
-    // operatorController.rightBumper().onTrue(this.elevator.setElevatorPositionStow());
-    // operatorController.leftBumper().onTrue(this.elevator.setArmPositionStow());
+    // Stow controls - explicitly name the command for dashboard visibility
+    operatorController.rightBumper().onTrue(this.elevator.stowSequence().withName("StowSequence"));
 
     operatorController.povUp().whileTrue(this.elevator.elevatorUp());
     operatorController.povDown().whileTrue(this.elevator.elevatorDown());
