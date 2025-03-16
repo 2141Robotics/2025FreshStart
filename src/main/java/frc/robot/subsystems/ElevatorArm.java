@@ -158,7 +158,7 @@ public class ElevatorArm extends SubsystemBase {
 
         this.armMotor.getConfigurator().apply(armConfig);
 
-        this.armMotor.setPosition(Constants.ARM_STOW);
+        this.armMotor.setPosition(ArmPreset.STOW.getPosition());
         this.armMotor.setNeutralMode(NeutralModeValue.Brake);
     }
 
