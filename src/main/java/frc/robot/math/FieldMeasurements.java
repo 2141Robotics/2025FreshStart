@@ -1,5 +1,3 @@
 package frc.robot.math;
 
-public class FieldMeasurements {
-    
-}
+public class FieldMeasurements {}

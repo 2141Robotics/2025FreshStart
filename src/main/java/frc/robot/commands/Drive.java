@@ -8,7 +8,6 @@ import com.mineinjava.quail.RobotMovement;
 import com.mineinjava.quail.util.geometry.AccelerationLimitedDouble;
 import com.mineinjava.quail.util.geometry.AccelerationLimitedVector;
 import com.mineinjava.quail.util.geometry.Vec2d;
-
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -18,23 +17,23 @@ import frc.robot.subsystems.Drivetrain;
 /** An example command that uses an example subsystem. */
 public class Drive extends Command {
 
-  public AccelerationLimitedVector a_leftStickVector = new AccelerationLimitedVector(
-      Constants.MOVEMENT_ACCELERATION_LIMIT);
+  public AccelerationLimitedVector a_leftStickVector =
+      new AccelerationLimitedVector(Constants.MOVEMENT_ACCELERATION_LIMIT);
 
-  public AccelerationLimitedVector a_rightStickVector = new AccelerationLimitedVector(
-      Constants.ROTATION_ACCELERATION_LIMIT);
+  public AccelerationLimitedVector a_rightStickVector =
+      new AccelerationLimitedVector(Constants.ROTATION_ACCELERATION_LIMIT);
 
-  public AccelerationLimitedVector a_driveVector = new AccelerationLimitedVector(Constants.DRIVE_ACCELERATION_LIMIT);
+  public AccelerationLimitedVector a_driveVector =
+      new AccelerationLimitedVector(Constants.DRIVE_ACCELERATION_LIMIT);
 
-  public AccelerationLimitedDouble a_rtrigger = new AccelerationLimitedDouble(Constants.SPEED_ACCELERATION_LIMIT);
+  public AccelerationLimitedDouble a_rtrigger =
+      new AccelerationLimitedDouble(Constants.SPEED_ACCELERATION_LIMIT);
 
   private Drivetrain drivetrain;
 
   private CommandXboxController driverController;
 
-  /**
-   * Creates a new ExampleCommand.
-   */
+  /** Creates a new ExampleCommand. */
   public Drive(Drivetrain drivetrain, CommandXboxController driverController) {
 
     this.drivetrain = drivetrain;
@@ -46,7 +45,7 @@ public class Drive extends Command {
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() { }
+  public void initialize() {}
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
@@ -72,7 +71,7 @@ public class Drive extends Command {
 
     double scaledSpeed = Constants.BASE_SPEED;
 
-    //Left Trigger (Slow speed) has prioroty
+    // Left Trigger (Slow speed) has prioroty
     if (rightTrigger > 0.08 && leftTrigger > 0.08) {
       scaledSpeed = Constants.BASE_SPEED - (Constants.BASE_SPEED * leftTrigger);
     } else if (rightTrigger > 0) {
@@ -100,8 +99,9 @@ public class Drive extends Command {
       drivetrain.stop();
     } else {
 
-      RobotMovement movement = new RobotMovement(rightStickVector.x / Constants.ROTATION_SPEED_INVERSE_SCALE,
-          newDriveVector);
+      RobotMovement movement =
+          new RobotMovement(
+              rightStickVector.x / Constants.ROTATION_SPEED_INVERSE_SCALE, newDriveVector);
       drivetrain.drive(movement);
 
       SmartDashboard.putNumber("driveVecX", newDriveVector.x);
@@ -111,8 +111,7 @@ public class Drive extends Command {
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {
-  }
+  public void end(boolean interrupted) {}
 
   // Returns true when the command should end.
   @Override
