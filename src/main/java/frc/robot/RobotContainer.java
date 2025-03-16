@@ -4,20 +4,6 @@
 
 package frc.robot;
 
-<<<<<<< HEAD
-=======
-import frc.robot.commands.Autos;
-import frc.robot.commands.Drive;
-import frc.robot.commands.DriveForward;
-import frc.robot.commands.ExampleCommand;
-import frc.robot.math.Constants;
-import frc.robot.subsystems.ElevatorArm;
-import frc.robot.subsystems.Climber;
-import frc.robot.subsystems.Drivetrain;
-
-import com.mineinjava.quail.util.geometry.Vec2d;
-
->>>>>>> ff42909 (Improved)
 import com.studica.frc.AHRS;
 import com.studica.frc.AHRS.NavXComType;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
