@@ -6,4 +6,3 @@ To format all your code locally, run:
 ```bash
 ./gradlew spotlessApply
 ```
-
