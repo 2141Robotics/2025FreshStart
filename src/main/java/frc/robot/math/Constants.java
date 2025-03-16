@@ -114,6 +114,8 @@ public class Constants {
 
 	public static final int ARM_MOTOR_ID = 31;
 
+	public static final int CLIMBER_MOTOR_ID = 41;
+
 	// Individual canCoder offsets that are determined by the Phoenix Tuner X
 	public static final double[] CANCODER_OFFSETS = new double[] {
 			-.83,
@@ -169,4 +171,6 @@ public class Constants {
 
 	public static final double ELEVATOR_TIME_TO_MAX_SPEED = 1;
 	public static final double ARM_TIME_TO_MAX_SPEED = 1;
+
+    public static final double CLIMBER_SPEED = 0.2;
 }

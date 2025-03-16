@@ -58,12 +58,6 @@ public class Drive extends Command {
     double rightX = driverController.getRightX();
     double rightY = -driverController.getRightY();
 
-    // TODO: Remove
-    // double leftX = 0;
-    // double leftY = -1; // Y UP is negative
-    // double rightX = 0;
-    // double rightY = 0;
-
     double rightTrigger = driverController.getRightTriggerAxis();
     double leftTrigger = driverController.getLeftTriggerAxis();
 

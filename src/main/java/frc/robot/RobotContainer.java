@@ -11,6 +11,7 @@ import frc.robot.commands.ExampleCommand;
 import frc.robot.commands.ElevatorMovement;
 import frc.robot.math.Constants;
 import frc.robot.subsystems.ElevatorArm;
+import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.Drivetrain;
 
 import com.mineinjava.quail.util.geometry.Vec2d;
@@ -22,6 +23,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -37,6 +39,8 @@ public class RobotContainer {
 
   // The robot's subsystems and commands are defined here...
   public final Drivetrain drivetrain = new Drivetrain(gyro);
+  public final Climber climber = new Climber();
+
   // Replace with CommandPS4Controller or CommandJoystick if needed
   private final CommandXboxController driverController =
       new CommandXboxController(Constants.DRIVER_PORT);
@@ -88,8 +92,9 @@ public class RobotContainer {
 
     operatorController.back().onTrue(this.elevator.pickupSequence());
 
-    operatorController.rightBumper().onTrue(this.elevator.setElevatorPositionStow());
-    operatorController.leftBumper().onTrue(this.elevator.setArmPositionStow());
+    //TODO reinstate
+    //operatorController.rightBumper().onTrue(this.elevator.setElevatorPositionStow());
+    //operatorController.leftBumper().onTrue(this.elevator.setArmPositionStow());
 
     operatorController.povUp().whileTrue(this.elevator.elevatorUp());
     operatorController.povDown().whileTrue(this.elevator.elevatorDown());
@@ -100,6 +105,12 @@ public class RobotContainer {
     operatorController.povDown().onFalse(this.elevator.stopElevatorCommand());
     operatorController.povLeft().onFalse(this.elevator.stopArmCommand());
     operatorController.povRight().onFalse(this.elevator.stopArmCommand());
+
+    driverController.rightBumper().onTrue(this.climber.setSpeed(Constants.CLIMBER_SPEED));
+    driverController.rightBumper().onFalse(this.climber.setSpeed(0));
+
+    driverController.leftBumper().onTrue(this.climber.setSpeed(-Constants.CLIMBER_SPEED));
+    driverController.leftBumper().onFalse(this.climber.setSpeed(0));
 
   
 
