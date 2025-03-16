@@ -148,4 +148,76 @@ public class Constants {
   public static final double ARM_TIME_TO_MAX_SPEED = 1;
 
   public static final double CLIMBER_SPEED = 0.2;
+
+  // PID Constants for Elevator motor
+  public static final double ELEVATOR_PID_P = 0.2;
+  public static final double ELEVATOR_PID_I = 0.0;
+  public static final double ELEVATOR_PID_D = 0.01;
+  public static final double ELEVATOR_PID_S = 0.0;
+  public static final double ELEVATOR_PID_G = 0.02;
+
+  // PID Constants for Arm motor
+  public static final double ARM_PID_P = 3.2;
+  public static final double ARM_PID_I = 0.05;
+  public static final double ARM_PID_D = 0.20;
+  public static final double ARM_PID_S = 0.0;
+  public static final double ARM_PID_G = 0.02;
+
+  // Manual control speeds for arm and elevator
+  public static final double ARM_MANUAL_UP_SPEED = 0.1;
+  public static final double ARM_MANUAL_DOWN_SPEED = -0.1;
+  public static final double ELEVATOR_MANUAL_DOWN_SPEED = -0.1;
+
+  /**
+   * Preset elevator positions in motor rotations. The elevator uses rotations as the unit of
+   * measurement where: - 0.0 = fully retracted (bottom position) - Higher values = higher elevator
+   * positions
+   */
+  public enum ElevatorPreset {
+    L1(0),
+    L2(9),
+    L3(22),
+    L4(41),
+    STOW(0),
+    TRANSITION(14),
+    PICKUP(10);
+
+    private final double position;
+
+    ElevatorPreset(double position) {
+      this.position = position;
+    }
+
+    public double getPosition() {
+      return position;
+    }
+  }
+
+  /**
+   * Preset arm positions in rotations. The arm uses rotations as the unit of measurement where: -
+   * Positive values = arm raised up - Negative values = arm pointing down - 0.0 = arm horizontal
+   * (pointing straight out)
+   */
+  public enum ArmPreset {
+    // Core positions for game actions
+    STOW(0.25), // Stored/starting position (raised up)
+    OUT(0), // Extended straight out (horizontal)
+    DOWN(-0.25), // Fully down position
+    SCORE_HIGH(0.17), // Position for scoring in high goals
+    SCORE_LOW(0.15), // Position for scoring in low goals
+
+    // Safety clearance positions
+    UPPER_CLEARANCE(0.2), // Safe position when elevator needs to move up
+    LOWER_CLEARANCE(-0.05); // Safe position when elevator needs to move down
+
+    private final double position;
+
+    ArmPreset(double position) {
+      this.position = position;
+    }
+
+    public double getPosition() {
+      return position;
+    }
+  }
 }

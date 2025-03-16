@@ -74,8 +74,7 @@ public class RobotContainer {
     // Debugging only
     // driverController.a().whileTrue(new DriveForward(drivetrain));
 
-    // fixme: uncomment
-    // Elevator & Arm Controls
+    // Elevator & Arm Controls - explicitly name sequences for dashboard visibility
     operatorController.y().whileTrue(this.elevator.L4Sequence());
     operatorController.a().whileTrue(this.elevator.L1Sequence());
     operatorController.x().onTrue(this.elevator.L2Sequence());
@@ -83,10 +82,7 @@ public class RobotContainer {
 
     operatorController.back().onTrue(this.elevator.pickupSequence());
 
-    // TODO reinstate
-    // operatorController.rightBumper().onTrue(this.elevator.setElevatorPositionStow());
-    // operatorController.leftBumper().onTrue(this.elevator.setArmPositionStow());
-
+    operatorController.rightBumper().onTrue(this.elevator.stowSequence());
     operatorController.povUp().whileTrue(this.elevator.elevatorUp());
     operatorController.povDown().whileTrue(this.elevator.elevatorDown());
     operatorController.povLeft().whileTrue(this.elevator.armDown());
