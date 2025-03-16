@@ -49,8 +49,7 @@ public class Robot extends TimedRobot {
     m_robotContainer.elevator.init();
     m_robotContainer.drivetrain.init();
     
-    // Add the CommandScheduler data to the SmartDashboard
-    // This single line gives us visualization of all commands and subsystems
+    // Add the CommandScheduler data to the SmartDashboard, this will log all running commands and subsystems
     SmartDashboard.putData(CommandScheduler.getInstance());
   }
 

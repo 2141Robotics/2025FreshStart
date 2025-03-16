@@ -4,6 +4,20 @@
 
 package frc.robot;
 
+<<<<<<< HEAD
+=======
+import frc.robot.commands.Autos;
+import frc.robot.commands.Drive;
+import frc.robot.commands.DriveForward;
+import frc.robot.commands.ExampleCommand;
+import frc.robot.math.Constants;
+import frc.robot.subsystems.ElevatorArm;
+import frc.robot.subsystems.Climber;
+import frc.robot.subsystems.Drivetrain;
+
+import com.mineinjava.quail.util.geometry.Vec2d;
+
+>>>>>>> ff42909 (Improved)
 import com.studica.frc.AHRS;
 import com.studica.frc.AHRS.NavXComType;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -74,18 +88,15 @@ public class RobotContainer {
     // Debugging only
     // driverController.a().whileTrue(new DriveForward(drivetrain));
 
-    // fixme: uncomment
     // Elevator & Arm Controls - explicitly name sequences for dashboard visibility
-    operatorController.y().whileTrue(this.elevator.L4Sequence().withName("L4Sequence"));
-    operatorController.a().whileTrue(this.elevator.L1Sequence().withName("L1Sequence"));
-    operatorController.x().onTrue(this.elevator.L2Sequence().withName("L2Sequence"));
-    operatorController.b().onTrue(this.elevator.L3Sequence().withName("L3Sequence"));
+    operatorController.y().whileTrue(this.elevator.L4Sequence());
+    operatorController.a().whileTrue(this.elevator.L1Sequence());
+    operatorController.x().onTrue(this.elevator.L2Sequence());
+    operatorController.b().onTrue(this.elevator.L3Sequence());
 
-    operatorController.back().onTrue(this.elevator.pickupSequence().withName("PickupSequence"));
+    operatorController.back().onTrue(this.elevator.pickupSequence());
 
-    // Stow controls - explicitly name the command for dashboard visibility
-    operatorController.rightBumper().onTrue(this.elevator.stowSequence().withName("StowSequence"));
-
+    operatorController.rightBumper().onTrue(this.elevator.stowSequence());
     operatorController.povUp().whileTrue(this.elevator.elevatorUp());
     operatorController.povDown().whileTrue(this.elevator.elevatorDown());
     operatorController.povLeft().whileTrue(this.elevator.armDown());
