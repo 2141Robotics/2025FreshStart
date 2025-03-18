@@ -25,8 +25,6 @@ public class RobotContainer {
 
   AHRS gyro = new AHRS(NavXComType.kMXP_SPI);
 
-  Drive drive;
-
   // The robot's subsystems and commands are defined here...
   public final Drivetrain drivetrain = new Drivetrain(gyro);
   public final Climber climber = new Climber();
@@ -39,7 +37,7 @@ public class RobotContainer {
       new CommandXboxController(Constants.OPERATOR_PORT);
 
   public final ElevatorArm elevator =
-      new ElevatorArm(Constants.ELEVATOR_IDS[0], Constants.ELEVATOR_IDS[1], Constants.ARM_MOTOR_ID);
+      new ElevatorArm(Constants.ELEVATOR_IDS[0], Constants.ELEVATOR_IDS[1], Constants.ARM_MOTOR_ID, Constants.HOPPER_SWITCH, Constants.ARM_SWITCH);
 
   // private final CommandXboxController operatorController =
   //     new CommandXboxController(Constants.OPERATOR_PORT);
@@ -66,7 +64,7 @@ public class RobotContainer {
     // new Trigger(m_exampleSubsystem::exampleCondition)
     //    .onTrue(new ExampleCommand(m_exampleSubsystem));
 
-    drive = new Drive(drivetrain, driverController);
+    Drive drive = new Drive(drivetrain, driverController);
 
     drivetrain.setDefaultCommand(drive);
     driverController.back().onTrue(drivetrain.resetGyroCommand());

@@ -148,4 +148,10 @@ public class Constants {
   public static final double ARM_TIME_TO_MAX_SPEED = 1;
 
   public static final double CLIMBER_SPEED = 0.2;
+
+  public static final double ELEVATOR_STATE_DEADBAND = 0.05;
+  public static final double ELEVATOR_STALL_CURRENT = 10;
+
+  public static final int HOPPER_SWITCH = 0;
+  public static final int ARM_SWITCH = 1;
 }

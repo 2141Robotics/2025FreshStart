@@ -4,7 +4,17 @@
 
 package frc.robot;
 
+import edu.wpi.first.units.Units;
+
+import edu.wpi.first.units.measure.Distance;
+import edu.wpi.first.wpilibj.AddressableLED;
+import edu.wpi.first.wpilibj.AddressableLEDBuffer;
+import edu.wpi.first.wpilibj.AddressableLEDBufferView;
+import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.LEDPattern;
+import edu.wpi.first.wpilibj.LEDPattern.GradientType;
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 
@@ -16,13 +26,48 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
 
+  
+  private AddressableLED m_led;
+  private AddressableLEDBuffer m_led_buffer;
+
+  private AddressableLEDBufferView left;
+  private AddressableLEDBufferView right;
+
+  private final LEDPattern m_rainbow = LEDPattern.gradient(GradientType.kContinuous, Color.kGreen, Color.kBlue);
+  private static final Distance kLedSpacing = Units.Meters.of(1 / 120.0);
+  
+
+  private final LEDPattern m_scrollingRainbow =
+      m_rainbow.scrollAtAbsoluteSpeed(Units.MetersPerSecond.of(1), kLedSpacing);
+
   private final RobotContainer m_robotContainer;
+
+  DigitalInput armLimitSwitch, trayLimitSwitch;
 
   /**
    * This function is run when the robot is first started up and should be used for any
    * initialization code.
    */
   public Robot() {
+
+    m_led = new AddressableLED(0);
+    m_led_buffer = new AddressableLEDBuffer(288);
+    m_led.setLength(m_led_buffer.getLength());
+
+    m_led.setData(m_led_buffer);
+    m_led.start();
+
+    left = m_led_buffer.createView(0, 143);
+    
+    right = m_led_buffer.createView(144, 287).reversed();
+
+
+    m_scrollingRainbow.applyTo(left);
+    m_scrollingRainbow.applyTo(right);
+    m_led.setData(m_led_buffer);
+
+    armLimitSwitch = new DigitalInput(1);
+    trayLimitSwitch = new DigitalInput(0);
     // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
     // autonomous chooser on the dashboard.
     m_robotContainer = new RobotContainer();
@@ -37,10 +82,19 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void robotPeriodic() {
+
+
     // Runs the Scheduler.  This is responsible for polling buttons, adding newly-scheduled
     // commands, running already-scheduled commands, removing finished or interrupted commands,
     // and running subsystem periodic() methods.  This must be called from the robot's periodic
     // block in order for anything in the Command-based framework to work.
+    m_scrollingRainbow.applyTo(left);
+    m_scrollingRainbow.applyTo(right);
+
+    m_led.setData(m_led_buffer);
+
+    System.out.println("ARM SWITCH" + armLimitSwitch.get());
+    System.out.println("TRAY SWITCH" + trayLimitSwitch.get());
     CommandScheduler.getInstance().run();
   }
 

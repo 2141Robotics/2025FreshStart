@@ -2,6 +2,8 @@ package frc.robot.subsystems;
 
 import static edu.wpi.first.units.Units.Rotations;
 
+import java.io.DataInput;
+
 import com.ctre.phoenix6.configs.ClosedLoopRampsConfigs;
 import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
 import com.ctre.phoenix6.configs.FeedbackConfigs;
@@ -18,11 +20,14 @@ import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.util.sendable.SendableBuilder;
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.math.Constants;
+import frc.robot.math.MechanismStates.CoralState;
+import frc.robot.math.MechanismStates.ElevatorState;
 
 // 1. Initialize talons
 // 2. Configure talons
@@ -32,6 +37,8 @@ public class ElevatorArm extends SubsystemBase {
   private final TalonFX leftMotor;
   private final TalonFX rightMotor;
   private final TalonFX armMotor;
+  private final DigitalInput hopperSwitch;
+  private final DigitalInput armSwitch;
 
   public void init() {
     System.out.println("Initializing elevator!");
@@ -124,10 +131,12 @@ public class ElevatorArm extends SubsystemBase {
     this.armMotor.setNeutralMode(NeutralModeValue.Brake);
   }
 
-  public ElevatorArm(int leftMotorID, int rightMotorID, int armMotorID) {
+  public ElevatorArm(int leftMotorID, int rightMotorID, int armMotorID, int hopperSwitchID, int armSwitchID) {
     this.leftMotor = new TalonFX(leftMotorID);
     this.rightMotor = new TalonFX(rightMotorID);
     this.armMotor = new TalonFX(armMotorID);
+    this.hopperSwitch = new DigitalInput(hopperSwitchID);
+    this.armSwitch = new DigitalInput(armSwitchID);
   }
 
   public void stopElevator() {
@@ -461,5 +470,35 @@ public class ElevatorArm extends SubsystemBase {
         this.setArmPositionSCORE_HIGH(),
         this.WaitForArmBelow(Constants.ARM_UPPER_ELEVATOR_CLEARANCE),
         this.setElevatorPositionL4());
+  }
+
+  public ElevatorState getElevatorState(){
+    if (this.leftMotor.getVelocity().getValueAsDouble() >= Constants.ELEVATOR_STATE_DEADBAND){
+      return ElevatorState.MOVING_UP;
+    }
+    if (this.leftMotor.getVelocity().getValueAsDouble() <= -Constants.ELEVATOR_STATE_DEADBAND){
+      return ElevatorState.MOVING_DOWN;
+    }
+    if (this.leftMotor.getPosition().getValueAsDouble() <= Constants.ELEVATOR_TOLERANCE
+     && this.armMotor.getPosition().getValueAsDouble() >= Constants.ARM_STOW + Constants.ARM_TOLERANCE){
+      return ElevatorState.STOWED;
+    }
+    if (this.leftMotor.getTorqueCurrent().getValueAsDouble() <= Constants.ELEVATOR_STALL_CURRENT) {
+      return ElevatorState.BLOCKED;
+    }
+    if (Math.abs(this.leftMotor.getClosedLoopError().getValueAsDouble()) < Constants.ELEVATOR_TOLERANCE){
+      return ElevatorState.IN_POSITION;
+    }
+    return ElevatorState.NONE;
+  }
+
+  public CoralState getCoralState() {
+    if (this.armSwitch.get()){
+      return CoralState.CORAL_ARM;
+    }
+    if (this.hopperSwitch.get()){
+      return CoralState.CORAL_HOPPER;
+    }
+    return CoralState.NO_CORAL;
   }
 }

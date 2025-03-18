@@ -88,6 +88,8 @@ public class Drivetrain extends SubsystemBase {
     if (canDrive()) {
       quailSwerveDrive.drive(robotMovement, this.gyro.getAngle());
       // System.out.println("GYRO " + this.gyro.getAngle());
+    } else {
+      System.out.println("cannot drive, calibrating gyro");
     }
   }
 
