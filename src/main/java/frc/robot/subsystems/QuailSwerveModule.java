@@ -92,6 +92,10 @@ public class QuailSwerveModule extends SwerveModuleBase {
     this.steeringMotor.stopMotor();
   }
 
+  public Vec2d getCurrentMovement(){
+    return new Vec2d(this.currentAngle, this.drivingMotor.getVelocity().getValueAsDouble() * Math.PI * 2 * Constants.WHEEL_DIAMETER / this.driveRatio, false);
+  }
+
   /*
    * public Vec2d getCurrentMovement() {
    * double angle = this.canCoder.getAbsolutePosition().refresh().getValue() * (2

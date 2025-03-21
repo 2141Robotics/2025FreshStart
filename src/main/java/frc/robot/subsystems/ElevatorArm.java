@@ -2,8 +2,6 @@ package frc.robot.subsystems;
 
 import static edu.wpi.first.units.Units.Rotations;
 
-import java.io.DataInput;
-
 import com.ctre.phoenix6.configs.ClosedLoopRampsConfigs;
 import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
 import com.ctre.phoenix6.configs.FeedbackConfigs;
@@ -37,8 +35,8 @@ public class ElevatorArm extends SubsystemBase {
   private final TalonFX leftMotor;
   private final TalonFX rightMotor;
   private final TalonFX armMotor;
-  private final DigitalInput hopperSwitch;
-  private final DigitalInput armSwitch;
+  public DigitalInput hopperSwitch;
+  public DigitalInput armSwitch;
 
   public void init() {
     System.out.println("Initializing elevator!");
@@ -493,10 +491,10 @@ public class ElevatorArm extends SubsystemBase {
   }
 
   public CoralState getCoralState() {
-    if (this.armSwitch.get()){
+    if (!this.armSwitch.get()){
       return CoralState.CORAL_ARM;
     }
-    if (this.hopperSwitch.get()){
+    if (!this.hopperSwitch.get()){
       return CoralState.CORAL_HOPPER;
     }
     return CoralState.NO_CORAL;

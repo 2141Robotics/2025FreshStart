@@ -6,7 +6,11 @@ import com.ctre.phoenix6.controls.ControlRequest;
 import com.ctre.phoenix6.controls.StaticBrake;
 import com.mineinjava.quail.RobotMovement;
 import com.mineinjava.quail.SwerveDrive;
+import com.mineinjava.quail.util.geometry.Vec2d;
+
 import frc.robot.math.Constants;
+
+import java.util.ArrayList;
 import java.util.List;
 
 public class QuailSwerveDrive extends SwerveDrive<QuailSwerveModule> {
@@ -60,6 +64,14 @@ public class QuailSwerveDrive extends SwerveDrive<QuailSwerveModule> {
     for (QuailSwerveModule module : this.modules) {
       module.setBrake(brake);
     }
+  }
+
+  public ArrayList<Vec2d> getModuleSpeeds() {
+    ArrayList<Vec2d> vectors = new ArrayList<Vec2d>();
+    for (QuailSwerveModule module : this.swerveModules) {
+      vectors.add(((QuailSwerveModule) module).getCurrentMovement());
+    }
+    return vectors;
   }
 
   /*

@@ -17,11 +17,17 @@ public class Constants {
    *
    */
 
+   public static final double INCHES_PER_METER = 39.3701;
+   public static final double KALMAN_FILTER_W = 0.015;
+   public static final double SECONDS_TO_MS = 1000;
+
   /** The delay in milliseconds before a report gets sent to DriverStation if an action fails. */
   // public static final int MS_DELAY = 30;
 
   // The port of the driver controller
   public static final int DRIVER_PORT = 0;
+
+  public static final double LOOPTIME = 0.02;
 
   // The port of the operator (secondary driver) controller
   public static final int OPERATOR_PORT = 1;
@@ -108,14 +114,14 @@ public class Constants {
 
   //////////// ELEVATOR / ARM Constants
 
-  public static final double ELEVATOR_MANUAL_SPEED = 0.1;
+  public static final double ELEVATOR_MANUAL_SPEED = 0.2;
 
   // Bounds for the elevator in rotations
   public static final double ELEVATOR_MIN_ROTATIONS = 0d;
   public static final double ELEVATOR_MAX_ROTATIONS = 41d;
 
-  public static final double ELEVATOR_MAX_SPEED = 0.2d;
-  public static final double ARM_MAX_SPEED = 0.2d;
+  public static final double ELEVATOR_MAX_SPEED = 0.3d;
+  public static final double ARM_MAX_SPEED = 0.3d;
 
   public static final double ARM_MAX_ROTATIONS = 0.25;
   public static final double ARM_MIN_ROTATIONS = -0.25;
@@ -144,12 +150,12 @@ public class Constants {
   public static final double ARM_UPPER_ELEVATOR_CLEARANCE = 0.2;
   public static final double ARM_LOWER_ELEVATOR_CLEARANCE = -0.05;
 
-  public static final double ELEVATOR_TIME_TO_MAX_SPEED = 1;
-  public static final double ARM_TIME_TO_MAX_SPEED = 1;
+  public static final double ELEVATOR_TIME_TO_MAX_SPEED = 0.2;
+  public static final double ARM_TIME_TO_MAX_SPEED = 0.2;
 
   public static final double CLIMBER_SPEED = 0.2;
 
-  public static final double ELEVATOR_STATE_DEADBAND = 0.05;
+  public static final double ELEVATOR_STATE_DEADBAND = 0.50;
   public static final double ELEVATOR_STALL_CURRENT = 10;
 
   public static final int HOPPER_SWITCH = 0;

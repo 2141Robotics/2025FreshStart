@@ -14,6 +14,7 @@ import frc.robot.math.Constants;
 import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.ElevatorArm;
+import frc.robot.subsystems.LEDSubsystem;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -36,9 +37,12 @@ public class RobotContainer {
   private final CommandXboxController operatorController =
       new CommandXboxController(Constants.OPERATOR_PORT);
 
+  
+
   public final ElevatorArm elevator =
       new ElevatorArm(Constants.ELEVATOR_IDS[0], Constants.ELEVATOR_IDS[1], Constants.ARM_MOTOR_ID, Constants.HOPPER_SWITCH, Constants.ARM_SWITCH);
 
+  public final LEDSubsystem led = new LEDSubsystem(elevator);
   // private final CommandXboxController operatorController =
   //     new CommandXboxController(Constants.OPERATOR_PORT);
 
