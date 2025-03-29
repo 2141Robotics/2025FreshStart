@@ -101,7 +101,7 @@ public class Drive extends Command {
 
       RobotMovement movement =
           new RobotMovement(
-              rightStickVector.x / Constants.ROTATION_SPEED_INVERSE_SCALE, newDriveVector);
+              -rightStickVector.x / Constants.ROTATION_SPEED_INVERSE_SCALE, newDriveVector);
       drivetrain.drive(movement);
 
       SmartDashboard.putNumber("driveVecX", newDriveVector.x);

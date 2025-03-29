@@ -73,7 +73,14 @@ public class Robot extends TimedRobot {
   public void disabledInit() {}
 
   @Override
-  public void disabledPeriodic() {}
+  public void disabledPeriodic() {
+    if (this.m_robotContainer.drivetrain.HAS_LIMELIGHT) {
+      this.m_robotContainer.led.runFire();
+    } else {
+      this.m_robotContainer.led.(LEDPattern.solid(Color.kAqua));
+    }
+
+  }
 
   /** This autonomous runs the autonomous command selected by your {@link RobotContainer} class. */
   @Override
@@ -113,7 +120,8 @@ public class Robot extends TimedRobot {
 
   /** This function is called periodically during test mode. */
   @Override
-  public void testPeriodic() {}
+  public void testPeriodic() {
+  }
 
   /** This function is called once when the robot is first started up. */
   @Override

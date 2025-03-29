@@ -8,6 +8,7 @@ import static edu.wpi.first.units.Units.*;
 import com.mineinjava.quail.RobotMovement;
 import com.mineinjava.quail.localization.KalmanFilterLocalizer;
 import com.mineinjava.quail.localization.SwerveOdometry;
+import com.mineinjava.quail.util.MathUtil;
 import com.mineinjava.quail.util.MiniPID;
 import com.mineinjava.quail.util.geometry.Pose2d;
 import com.mineinjava.quail.util.geometry.Vec2d;
@@ -33,6 +34,8 @@ public class Drivetrain extends SubsystemBase {
   private QuailSwerveDrive quailSwerveDrive;
 
   private ArrayList<QuailSwerveModule> modules;
+
+  public Boolean HAS_LIMELIGHT = false;
 
   public SwerveOdometry odometry;
   public MiniPID pidcontroller;
@@ -132,6 +135,7 @@ public class Drivetrain extends SubsystemBase {
   /** Reset the gyro to 0°. */
   public void resetGyro() {
     this.gyro.reset();
+
   }
 
   /**
@@ -173,6 +177,7 @@ public class Drivetrain extends SubsystemBase {
       SmartDashboard.putNumber(
           "Module " + (i + 1) + " angle:", this.modules.get(i).getRotations().in(Rotation));
     }
+    this.updateOdometry();
   }
 
   @Override
@@ -192,20 +197,51 @@ public class Drivetrain extends SubsystemBase {
     this.odometry.updateDeltaPoseEstimate(velocity.translation);
     this.odometry.setAngle(this.gyro.getAngle() * Math.PI * 2);
 
-    double[] pos = NetworkTableInstance.getDefault()
-      .getTable("limelight")
+    double[] LL2pos = NetworkTableInstance.getDefault()
+      .getTable("limelight-two")
+      .getEntry("botpose")
+      .getDoubleArray(new double[6]);
+
+    double[] LL3pos = NetworkTableInstance.getDefault()
+      .getTable("limelight-three")
       .getEntry("botpose")
       .getDoubleArray(new double[6]);
     
-    SmartDashboard.putNumberArray("Limelight Pos", pos);
+    SmartDashboard.putNumberArray("Limelight 2 Pos", LL2pos);
+    SmartDashboard.putNumberArray("Limelight 3 Pos", LL3pos);
+
+
+
     double LX = 0;
     double LY = 0;
     double LATENCY = 0;
 
-    if (pos.length == 7) {
-      LX = pos[1] * Constants.INCHES_PER_METER;
-      LY = -pos[0] * Constants.INCHES_PER_METER;
-      LATENCY = pos[6];
+
+
+    if (LL3pos.length >= 7) {
+      LX = LL3pos[1] * Constants.INCHES_PER_METER;
+      LY = -LL3pos[0] * Constants.INCHES_PER_METER;
+      LATENCY = LL3pos[6];
+      if (LL3pos[0] != 0){
+        NetworkTableInstance.getDefault().getTable("limelight-three").getEntry("ledMode").setNumber(3);
+      }
+      else {
+        NetworkTableInstance.getDefault().getTable("limelight-three").getEntry("ledMode").setNumber(1);
+        System.out.println("LL3 no");
+      }
+    }
+    if (LL2pos.length >= 7) {
+      if (LX==0){
+        LX = LL2pos[1] * Constants.INCHES_PER_METER;
+        LY = -LL2pos[0] * Constants.INCHES_PER_METER;
+        LATENCY = LL2pos[6];
+      }
+      if (LL2pos[0] != 0){
+        NetworkTableInstance.getDefault().getTable("limelight-two").getEntry("ledMode").setNumber(3);
+      }
+      else {
+        NetworkTableInstance.getDefault().getTable("limelight-two").getEntry("ledMode").setNumber(1);
+      }
     }
 
     if (DriverStation.getAlliance().orElse(Alliance.Red) == Alliance.Blue) {
@@ -220,12 +256,14 @@ public class Drivetrain extends SubsystemBase {
     double w = Constants.KALMAN_FILTER_W;
     if ((LX == 0) && (LY == 0)) {
       w = 0;
+      this.HAS_LIMELIGHT = false;
+    } else {
+      this.HAS_LIMELIGHT = true;
     }
-
     
     this.kalmanFilter.update(
         new Pose2d(LX, LY, 0),
-        new Pose2d(velocity.translation.rotate(-this.gyro.getAngle(), true)),
+        new Pose2d(velocity.translation.rotate(-this.gyro.getAngle(), true), 0),
         LATENCY,
         w,
         0,

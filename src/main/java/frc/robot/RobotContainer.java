@@ -72,22 +72,23 @@ public class RobotContainer {
 
     drivetrain.setDefaultCommand(drive);
     driverController.back().onTrue(drivetrain.resetGyroCommand());
+    driverController.back().onTrue(led.blinkLEDs());
 
     // Debugging only
     // driverController.a().whileTrue(new DriveForward(drivetrain));
 
     // fixme: uncomment
     // Elevator & Arm Controls
-    operatorController.y().whileTrue(this.elevator.L4Sequence());
-    operatorController.a().whileTrue(this.elevator.L1Sequence());
-    operatorController.x().onTrue(this.elevator.L2Sequence());
+    operatorController.y().onTrue(this.elevator.L4Sequence());
+    operatorController.x().onTrue(this.elevator.L1Sequence());
+    operatorController.a().onTrue(this.elevator.L2Sequence());
     operatorController.b().onTrue(this.elevator.L3Sequence());
 
     operatorController.back().onTrue(this.elevator.pickupSequence());
 
     // TODO reinstate
-    // operatorController.rightBumper().onTrue(this.elevator.setElevatorPositionStow());
-    // operatorController.leftBumper().onTrue(this.elevator.setArmPositionStow());
+    operatorController.rightBumper().onTrue(this.elevator.setElevatorPositionStow());
+    operatorController.leftBumper().onTrue(this.elevator.setArmPositionStow());
 
     operatorController.povUp().whileTrue(this.elevator.elevatorUp());
     operatorController.povDown().whileTrue(this.elevator.elevatorDown());
@@ -99,11 +100,11 @@ public class RobotContainer {
     operatorController.povLeft().onFalse(this.elevator.stopArmCommand());
     operatorController.povRight().onFalse(this.elevator.stopArmCommand());
 
-    driverController.rightBumper().onTrue(this.climber.setSpeed(Constants.CLIMBER_SPEED));
-    driverController.rightBumper().onFalse(this.climber.setSpeed(0));
-
-    driverController.leftBumper().onTrue(this.climber.setSpeed(-Constants.CLIMBER_SPEED));
+    driverController.leftBumper().onTrue(this.climber.setSpeed(Constants.CLIMBER_SPEED));
     driverController.leftBumper().onFalse(this.climber.setSpeed(0));
+
+    driverController.rightBumper().onTrue(this.climber.setSpeed(-Constants.CLIMBER_SPEED));
+    driverController.rightBumper().onFalse(this.climber.setSpeed(0));
 
     // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,
     // cancelling on release.

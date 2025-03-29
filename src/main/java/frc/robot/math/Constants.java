@@ -103,7 +103,7 @@ public class Constants {
   public static final int CLIMBER_MOTOR_ID = 41;
 
   // Individual canCoder offsets that are determined by the Phoenix Tuner X
-  public static final double[] CANCODER_OFFSETS = new double[] {-.83, -.92, -.52, -.27};
+  public static final double[] CANCODER_OFFSETS = new double[] {-.83 + 0.5, -.92 + 0.5, -.52 + 0.5, -.27 - 0.5};
 
   // The offset of the roboRio gyro
   // Factored in when moving the entire drivetrain
@@ -121,14 +121,14 @@ public class Constants {
   public static final double ELEVATOR_MAX_ROTATIONS = 41d;
 
   public static final double ELEVATOR_MAX_SPEED = 0.3d;
-  public static final double ARM_MAX_SPEED = 0.3d;
+  public static final double ARM_MAX_SPEED = 0.5d;
 
   public static final double ARM_MAX_ROTATIONS = 0.25;
-  public static final double ARM_MIN_ROTATIONS = -0.25;
+  public static final double ARM_MIN_ROTATIONS = -0.27;
 
   public static final double ARM_GEAR_RATIO = 81;
 
-  public static final double ARM_TOLERANCE = 0.05;
+  public static final double ARM_TOLERANCE = 0.03;
   public static final double ELEVATOR_TOLERANCE = 0.3;
 
   public static final double ELEVATOR_L1 = 0;
@@ -153,11 +153,18 @@ public class Constants {
   public static final double ELEVATOR_TIME_TO_MAX_SPEED = 0.2;
   public static final double ARM_TIME_TO_MAX_SPEED = 0.2;
 
-  public static final double CLIMBER_SPEED = 0.2;
+  public static final double CLIMBER_SPEED = 1;
 
   public static final double ELEVATOR_STATE_DEADBAND = 0.50;
   public static final double ELEVATOR_STALL_CURRENT = 10;
 
   public static final int HOPPER_SWITCH = 0;
   public static final int ARM_SWITCH = 1;
+
+  //In ticks
+  public static final int blinkLength = 30;
+  //In seconds
+  public static final double blinkOnLength = 0.1d;
+  //In seconds
+  public static final double blinkOffLength = 0.07d;
 }
