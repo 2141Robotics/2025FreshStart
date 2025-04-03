@@ -5,15 +5,16 @@ package frc.robot.subsystems;
 
 import static edu.wpi.first.units.Units.*;
 
+import com.ctre.phoenix6.controls.CoastOut;
+import com.ctre.phoenix6.controls.ControlRequest;
+import com.ctre.phoenix6.controls.StaticBrake;
 import com.mineinjava.quail.RobotMovement;
 import com.mineinjava.quail.localization.KalmanFilterLocalizer;
 import com.mineinjava.quail.localization.SwerveOdometry;
-import com.mineinjava.quail.util.MathUtil;
 import com.mineinjava.quail.util.MiniPID;
 import com.mineinjava.quail.util.geometry.Pose2d;
 import com.mineinjava.quail.util.geometry.Vec2d;
 import com.studica.frc.AHRS;
-
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.util.sendable.SendableBuilder;
@@ -24,7 +25,6 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.math.Constants;
-
 import java.util.ArrayList;
 
 public class Drivetrain extends SubsystemBase {
@@ -41,7 +41,6 @@ public class Drivetrain extends SubsystemBase {
   public MiniPID pidcontroller;
   private KalmanFilterLocalizer kalmanFilter =
       new KalmanFilterLocalizer(new Pose2d(0, 0, 0), Constants.LOOPTIME);
-
 
   /** Creates a new ExampleSubsystem. */
   public Drivetrain(AHRS gyro) {
@@ -95,6 +94,7 @@ public class Drivetrain extends SubsystemBase {
   public void reset() {
     quailSwerveDrive.reset();
     resetGyro();
+    setMotorBreaking(new StaticBrake());
     System.out.println("RESET DRIVETRAIN");
   }
 
@@ -113,7 +113,32 @@ public class Drivetrain extends SubsystemBase {
     }
   }
 
-  public void XLock() {
+  public Command xLockCommand(){
+    return this.runOnce(
+        () -> {
+          this.xLock();
+        });
+  }
+
+  public Command disableMotorBreakingCommand(){
+    return this.runOnce(
+        () -> {
+          this.setMotorBreaking(new CoastOut());
+        });
+  }
+
+  public Command enableMotorBreakingCommand(){
+    return this.runOnce(
+        () -> {
+          this.setMotorBreaking(new StaticBrake());
+        });
+  }
+
+  public void setMotorBreaking(ControlRequest controlRequest) {
+    quailSwerveDrive.setBrake(controlRequest);
+  }
+
+  public void xLock() {
     quailSwerveDrive.XLock();
   }
 
@@ -123,6 +148,10 @@ public class Drivetrain extends SubsystemBase {
 
   public SwerveOdometry getOdometry() {
     return this.odometry;
+  }
+
+  public KalmanFilterLocalizer getKalmanFilter() {
+    return this.kalmanFilter;
   }
 
   public Angle getGyroAngle() {
@@ -135,7 +164,6 @@ public class Drivetrain extends SubsystemBase {
   /** Reset the gyro to 0°. */
   public void resetGyro() {
     this.gyro.reset();
-
   }
 
   /**
@@ -193,54 +221,62 @@ public class Drivetrain extends SubsystemBase {
   public void updateOdometry() {
     ArrayList<Vec2d> moduleSpeeds = this.quailSwerveDrive.getModuleSpeeds();
     RobotMovement velocity = this.odometry.calculateFastOdometry(moduleSpeeds);
+    //System.out.println("velocity: "+ velocity.translation.getLength());
 
-    this.odometry.updateDeltaPoseEstimate(velocity.translation);
+    this.odometry.updateDeltaPoseEstimate(velocity.translation.scale(0.02));
     this.odometry.setAngle(this.gyro.getAngle() * Math.PI * 2);
 
-    double[] LL2pos = NetworkTableInstance.getDefault()
-      .getTable("limelight-two")
-      .getEntry("botpose")
-      .getDoubleArray(new double[6]);
+    double[] LL2pos =
+        NetworkTableInstance.getDefault()
+            .getTable("limelight-two")
+            .getEntry("botpose")
+            .getDoubleArray(new double[6]);
 
-    double[] LL3pos = NetworkTableInstance.getDefault()
-      .getTable("limelight-three")
-      .getEntry("botpose")
-      .getDoubleArray(new double[6]);
-    
+    double[] LL3pos =
+        NetworkTableInstance.getDefault()
+            .getTable("limelight-three")
+            .getEntry("botpose")
+            .getDoubleArray(new double[6]);
+
     SmartDashboard.putNumberArray("Limelight 2 Pos", LL2pos);
     SmartDashboard.putNumberArray("Limelight 3 Pos", LL3pos);
-
-
 
     double LX = 0;
     double LY = 0;
     double LATENCY = 0;
 
-
-
     if (LL3pos.length >= 7) {
       LX = LL3pos[1] * Constants.INCHES_PER_METER;
       LY = -LL3pos[0] * Constants.INCHES_PER_METER;
       LATENCY = LL3pos[6];
-      if (LL3pos[0] != 0){
-        NetworkTableInstance.getDefault().getTable("limelight-three").getEntry("ledMode").setNumber(3);
-      }
-      else {
-        NetworkTableInstance.getDefault().getTable("limelight-three").getEntry("ledMode").setNumber(1);
-        System.out.println("LL3 no");
+      if (LL3pos[0] != 0) {
+        NetworkTableInstance.getDefault()
+            .getTable("limelight-three")
+            .getEntry("ledMode")
+            .setNumber(3);
+      } else {
+        NetworkTableInstance.getDefault()
+            .getTable("limelight-three")
+            .getEntry("ledMode")
+            .setNumber(1);
       }
     }
     if (LL2pos.length >= 7) {
-      if (LX==0){
+      if (true) {
         LX = LL2pos[1] * Constants.INCHES_PER_METER;
         LY = -LL2pos[0] * Constants.INCHES_PER_METER;
         LATENCY = LL2pos[6];
       }
-      if (LL2pos[0] != 0){
-        NetworkTableInstance.getDefault().getTable("limelight-two").getEntry("ledMode").setNumber(3);
-      }
-      else {
-        NetworkTableInstance.getDefault().getTable("limelight-two").getEntry("ledMode").setNumber(1);
+      if (LL2pos[0] != 0) {
+        NetworkTableInstance.getDefault()
+            .getTable("limelight-two")
+            .getEntry("ledMode")
+            .setNumber(3);
+      } else {
+        NetworkTableInstance.getDefault()
+            .getTable("limelight-two")
+            .getEntry("ledMode")
+            .setNumber(1);
       }
     }
 
@@ -249,7 +285,6 @@ public class Drivetrain extends SubsystemBase {
       LX = -LX;
     }
 
-    
     SmartDashboard.putNumber("LX", LX);
     SmartDashboard.putNumber("LY", LY);
 
@@ -260,10 +295,10 @@ public class Drivetrain extends SubsystemBase {
     } else {
       this.HAS_LIMELIGHT = true;
     }
-    
+
     this.kalmanFilter.update(
         new Pose2d(LX, LY, 0),
-        new Pose2d(velocity.translation.rotate(-this.gyro.getAngle(), true), 0),
+        new Pose2d(velocity.translation.rotate(-this.gyro.getAngle(), true).rotate(Math.PI/2, false), 0),
         LATENCY,
         w,
         0,
@@ -275,11 +310,8 @@ public class Drivetrain extends SubsystemBase {
     SmartDashboard.putNumber("Ox", this.odometry.x);
     SmartDashboard.putNumber("Oy", this.odometry.y);
 
-
     this.odometry.setPose(
         new Pose2d(this.kalmanFilter.getPose().vec(), this.gyro.getAngle() * Math.PI / 180));
-
-
+    this.kalmanFilter.setHeading(this.gyro.getAngle() * Math.PI / 180);
   }
-
 }

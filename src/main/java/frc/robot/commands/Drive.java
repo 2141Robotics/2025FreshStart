@@ -5,8 +5,6 @@
 package frc.robot.commands;
 
 import com.mineinjava.quail.RobotMovement;
-import com.mineinjava.quail.util.geometry.AccelerationLimitedDouble;
-import com.mineinjava.quail.util.geometry.AccelerationLimitedVector;
 import com.mineinjava.quail.util.geometry.Vec2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -16,18 +14,6 @@ import frc.robot.subsystems.Drivetrain;
 
 /** An example command that uses an example subsystem. */
 public class Drive extends Command {
-
-  public AccelerationLimitedVector a_leftStickVector =
-      new AccelerationLimitedVector(Constants.MOVEMENT_ACCELERATION_LIMIT);
-
-  public AccelerationLimitedVector a_rightStickVector =
-      new AccelerationLimitedVector(Constants.ROTATION_ACCELERATION_LIMIT);
-
-  public AccelerationLimitedVector a_driveVector =
-      new AccelerationLimitedVector(Constants.DRIVE_ACCELERATION_LIMIT);
-
-  public AccelerationLimitedDouble a_rtrigger =
-      new AccelerationLimitedDouble(Constants.SPEED_ACCELERATION_LIMIT);
 
   private Drivetrain drivetrain;
 
@@ -45,7 +31,9 @@ public class Drive extends Command {
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {}
+  public void initialize() {
+    System.out.println("Drive command started");
+  }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
@@ -57,61 +45,41 @@ public class Drive extends Command {
     double rightX = driverController.getRightX();
     double rightY = -driverController.getRightY();
 
-    double rightTrigger = driverController.getRightTriggerAxis();
-    double leftTrigger = driverController.getLeftTriggerAxis();
-
-    // Makes joystick values into Vectors
     Vec2d leftStickVector = new Vec2d(leftX, leftY);
     Vec2d rightStickVector = new Vec2d(rightX, rightY);
 
-    // Updates accelerationLimitedVector(s) and acceleration limits current vectors
-    Vec2d leftStick = a_leftStickVector.update(leftStickVector);
-    Vec2d rightStick = a_rightStickVector.update(rightStickVector);
-    // double a_rtriggerValue = a_rtrigger.update(rightTrigger);
+    double scaledSpeed = leftStickVector.getLength() * 0.1 + driverController.getRightTriggerAxis() * 0.9;
 
-    double scaledSpeed = Constants.BASE_SPEED;
-
-    // Left Trigger (Slow speed) has prioroty
-    if (rightTrigger > 0.08 && leftTrigger > 0.08) {
-      scaledSpeed = Constants.BASE_SPEED - (Constants.BASE_SPEED * leftTrigger);
-    } else if (rightTrigger > 0) {
-      scaledSpeed = Constants.BASE_SPEED + ((1 - Constants.BASE_SPEED) * rightTrigger);
-    } else if (leftTrigger > 0) {
-      scaledSpeed = Constants.BASE_SPEED - (Constants.BASE_SPEED * leftTrigger);
-    }
-
-    if (scaledSpeed < Constants.MINIMUM_SPEED) {
-      scaledSpeed = Constants.MINIMUM_SPEED;
-    }
-
-    if (leftStick.getLength() < Constants.JOYSTICK_DEAD_ZONE) {
+    if (leftStickVector.getLength() < Constants.JOYSTICK_DEAD_ZONE) {
       leftStickVector = new Vec2d(0, 0);
     }
-    if (rightStick.getLength() < Constants.JOYSTICK_DEAD_ZONE) {
+    if (rightStickVector.getLength() < Constants.JOYSTICK_DEAD_ZONE) {
       rightStickVector = new Vec2d(0, 0);
     }
 
     Vec2d driveVector = leftStickVector.normalize().scale(scaledSpeed);
-    Vec2d newDriveVector = a_driveVector.update(driveVector);
 
-    if ((Math.abs(rightStick.x) < Constants.JOYSTICK_DEAD_ZONE)
-        && (leftStick.getLength() < Constants.JOYSTICK_DEAD_ZONE)) {
+    if ((Math.abs(rightStickVector.x) < Constants.JOYSTICK_DEAD_ZONE)
+        && (leftStickVector.getLength() < Constants.JOYSTICK_DEAD_ZONE)) {
       drivetrain.stop();
     } else {
 
       RobotMovement movement =
           new RobotMovement(
-              -rightStickVector.x / Constants.ROTATION_SPEED_INVERSE_SCALE, newDriveVector);
+              -rightStickVector.x / Constants.ROTATION_SPEED_INVERSE_SCALE, driveVector);
       drivetrain.drive(movement);
 
-      SmartDashboard.putNumber("driveVecX", newDriveVector.x);
-      SmartDashboard.putNumber("driveVecY", newDriveVector.y);
+      SmartDashboard.putNumber("driveVecX", driveVector.x);
+      SmartDashboard.putNumber("driveVecY", driveVector.y);
+
     }
   }
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {}
+  public void end(boolean interrupted) {
+    System.out.println("Drive Command Ended. Interrupted: "+interrupted);
+  }
 
   // Returns true when the command should end.
   @Override

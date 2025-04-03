@@ -7,9 +7,7 @@ import com.ctre.phoenix6.controls.StaticBrake;
 import com.mineinjava.quail.RobotMovement;
 import com.mineinjava.quail.SwerveDrive;
 import com.mineinjava.quail.util.geometry.Vec2d;
-
 import frc.robot.math.Constants;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,14 +32,17 @@ public class QuailSwerveDrive extends SwerveDrive<QuailSwerveModule> {
   public void initModules() {
     this.modules.forEach(m -> m.init());
     this.setBrake(new StaticBrake());
+    System.out.println("Initializing Swerve Modules");
   }
 
   public void reset() {
     this.modules.forEach(m -> m.reset());
+    this.setBrake(new StaticBrake());
+    System.out.println("Resetting Swerve Modules");
   }
 
   public void drive(RobotMovement robotMovement, double gyroAngleDeg) {
-    // System.out.println("PASSED THRU ANGLE " + gyroAngleDeg);
+    //System.out.println("drivetrain moving: " + robotMovement.translation.toString());
     move(robotMovement, Math.toRadians(gyroAngleDeg) + Constants.GYRO_OFFSET.in(Radians));
   }
 
@@ -57,7 +58,7 @@ public class QuailSwerveDrive extends SwerveDrive<QuailSwerveModule> {
     for (QuailSwerveModule module : this.modules) {
       module.setRawSpeed(0);
     }
-    setBrake(new StaticBrake());
+    //setBrake(new StaticBrake());
   }
 
   public void setBrake(ControlRequest brake) {

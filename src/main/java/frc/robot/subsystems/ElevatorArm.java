@@ -108,12 +108,12 @@ public class ElevatorArm extends SubsystemBase {
             .withCurrentLimits(armCurrentLimitsConfigs)
             .withFeedback(armFeedbackConfigs);
 
-    armMotorConfig.Slot0.kP = 3.2;
+    armMotorConfig.Slot0.kP = 1.2;
     armMotorConfig.Slot0.kI = 0.05;
     armMotorConfig.Slot0.kD = 0.20;
     armMotorConfig.Slot0.kS = 0.0;
     armMotorConfig.Slot0.GravityType = GravityTypeValue.Arm_Cosine;
-    armMotorConfig.Slot0.kG = 0.02;
+    armMotorConfig.Slot0.kG = 0.25;
 
     armMotorConfig.MotorOutput.PeakForwardDutyCycle = Constants.ARM_MAX_SPEED;
     armMotorConfig.MotorOutput.PeakReverseDutyCycle = -Constants.ARM_MAX_SPEED;
@@ -129,7 +129,9 @@ public class ElevatorArm extends SubsystemBase {
     this.armMotor.setNeutralMode(NeutralModeValue.Brake);
   }
 
-  public ElevatorArm(int leftMotorID, int rightMotorID, int armMotorID, int hopperSwitchID, int armSwitchID) {
+
+  public ElevatorArm(
+      int leftMotorID, int rightMotorID, int armMotorID, int hopperSwitchID, int armSwitchID) {
     this.leftMotor = new TalonFX(leftMotorID);
     this.rightMotor = new TalonFX(rightMotorID);
     this.armMotor = new TalonFX(armMotorID);
@@ -177,7 +179,8 @@ public class ElevatorArm extends SubsystemBase {
   public void initSendable(SendableBuilder builder) {
     super.initSendable(builder);
     // To the dashboard, push current position, speed
-    // builder.addBooleanProperty("extended", () -> m_hatchSolenoid.get() == this.speed, null);
+    // builder.addBooleanProperty("extended", () -> m_hatchSolenoid.get() ==
+    // this.speed, null);
   }
 
   @Override
@@ -189,15 +192,14 @@ public class ElevatorArm extends SubsystemBase {
     SmartDashboard.putNumber("Arm Position: ", armMotor.getPosition().getValueAsDouble());
   }
 
-  public Command stopElevatorCommand() {
-    // TODO:REMOVE ME PLZ
+  public Command elevatorStop() {
     return this.runOnce(
         () -> {
           this.stopElevator();
         });
   }
 
-  public Command stopArmCommand() {
+  public Command armStop() {
     return this.runOnce(
         () -> {
           this.stopArm();
@@ -218,7 +220,7 @@ public class ElevatorArm extends SubsystemBase {
   public Command elevatorDown() {
     return this.runOnce(
             () -> {
-              this.setRawElevatorSpeed(-0.1d);
+              this.setRawElevatorSpeed(-Constants.ELEVATOR_MANUAL_SPEED);
               ;
             })
         .handleInterrupt(
@@ -227,10 +229,11 @@ public class ElevatorArm extends SubsystemBase {
             });
   }
 
+  //Manual control
   public Command armUp() {
     return this.runOnce(
             () -> {
-              this.setRawArmSpeed(0.1d);
+              this.setRawArmSpeed(Constants.ARM_MANUAL_SPEED);
               ;
             })
         .handleInterrupt(
@@ -239,10 +242,11 @@ public class ElevatorArm extends SubsystemBase {
             });
   }
 
+  //Manual control
   public Command armDown() {
     return this.runOnce(
             () -> {
-              this.setRawArmSpeed(-0.1d);
+              this.setRawArmSpeed(-Constants.ARM_MANUAL_SPEED);
               ;
             })
         .handleInterrupt(
@@ -333,7 +337,28 @@ public class ElevatorArm extends SubsystemBase {
             });
   }
 
+  public Command setElevatorPositionIntake() {
+    return this.runOnce(
+            () -> {
+              this.setRawElevatorPos(Constants.ELEVATOR_INTAKE);
+            })
+        .handleInterrupt(
+            () -> {
+              this.stopElevator();
+            });
+  }
+
   public Command setArmPositionStow() {
+    return this.runOnce(
+            () -> {
+              this.setRawArmPos(Constants.ARM_STOW);
+            })
+        .handleInterrupt(
+            () -> {
+              this.stopArm();
+            });
+  }
+  public Command setArmPositionScore() {
     return this.runOnce(
             () -> {
               this.setRawArmPos(Constants.ARM_STOW);
@@ -470,31 +495,40 @@ public class ElevatorArm extends SubsystemBase {
         this.setElevatorPositionL4());
   }
 
-  public ElevatorState getElevatorState(){
-    if (this.leftMotor.getVelocity().getValueAsDouble() >= Constants.ELEVATOR_STATE_DEADBAND){
+  public Command intakePosition() {
+    return Commands.sequence(
+        this.setArmPositionOUT(),
+        this.WaitForArmBelow(Constants.ARM_UPPER_ELEVATOR_CLEARANCE),
+        this.setElevatorPositionIntake());
+  }
+
+  public ElevatorState getElevatorState() {
+    if (this.leftMotor.getVelocity().getValueAsDouble() >= Constants.ELEVATOR_STATE_DEADBAND) {
       return ElevatorState.MOVING_UP;
     }
-    if (this.leftMotor.getVelocity().getValueAsDouble() <= -Constants.ELEVATOR_STATE_DEADBAND){
+    if (this.leftMotor.getVelocity().getValueAsDouble() <= -Constants.ELEVATOR_STATE_DEADBAND) {
       return ElevatorState.MOVING_DOWN;
     }
     if (this.leftMotor.getPosition().getValueAsDouble() <= Constants.ELEVATOR_TOLERANCE
-     && this.armMotor.getPosition().getValueAsDouble() >= Constants.ARM_STOW + Constants.ARM_TOLERANCE){
+        && this.armMotor.getPosition().getValueAsDouble()
+            >= Constants.ARM_STOW + Constants.ARM_TOLERANCE) {
       return ElevatorState.STOWED;
     }
     if (this.leftMotor.getTorqueCurrent().getValueAsDouble() <= Constants.ELEVATOR_STALL_CURRENT) {
       return ElevatorState.BLOCKED;
     }
-    if (Math.abs(this.leftMotor.getClosedLoopError().getValueAsDouble()) < Constants.ELEVATOR_TOLERANCE){
+    if (Math.abs(this.leftMotor.getClosedLoopError().getValueAsDouble())
+        < Constants.ELEVATOR_TOLERANCE) {
       return ElevatorState.IN_POSITION;
     }
     return ElevatorState.NONE;
   }
 
   public CoralState getCoralState() {
-    if (!this.armSwitch.get()){
+    if (!this.armSwitch.get()) {
       return CoralState.CORAL_ARM;
     }
-    if (!this.hopperSwitch.get()){
+    if (!this.hopperSwitch.get()) {
       return CoralState.CORAL_HOPPER;
     }
     return CoralState.NO_CORAL;

@@ -10,6 +10,7 @@ import com.ctre.phoenix6.controls.PositionDutyCycle;
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.InvertedValue;
+import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.ctre.phoenix6.signals.SensorDirectionValue;
 import com.mineinjava.quail.SwerveModuleBase;
 import com.mineinjava.quail.util.geometry.Vec2d;
@@ -33,7 +34,7 @@ public class QuailSwerveModule extends SwerveModuleBase {
 
   private int steeringMotorID;
 
-  private int resets;
+  public ControlRequest brake;
 
   public QuailSwerveModule(
       Vec2d position,
@@ -49,8 +50,6 @@ public class QuailSwerveModule extends SwerveModuleBase {
     this.canOffset = canCoderOffset;
 
     this.steeringMotorID = steeringMotorID;
-
-    resets = 0;
   }
 
   public void init() {
@@ -58,7 +57,9 @@ public class QuailSwerveModule extends SwerveModuleBase {
     System.out.println("Initializing Swerve modue [sid: ]" + this.steeringMotorID);
     // Reset the steering motor.
     MotorOutputConfigs motorConfig =
-        new MotorOutputConfigs().withInverted(InvertedValue.CounterClockwise_Positive);
+        new MotorOutputConfigs()
+        .withInverted(InvertedValue.CounterClockwise_Positive)
+        .withNeutralMode(NeutralModeValue.Brake);
 
     TalonFXConfiguration driveTalonConfig = new TalonFXConfiguration().withMotorOutput(motorConfig);
 
@@ -88,12 +89,17 @@ public class QuailSwerveModule extends SwerveModuleBase {
     System.out.println("Resetting steering module ID: " + this.steeringMotorID);
     this.steeringMotor.setPosition(this.getRawAngle() * Constants.STEERING_RATIO);
     this.currentAngle = this.getRawAngle() * Math.PI * 2;
-    this.drivingMotor.stopMotor();
-    this.steeringMotor.stopMotor();
+    this.drivingMotor.set(0);
   }
 
-  public Vec2d getCurrentMovement(){
-    return new Vec2d(this.currentAngle, this.drivingMotor.getVelocity().getValueAsDouble() * Math.PI * 2 * Constants.WHEEL_DIAMETER / this.driveRatio, false);
+  public Vec2d getCurrentMovement() {
+    return new Vec2d(
+        this.canCoder.getAbsolutePosition().getValueAsDouble() * Math.PI * 2,
+        this.drivingMotor.getVelocity().refresh().getValueAsDouble()
+            * Math.PI
+            * Constants.WHEEL_DIAMETER
+            / Constants.DRIVE_RATIO,
+        false);
   }
 
   /*
@@ -115,6 +121,11 @@ public class QuailSwerveModule extends SwerveModuleBase {
   /** Input in radians Create an angle object Set position */
   @Override
   public void setRawAngle(double angleInRad) {
+    if (angleInRad != angleInRad) {
+      System.out.println("SetRawAngle: " + angleInRad);
+      this.reset();
+      return;
+    }
     Angle angle = Angle.ofBaseUnits(angleInRad, Radian);
     this.steeringMotor.setControl(new PositionDutyCycle(angle.times(Constants.STEERING_RATIO)));
     SmartDashboard.putNumber("Module " + steeringMotorID + " target angle: ", angle.in(Rotations));
@@ -147,6 +158,9 @@ public class QuailSwerveModule extends SwerveModuleBase {
 
   public void setBrake(ControlRequest brake) {
     this.drivingMotor.setControl(brake);
+    this.brake = brake;
+    System.out.println("SETTING BRAKE TO " +brake);
+    System.out.println(drivingMotor.getControlMode().getName());
   }
 
   /*

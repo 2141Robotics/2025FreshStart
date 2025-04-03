@@ -9,6 +9,7 @@ import com.studica.frc.AHRS.NavXComType;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.robot.commands.Autos;
 import frc.robot.commands.Drive;
 import frc.robot.math.Constants;
 import frc.robot.subsystems.Climber;
@@ -37,12 +38,18 @@ public class RobotContainer {
   private final CommandXboxController operatorController =
       new CommandXboxController(Constants.OPERATOR_PORT);
 
-  
-
   public final ElevatorArm elevator =
-      new ElevatorArm(Constants.ELEVATOR_IDS[0], Constants.ELEVATOR_IDS[1], Constants.ARM_MOTOR_ID, Constants.HOPPER_SWITCH, Constants.ARM_SWITCH);
+      new ElevatorArm(
+          Constants.ELEVATOR_IDS[0],
+          Constants.ELEVATOR_IDS[1],
+          Constants.ARM_MOTOR_ID,
+          Constants.HOPPER_SWITCH_ID,
+          Constants.ARM_SWITCH_ID);
+
+  public Autos autos = new Autos(drivetrain, elevator);
 
   public final LEDSubsystem led = new LEDSubsystem(elevator);
+
   // private final CommandXboxController operatorController =
   //     new CommandXboxController(Constants.OPERATOR_PORT);
 
@@ -74,37 +81,73 @@ public class RobotContainer {
     driverController.back().onTrue(drivetrain.resetGyroCommand());
     driverController.back().onTrue(led.blinkLEDs());
 
-    // Debugging only
-    // driverController.a().whileTrue(new DriveForward(drivetrain));
-
-    // fixme: uncomment
-    // Elevator & Arm Controls
-    operatorController.y().onTrue(this.elevator.L4Sequence());
-    operatorController.x().onTrue(this.elevator.L1Sequence());
-    operatorController.a().onTrue(this.elevator.L2Sequence());
-    operatorController.b().onTrue(this.elevator.L3Sequence());
-
-    operatorController.back().onTrue(this.elevator.pickupSequence());
-
-    // TODO reinstate
-    operatorController.rightBumper().onTrue(this.elevator.setElevatorPositionStow());
-    operatorController.leftBumper().onTrue(this.elevator.setArmPositionStow());
-
-    operatorController.povUp().whileTrue(this.elevator.elevatorUp());
-    operatorController.povDown().whileTrue(this.elevator.elevatorDown());
-    operatorController.povLeft().whileTrue(this.elevator.armDown());
-    operatorController.povRight().whileTrue(this.elevator.armUp());
-
-    operatorController.povUp().onFalse(this.elevator.stopElevatorCommand());
-    operatorController.povDown().onFalse(this.elevator.stopElevatorCommand());
-    operatorController.povLeft().onFalse(this.elevator.stopArmCommand());
-    operatorController.povRight().onFalse(this.elevator.stopArmCommand());
+    driverController.x().onTrue(drivetrain.xLockCommand());
+    
+    //driverController.a().whileTrue(drivetrain.autoAlign());
+    driverController.y().whileTrue(drivetrain.disableMotorBreakingCommand());
+    driverController.y().whileFalse(drivetrain.enableMotorBreakingCommand());
 
     driverController.leftBumper().onTrue(this.climber.setSpeed(Constants.CLIMBER_SPEED));
     driverController.leftBumper().onFalse(this.climber.setSpeed(0));
 
     driverController.rightBumper().onTrue(this.climber.setSpeed(-Constants.CLIMBER_SPEED));
     driverController.rightBumper().onFalse(this.climber.setSpeed(0));
+
+    // Debugging only
+    // driverController.a().whileTrue(new DriveForward(drivetrain));
+
+    // Elevator & Arm Controls
+    operatorController.y().onTrue(this.elevator.L4Sequence());
+    operatorController.x().onTrue(this.elevator.L1Sequence());
+    operatorController.a().onTrue(this.elevator.L2Sequence());
+    operatorController.b().onTrue(this.elevator.L3Sequence());
+
+    operatorController.povDown().onTrue(this.elevator.pickupSequence());
+    operatorController.povUp().onTrue(this.elevator.intakePosition());
+    operatorController.povRight().onTrue(this.elevator.setArmPositionSCORE_HIGH());
+    operatorController.povLeft().onTrue(this.elevator.setArmPositionSCORE_LOW());
+
+    operatorController.rightBumper().onTrue(this.elevator.setElevatorPositionStow());
+    operatorController.leftBumper().onTrue(this.elevator.setArmPositionStow());
+
+    // Y Up is negative for some reason
+    operatorController
+        .axisLessThan(1, -Constants.JOYSTICK_DEAD_ZONE)
+        .whileTrue(this.elevator.elevatorUp());
+    operatorController
+        .axisGreaterThan(1, Constants.JOYSTICK_DEAD_ZONE)
+        .whileTrue(this.elevator.elevatorDown());
+    operatorController
+        .axisGreaterThan(1, -Constants.JOYSTICK_DEAD_ZONE)
+        .onTrue(this.elevator.elevatorStop());
+    operatorController
+        .axisLessThan(1, Constants.JOYSTICK_DEAD_ZONE)
+        .onTrue(this.elevator.elevatorStop());
+
+    operatorController
+        .axisGreaterThan(4, Constants.JOYSTICK_DEAD_ZONE)
+        .whileTrue(this.elevator.armUp());
+    operatorController
+        .axisLessThan(4, -Constants.JOYSTICK_DEAD_ZONE)
+        .whileTrue(this.elevator.armDown());
+    operatorController
+        .axisGreaterThan(4, -Constants.JOYSTICK_DEAD_ZONE)
+        .onTrue(this.elevator.armStop());
+    operatorController
+        .axisLessThan(4, Constants.JOYSTICK_DEAD_ZONE)
+        .onTrue(this.elevator.armStop());
+
+    /*
+    operatorController.povUp().whileTrue(this.elevator.elevatorUp());
+    operatorController.povDown().whileTrue(this.elevator.elevatorDown());
+    operatorController.povLeft().whileTrue(this.elevator.armDown());
+    operatorController.povRight().whileTrue(this.elevator.armUp());
+
+    operatorController.povUp().onFalse(this.elevator.elevatorStop());
+    operatorController.povDown().onFalse(this.elevator.elevatorStop());
+    operatorController.povLeft().onFalse(this.elevator.armStop());
+    operatorController.povRight().onFalse(this.elevator.armStop());
+    */
 
     // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,
     // cancelling on release.
