@@ -151,7 +151,7 @@ public class Constants {
   public static final double ELEVATOR_PICKUP = 10;
   public static final double ELEVATOR_INTAKE = 12;
 
-  public static final double ARM_STOW = 0.2675;
+  public static final double ARM_STOW = 0.25;
 
   public static final double ARM_OUT = -0.08;
   public static final double ARM_DOWN = -0.25;
