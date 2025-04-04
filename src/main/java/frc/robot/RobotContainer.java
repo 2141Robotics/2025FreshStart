@@ -82,8 +82,8 @@ public class RobotContainer {
     driverController.back().onTrue(led.blinkLEDs());
 
     driverController.x().onTrue(drivetrain.xLockCommand());
-    
-    //driverController.a().whileTrue(drivetrain.autoAlign());
+
+    // driverController.a().whileTrue(drivetrain.autoAlign());
     driverController.y().whileTrue(drivetrain.disableMotorBreakingCommand());
     driverController.y().whileFalse(drivetrain.enableMotorBreakingCommand());
 

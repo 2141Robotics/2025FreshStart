@@ -58,8 +58,8 @@ public class QuailSwerveModule extends SwerveModuleBase {
     // Reset the steering motor.
     MotorOutputConfigs motorConfig =
         new MotorOutputConfigs()
-        .withInverted(InvertedValue.CounterClockwise_Positive)
-        .withNeutralMode(NeutralModeValue.Brake);
+            .withInverted(InvertedValue.CounterClockwise_Positive)
+            .withNeutralMode(NeutralModeValue.Brake);
 
     TalonFXConfiguration driveTalonConfig = new TalonFXConfiguration().withMotorOutput(motorConfig);
 
@@ -159,7 +159,7 @@ public class QuailSwerveModule extends SwerveModuleBase {
   public void setBrake(ControlRequest brake) {
     this.drivingMotor.setControl(brake);
     this.brake = brake;
-    System.out.println("SETTING BRAKE TO " +brake);
+    System.out.println("SETTING BRAKE TO " + brake);
     System.out.println(drivingMotor.getControlMode().getName());
   }
 

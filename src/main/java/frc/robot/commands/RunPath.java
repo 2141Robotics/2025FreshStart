@@ -11,9 +11,6 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.math.Constants;
 import frc.robot.subsystems.Drivetrain;
-
-import static edu.wpi.first.units.Units.Newton;
-
 import java.util.ArrayList;
 
 public class RunPath extends Command {
@@ -39,7 +36,6 @@ public class RunPath extends Command {
   @Override
   public void initialize() {
     this.path = new Path(this.points);
-
 
     // TODO: Put units on these
     ConstraintsPair translationPair = new ConstraintsPair(40, 1000);
@@ -70,8 +66,8 @@ public class RunPath extends Command {
         (new Vec2d(nextMovement.translation.x / 200, nextMovement.translation.y / 200));
     double rotation = nextMovement.rotation / 100; // TODO: De magic this number!!
 
-    //System.out.println("p: " + this.pathfollower.getPath().currentPointIndex);
-    //System.out.println("p: " + newTranslation.toString());
+    // System.out.println("p: " + this.pathfollower.getPath().currentPointIndex);
+    // System.out.println("p: " + newTranslation.toString());
 
     drivetrain.drive(new RobotMovement(-rotation, newTranslation));
   }

@@ -48,7 +48,8 @@ public class Drive extends Command {
     Vec2d leftStickVector = new Vec2d(leftX, leftY);
     Vec2d rightStickVector = new Vec2d(rightX, rightY);
 
-    double scaledSpeed = leftStickVector.getLength() * 0.1 + driverController.getRightTriggerAxis() * 0.9;
+    double scaledSpeed =
+        leftStickVector.getLength() * 0.1 + driverController.getRightTriggerAxis() * 0.9;
 
     if (leftStickVector.getLength() < Constants.JOYSTICK_DEAD_ZONE) {
       leftStickVector = new Vec2d(0, 0);
@@ -71,14 +72,13 @@ public class Drive extends Command {
 
       SmartDashboard.putNumber("driveVecX", driveVector.x);
       SmartDashboard.putNumber("driveVecY", driveVector.y);
-
     }
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    System.out.println("Drive Command Ended. Interrupted: "+interrupted);
+    System.out.println("Drive Command Ended. Interrupted: " + interrupted);
   }
 
   // Returns true when the command should end.

@@ -108,12 +108,12 @@ public class ElevatorArm extends SubsystemBase {
             .withCurrentLimits(armCurrentLimitsConfigs)
             .withFeedback(armFeedbackConfigs);
 
-    armMotorConfig.Slot0.kP = 1.2;
-    armMotorConfig.Slot0.kI = 0.05;
-    armMotorConfig.Slot0.kD = 0.20;
-    armMotorConfig.Slot0.kS = 0.0;
+    armMotorConfig.Slot0.kP = Constants.armPID[0];
+    armMotorConfig.Slot0.kI = Constants.armPID[1];
+    armMotorConfig.Slot0.kD = Constants.armPID[2];
+    armMotorConfig.Slot0.kS = Constants.armPID[3];
+    armMotorConfig.Slot0.kG = Constants.armPID[4];
     armMotorConfig.Slot0.GravityType = GravityTypeValue.Arm_Cosine;
-    armMotorConfig.Slot0.kG = 0.25;
 
     armMotorConfig.MotorOutput.PeakForwardDutyCycle = Constants.ARM_MAX_SPEED;
     armMotorConfig.MotorOutput.PeakReverseDutyCycle = -Constants.ARM_MAX_SPEED;
@@ -128,7 +128,6 @@ public class ElevatorArm extends SubsystemBase {
     this.armMotor.setPosition(Constants.ARM_STOW);
     this.armMotor.setNeutralMode(NeutralModeValue.Brake);
   }
-
 
   public ElevatorArm(
       int leftMotorID, int rightMotorID, int armMotorID, int hopperSwitchID, int armSwitchID) {
@@ -229,7 +228,7 @@ public class ElevatorArm extends SubsystemBase {
             });
   }
 
-  //Manual control
+  // Manual control
   public Command armUp() {
     return this.runOnce(
             () -> {
@@ -242,7 +241,7 @@ public class ElevatorArm extends SubsystemBase {
             });
   }
 
-  //Manual control
+  // Manual control
   public Command armDown() {
     return this.runOnce(
             () -> {
@@ -358,6 +357,7 @@ public class ElevatorArm extends SubsystemBase {
               this.stopArm();
             });
   }
+
   public Command setArmPositionScore() {
     return this.runOnce(
             () -> {

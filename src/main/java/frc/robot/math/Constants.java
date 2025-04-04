@@ -110,7 +110,12 @@ public class Constants {
 
   // Individual canCoder offsets that are determined by the Phoenix Tuner X
   public static final double[] CANCODER_OFFSETS =
-      new double[] {-0.8286132812500001 + 0.5, -0.903076171875 + 0.5, -0.527099609375 + 0.5, -0.274658203125 - 0.5};
+      new double[] {
+        -0.8286132812500001 + 0.5,
+        -0.903076171875 + 0.5,
+        -0.527099609375 + 0.5,
+        -0.274658203125 - 0.5
+      };
 
   // The offset of the roboRio gyro
   // Factored in when moving the entire drivetrain
@@ -131,7 +136,7 @@ public class Constants {
   public static final double ARM_MAX_ROTATIONS = 0.25;
   public static final double ARM_MIN_ROTATIONS = -0.27;
 
-  public static final double ARM_GEAR_RATIO = 9;
+  public static final double ARM_GEAR_RATIO = 81;
 
   public static final double ARM_TOLERANCE = 0.03;
   public static final double ELEVATOR_TOLERANCE = 0.3;
@@ -152,7 +157,7 @@ public class Constants {
   public static final double ARM_DOWN = -0.25;
   public static final double ARM_SCORE_HIGH = 0.17;
   public static final double ARM_SCORE_LOW = 0.15;
- 
+
   public static final double ARM_UPPER_ELEVATOR_CLEARANCE = 0.2;
   public static final double ARM_LOWER_ELEVATOR_CLEARANCE = -0.05;
 
@@ -173,4 +178,8 @@ public class Constants {
   public static final double blinkOnLength = 0.1d;
   // In seconds
   public static final double blinkOffLength = 0.07d;
+
+  // ARM PID VALUES
+  // kP, kI, kD, kS, kG
+  public static final double[] armPID = new double[] {3.2, 0.05, 0.20, 0.0, 0.02};
 }

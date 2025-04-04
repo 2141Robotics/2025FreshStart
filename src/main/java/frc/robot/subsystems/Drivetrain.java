@@ -113,21 +113,21 @@ public class Drivetrain extends SubsystemBase {
     }
   }
 
-  public Command xLockCommand(){
+  public Command xLockCommand() {
     return this.runOnce(
         () -> {
           this.xLock();
         });
   }
 
-  public Command disableMotorBreakingCommand(){
+  public Command disableMotorBreakingCommand() {
     return this.runOnce(
         () -> {
           this.setMotorBreaking(new CoastOut());
         });
   }
 
-  public Command enableMotorBreakingCommand(){
+  public Command enableMotorBreakingCommand() {
     return this.runOnce(
         () -> {
           this.setMotorBreaking(new StaticBrake());
@@ -221,7 +221,7 @@ public class Drivetrain extends SubsystemBase {
   public void updateOdometry() {
     ArrayList<Vec2d> moduleSpeeds = this.quailSwerveDrive.getModuleSpeeds();
     RobotMovement velocity = this.odometry.calculateFastOdometry(moduleSpeeds);
-    //System.out.println("velocity: "+ velocity.translation.getLength());
+    // System.out.println("velocity: "+ velocity.translation.getLength());
 
     this.odometry.updateDeltaPoseEstimate(velocity.translation.scale(0.02));
     this.odometry.setAngle(this.gyro.getAngle() * Math.PI * 2);
@@ -298,7 +298,8 @@ public class Drivetrain extends SubsystemBase {
 
     this.kalmanFilter.update(
         new Pose2d(LX, LY, 0),
-        new Pose2d(velocity.translation.rotate(-this.gyro.getAngle(), true).rotate(Math.PI/2, false), 0),
+        new Pose2d(
+            velocity.translation.rotate(-this.gyro.getAngle(), true).rotate(Math.PI / 2, false), 0),
         LATENCY,
         w,
         0,

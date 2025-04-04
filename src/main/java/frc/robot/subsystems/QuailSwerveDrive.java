@@ -42,7 +42,7 @@ public class QuailSwerveDrive extends SwerveDrive<QuailSwerveModule> {
   }
 
   public void drive(RobotMovement robotMovement, double gyroAngleDeg) {
-    //System.out.println("drivetrain moving: " + robotMovement.translation.toString());
+    // System.out.println("drivetrain moving: " + robotMovement.translation.toString());
     move(robotMovement, Math.toRadians(gyroAngleDeg) + Constants.GYRO_OFFSET.in(Radians));
   }
 
@@ -58,7 +58,7 @@ public class QuailSwerveDrive extends SwerveDrive<QuailSwerveModule> {
     for (QuailSwerveModule module : this.modules) {
       module.setRawSpeed(0);
     }
-    //setBrake(new StaticBrake());
+    // setBrake(new StaticBrake());
   }
 
   public void setBrake(ControlRequest brake) {
