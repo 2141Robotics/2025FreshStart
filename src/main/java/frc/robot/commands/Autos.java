@@ -34,21 +34,27 @@ public class Autos {
     ArrayList<Pose2d> points = new ArrayList<Pose2d>();
     points.add(new Pose2d(0, -100, 0));
     return new SequentialCommandGroup(
-        this.elevator.setArmPositionStow(), new RunPath(this.drivetrain, points));
+        this.drivetrain.resetGyroCommand(),
+        this.elevator.setArmPositionStow(),
+        new RunPath(this.drivetrain, points));
   }
 
   public Command TaxiLeft() {
     ArrayList<Pose2d> points = new ArrayList<Pose2d>();
     points.add(new Pose2d(-120, -100, 0));
     return new SequentialCommandGroup(
-        this.elevator.setArmPositionStow(), new RunPath(this.drivetrain, points));
+        this.drivetrain.resetGyroCommand(),
+        this.elevator.setArmPositionStow(),
+        new RunPath(this.drivetrain, points));
   }
 
   public Command TaxiRight() {
     ArrayList<Pose2d> points = new ArrayList<Pose2d>();
     points.add(new Pose2d(120, -100, 0));
     return new SequentialCommandGroup(
-        this.elevator.setArmPositionStow(), new RunPath(this.drivetrain, points));
+        this.drivetrain.resetGyroCommand(),
+        this.elevator.setArmPositionStow(),
+        new RunPath(this.drivetrain, points));
   }
 
   public Command testAngles() {
@@ -56,16 +62,19 @@ public class Autos {
     points.add(new Pose2d(0, 30, Math.PI / 2));
     points.add(new Pose2d(0, 0, 0));
     return new SequentialCommandGroup(
-        this.elevator.setArmPositionStow(), new RunPath(this.drivetrain, points));
+        this.drivetrain.resetGyroCommand(),
+        this.elevator.setArmPositionStow(),
+        new RunPath(this.drivetrain, points));
   }
 
   public Command ScoreL4() {
     ArrayList<Pose2d> points1 = new ArrayList<Pose2d>();
     // points1.add(new Pose2d(3, -111,0));
-    points1.add(new Pose2d(-9, -134, 0));
+    points1.add(new Pose2d(-9.8, -137, 0));
     ArrayList<Pose2d> points2 = new ArrayList<Pose2d>();
     points2.add(new Pose2d(0, -100, 0));
     return new SequentialCommandGroup(
+        this.drivetrain.resetGyroCommand(),
         this.elevator.L4Sequence(),
         new WaitCommand(0.5),
         new RunPath(drivetrain, points1),
