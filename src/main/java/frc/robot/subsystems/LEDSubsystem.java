@@ -74,10 +74,10 @@ public class LEDSubsystem extends SubsystemBase {
     m_led.setLength(kLength);
     m_led.start();
     // 288 led total
-    this.left = m_buffer.createView(0, 105);
-    this.topleft = m_buffer.createView(106, 143);
-    this.topright = m_buffer.createView(144, 181).reversed();
-    this.right = m_buffer.createView(182, 287).reversed();
+    this.left = m_buffer.createView(0, 104);
+    this.topleft = m_buffer.createView(105, 142);
+    this.topright = m_buffer.createView(143, 180).reversed();
+    this.right = m_buffer.createView(181, 286).reversed();
     runPattern(m_yellow);
     updatePattern();
     this.length = left.getLength();
