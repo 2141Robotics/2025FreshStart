@@ -32,7 +32,7 @@ public class Autos {
 
   public Command TaxiCenter() {
     ArrayList<Pose2d> points = new ArrayList<Pose2d>();
-    points.add(new Pose2d(0, -100, 0));
+    points.add(new Pose2d(0, -110, 0));
     return new SequentialCommandGroup(
         this.drivetrain.resetGyroCommand(),
         this.elevator.setArmPositionStow(),
@@ -41,7 +41,7 @@ public class Autos {
 
   public Command TaxiLeft() {
     ArrayList<Pose2d> points = new ArrayList<Pose2d>();
-    points.add(new Pose2d(-120, -100, 0));
+    points.add(new Pose2d(-120, -110, 0));
     return new SequentialCommandGroup(
         this.drivetrain.resetGyroCommand(),
         this.elevator.setArmPositionStow(),
@@ -50,7 +50,7 @@ public class Autos {
 
   public Command TaxiRight() {
     ArrayList<Pose2d> points = new ArrayList<Pose2d>();
-    points.add(new Pose2d(120, -100, 0));
+    points.add(new Pose2d(120, -110, 0));
     return new SequentialCommandGroup(
         this.drivetrain.resetGyroCommand(),
         this.elevator.setArmPositionStow(),
@@ -69,10 +69,12 @@ public class Autos {
 
   public Command ScoreL4() {
     ArrayList<Pose2d> points1 = new ArrayList<Pose2d>();
+    ArrayList<Pose2d> backupPoints1 = new ArrayList<Pose2d>();
     // points1.add(new Pose2d(3, -111,0));
-    points1.add(new Pose2d(-9.8, -137, 0));
+    points1.add(new Pose2d(-9.8, -138, 0));
+    backupPoints1.add(new Pose2d(-11.8, -140, 0)); // blue side
     ArrayList<Pose2d> points2 = new ArrayList<Pose2d>();
-    points2.add(new Pose2d(0, -100, 0));
+    points2.add(new Pose2d(0, -110, 0));
     return new SequentialCommandGroup(
         this.drivetrain.resetGyroCommand(),
         this.elevator.L4Sequence(),
@@ -84,11 +86,11 @@ public class Autos {
         new WaitCommand(0.5),
         this.elevator.L4Sequence(),
         new WaitCommand(0.5),
-        new RunPath(drivetrain, points1),
+        new RunPath(drivetrain, backupPoints1),
         this.elevator.setArmPositionOUT(),
-        new WaitCommand(0.5),
+        new WaitCommand(0.4),
         new RunPath(drivetrain, points2),
-        new WaitCommand(0.5),
+        new WaitCommand(0.4),
         this.elevator.setElevatorPositionStow(),
         this.elevator.setArmPositionStow());
   }
