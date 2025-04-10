@@ -24,6 +24,9 @@ public class Constants {
   /** 2π */
   public static final double TWO_PI = 2d * Math.PI;
 
+
+  public static final double PI = Math.PI;
+
   /** π/2 */
   public static final double PI_OVER_TWO = Math.PI / 2d;
 
@@ -117,7 +120,7 @@ public class Constants {
         -0.274658203125 - 0.5
       };
 
-  // The offset of the roboRio gyro
+      // The offset of the roboRio gyro
   // Factored in when moving the entire drivetrain
   public static final Angle GYRO_OFFSET = Angle.ofBaseUnits(-PI_OVER_TWO, Radian);
 
@@ -138,7 +141,7 @@ public class Constants {
 
   public static final double ARM_GEAR_RATIO = 81;
 
-  public static final double ARM_TOLERANCE = 0.03;
+  public static final double ARM_TOLERANCE = 0.04;
   public static final double ELEVATOR_TOLERANCE = 0.3;
 
   public static final double ELEVATOR_L1 = 0;
