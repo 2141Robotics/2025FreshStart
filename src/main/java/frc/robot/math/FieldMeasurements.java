@@ -10,7 +10,13 @@ public class FieldMeasurements {
    *
    * <p>DRIVERS -------------
    *
-   * <p>__________ / B A \ /C L\ /D Reef K\ \E J/ \F I/ \__H____G__/
+   *         __________
+   *        /  B    A  \ 
+   *       /C          L\ 
+   *      /D     Reef   K\
+   *      \E            J/ 
+   *       \F          I/ 
+   *        \__H____G__/
    *
    * <p>Center of field (0,0)
    *
@@ -62,31 +68,31 @@ public class FieldMeasurements {
 
   public static final Translation2d I_J_TROUGH_TO_CENTER_REEF =
       new Translation2d(
-          -(G_H_TROUGH_TO_CENTER_REEF.getY()) * Math.sin(Constants.PI / 3),
+          (G_H_TROUGH_TO_CENTER_REEF.getY()) * Math.sin(Constants.PI / 3),
           (G_H_TROUGH_TO_CENTER_REEF.getY()) * Math.cos(Constants.PI / 3));
 
   public static final Translation2d I =
       new Translation2d(
               (G_H_TROUGH_TO_G.getX()) * Math.sin(Constants.PI / 3),
-              (G_H_TROUGH_TO_G.getY()) * Math.cos(Constants.PI / 3))
+              (G_H_TROUGH_TO_G.getX()) * Math.cos(Constants.PI / 3))
           .plus(I_J_TROUGH_TO_CENTER_REEF.plus(CENTER_TO_CENTER_REEF));
   public static final Translation2d J =
       new Translation2d(
               -(G_H_TROUGH_TO_G.getX()) * Math.sin(Constants.PI / 3),
-              -(G_H_TROUGH_TO_G.getY()) * Math.cos(Constants.PI / 3))
+              -(G_H_TROUGH_TO_G.getX()) * Math.cos(Constants.PI / 3))
           .plus(I_J_TROUGH_TO_CENTER_REEF.plus(CENTER_TO_CENTER_REEF));
 
   public static final Translation2d L =
       new Translation2d(
               (G_H_TROUGH_TO_G.getX()) * Math.sin(Constants.PI / 3),
-              -(G_H_TROUGH_TO_G.getY()) * Math.cos(Constants.PI / 3))
+              -(G_H_TROUGH_TO_G.getX()) * Math.cos(Constants.PI / 3))
           .plus(
               new Translation2d(I_J_TROUGH_TO_CENTER_REEF.getX(), -I_J_TROUGH_TO_CENTER_REEF.getY())
                   .plus(CENTER_TO_CENTER_REEF));
   public static final Translation2d K =
       new Translation2d(
               -(G_H_TROUGH_TO_G.getX()) * Math.sin(Constants.PI / 3),
-              (G_H_TROUGH_TO_G.getY()) * Math.cos(Constants.PI / 3))
+              (G_H_TROUGH_TO_G.getX()) * Math.cos(Constants.PI / 3))
           .plus(
               new Translation2d(I_J_TROUGH_TO_CENTER_REEF.getX(), -I_J_TROUGH_TO_CENTER_REEF.getY())
                   .plus(CENTER_TO_CENTER_REEF));
@@ -94,14 +100,14 @@ public class FieldMeasurements {
   public static final Translation2d F =
       new Translation2d(
               -(G_H_TROUGH_TO_G.getX()) * Math.sin(Constants.PI / 3),
-              (G_H_TROUGH_TO_G.getY()) * Math.cos(Constants.PI / 3))
+              (G_H_TROUGH_TO_G.getX()) * Math.cos(Constants.PI / 3))
           .plus(
               new Translation2d(-I_J_TROUGH_TO_CENTER_REEF.getX(), I_J_TROUGH_TO_CENTER_REEF.getY())
                   .plus(CENTER_TO_CENTER_REEF));
   public static final Translation2d E =
       new Translation2d(
               (G_H_TROUGH_TO_G.getX()) * Math.sin(Constants.PI / 3),
-              -(G_H_TROUGH_TO_G.getY()) * Math.cos(Constants.PI / 3))
+              -(G_H_TROUGH_TO_G.getX()) * Math.cos(Constants.PI / 3))
           .plus(
               new Translation2d(-I_J_TROUGH_TO_CENTER_REEF.getX(), I_J_TROUGH_TO_CENTER_REEF.getY())
                   .plus(CENTER_TO_CENTER_REEF));
@@ -109,7 +115,7 @@ public class FieldMeasurements {
   public static final Translation2d C =
       new Translation2d(
               -(G_H_TROUGH_TO_G.getX()) * Math.sin(Constants.PI / 3),
-              -(G_H_TROUGH_TO_G.getY()) * Math.cos(Constants.PI / 3))
+              -(G_H_TROUGH_TO_G.getX()) * Math.cos(Constants.PI / 3))
           .plus(
               new Translation2d(
                       -I_J_TROUGH_TO_CENTER_REEF.getX(), -I_J_TROUGH_TO_CENTER_REEF.getY())
@@ -117,7 +123,7 @@ public class FieldMeasurements {
   public static final Translation2d D =
       new Translation2d(
               (G_H_TROUGH_TO_G.getX()) * Math.sin(Constants.PI / 3),
-              (G_H_TROUGH_TO_G.getY()) * Math.cos(Constants.PI / 3))
+              (G_H_TROUGH_TO_G.getX()) * Math.cos(Constants.PI / 3))
           .plus(
               new Translation2d(
                       -I_J_TROUGH_TO_CENTER_REEF.getX(), -I_J_TROUGH_TO_CENTER_REEF.getY())

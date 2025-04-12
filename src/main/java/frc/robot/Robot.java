@@ -36,7 +36,8 @@ public class Robot extends TimedRobot {
     m_chooser.setDefaultOption("Center Taxi", this.m_robotContainer.autos.TaxiCenter());
     m_chooser.setDefaultOption("Left Taxi", this.m_robotContainer.autos.TaxiLeft());
     m_chooser.setDefaultOption("Right Taxi", this.m_robotContainer.autos.TaxiRight());
-    m_chooser.addOption("Score L4", this.m_robotContainer.autos.ScoreL4());
+    m_chooser.addOption("RED Score L4", this.m_robotContainer.autos.REDScoreL4());
+    m_chooser.addOption("BLUEScore L4", this.m_robotContainer.autos.BLUEScoreL4());
     m_chooser.addOption("noop", this.m_robotContainer.autos.noop());
     m_chooser.addOption("Test Angle", this.m_robotContainer.autos.testAngles());
 
@@ -126,7 +127,9 @@ public class Robot extends TimedRobot {
 
   /** This function is called periodically during test mode. */
   @Override
-  public void testPeriodic() {}
+  public void testPeriodic() {
+    this.m_robotContainer.led.runFire();
+  }
 
   /** This function is called once when the robot is first started up. */
   @Override

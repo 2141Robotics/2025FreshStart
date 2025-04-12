@@ -24,7 +24,6 @@ public class Constants {
   /** 2π */
   public static final double TWO_PI = 2d * Math.PI;
 
-
   public static final double PI = Math.PI;
 
   /** π/2 */
@@ -120,7 +119,7 @@ public class Constants {
         -0.274658203125 - 0.5
       };
 
-      // The offset of the roboRio gyro
+  // The offset of the roboRio gyro
   // Factored in when moving the entire drivetrain
   public static final Angle GYRO_OFFSET = Angle.ofBaseUnits(-PI_OVER_TWO, Radian);
 

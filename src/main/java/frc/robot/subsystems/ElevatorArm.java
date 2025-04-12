@@ -16,6 +16,9 @@ import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.GravityTypeValue;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
+
+import edu.wpi.first.math.geometry.Transform2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj.DigitalInput;
@@ -24,6 +27,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.math.Constants;
+import frc.robot.math.FieldMeasurements;
 import frc.robot.math.MechanismStates.CoralState;
 import frc.robot.math.MechanismStates.ElevatorState;
 
@@ -189,6 +193,22 @@ public class ElevatorArm extends SubsystemBase {
     Angle elevatorPositions = this.leftMotor.getPosition().getValue();
     SmartDashboard.putNumber("Elevator Position", elevatorPositions.in(Rotations));
     SmartDashboard.putNumber("Arm Position: ", armMotor.getPosition().getValueAsDouble());
+    
+    
+    System.out.println("A"  + FieldMeasurements.A.plus(FieldMeasurements.CENTER_TO_CENTER_REEF.unaryMinus()));
+    System.out.println("B"  + FieldMeasurements.B.plus(FieldMeasurements.CENTER_TO_CENTER_REEF.unaryMinus()));
+    System.out.println("C"  + FieldMeasurements.C.plus(FieldMeasurements.CENTER_TO_CENTER_REEF.unaryMinus()));
+    System.out.println("D"  + FieldMeasurements.D.plus(FieldMeasurements.CENTER_TO_CENTER_REEF.unaryMinus()));
+    System.out.println("E"  + FieldMeasurements.E.plus(FieldMeasurements.CENTER_TO_CENTER_REEF.unaryMinus()));
+    System.out.println("F"  + FieldMeasurements.F.plus(FieldMeasurements.CENTER_TO_CENTER_REEF.unaryMinus()));
+    System.out.println("G"  + FieldMeasurements.G.plus(FieldMeasurements.CENTER_TO_CENTER_REEF.unaryMinus()));
+    System.out.println("H"  + FieldMeasurements.H.plus(FieldMeasurements.CENTER_TO_CENTER_REEF.unaryMinus()));
+    System.out.println("I"  + FieldMeasurements.I.plus(FieldMeasurements.CENTER_TO_CENTER_REEF.unaryMinus()));
+    System.out.println("J"  + FieldMeasurements.J.plus(FieldMeasurements.CENTER_TO_CENTER_REEF.unaryMinus()));
+    System.out.println("K"  + FieldMeasurements.K.plus(FieldMeasurements.CENTER_TO_CENTER_REEF.unaryMinus()));
+    System.out.println("L"  + FieldMeasurements.L.plus(FieldMeasurements.CENTER_TO_CENTER_REEF.unaryMinus()));
+    
+
   }
 
   public Command elevatorStop() {
