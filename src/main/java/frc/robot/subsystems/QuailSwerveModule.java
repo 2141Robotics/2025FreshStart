@@ -78,9 +78,8 @@ public class QuailSwerveModule extends SwerveModuleBase {
   }
 
   /**
-   * 1. Gets Encoder Angle 
-   * 2. Spins the motor so the encoder is at 0 
-   * 3. Sets the motor's position to 0
+   * 1. Gets Encoder Angle 2. Spins the motor so the encoder is at 0 3. Sets the motor's position to
+   * 0
    */
   public void reset() {
     System.out.println("Resetting steering module ID: " + this.steeringMotorID);
@@ -116,20 +115,22 @@ public class QuailSwerveModule extends SwerveModuleBase {
 
   /**
    * Gets raw angle of encoder
+   *
    * @return angle in rotations, not bounded
    */
   public Angle getRawAngle() {
     double currentPos = this.canCoder.getAbsolutePosition().refresh().getValue().in(Rotation);
     return Angle.ofBaseUnits(currentPos, Rotation);
   }
-  
+
   /**
    * Gets normalized angle of encoder
+   *
    * @return angle in rotations between 0 and 1
    */
   public Angle getNormalizedAngle() {
     double currentPos = this.canCoder.getAbsolutePosition().refresh().getValue().in(Rotation);
-    //Normalizes angle
+    // Normalizes angle
     currentPos = (currentPos + 1) % 1;
     return Angle.ofBaseUnits(currentPos, Rotation);
   }

@@ -46,7 +46,6 @@ public class Robot extends TimedRobot {
 
   @Override
   public void robotInit() {
-    m_robotContainer.elevator.init();
     m_robotContainer.drivetrain.init();
   }
 

@@ -90,5 +90,4 @@ public class Constants {
   // The offset of the roboRio gyro
   // Factored in when moving the entire drivetrain
   public static final Angle GYRO_OFFSET = Angle.ofBaseUnits(-PI_OVER_TWO, Radian);
-
 }

@@ -147,7 +147,8 @@ public class Drivetrain extends SubsystemBase {
       SmartDashboard.putNumber(
           "Module " + (i + 1) + " raw angle:", this.modules.get(i).getRawAngle().in(Rotation));
       SmartDashboard.putNumber(
-          "Module " + (i + 1) + " normalized angle:", this.modules.get(i).getNormalizedAngle().in(Rotation));
+          "Module " + (i + 1) + " normalized angle:",
+          this.modules.get(i).getNormalizedAngle().in(Rotation));
       SmartDashboard.putNumber(
           "Module " + (i + 1) + " angle:", this.modules.get(i).getAngle().in(Rotation));
     }
