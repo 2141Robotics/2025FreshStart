@@ -1,0 +1,24 @@
+Here are the 10 Commandments of Programming for FRC Team 2141:
+
+1. Always put any hardcoded numbers in Constants.java
+2. Always put any hardcoded numbers in Constants.java, please
+3. Use Angle objects
+    angle.in(units)
+        Rotation
+        Degree
+        Radian
+    Angle.ofBaseUnits();
+4. Name things like this:
+    classes: ClassName
+    variables: variableName
+        (include units)
+        wheelAngleDegrees
+        wheelAngleRadians
+    constants: CONSTANT_NAME
+    function: functionName()
+5. Name things well
+6. Don't edit Main.java
+7. Don't delete code unless you are entirely confident
+8. Always save the file
+9. Always finish what you start
+10. DO LATER

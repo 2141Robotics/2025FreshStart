@@ -33,8 +33,6 @@ public class QuailSwerveModule extends SwerveModuleBase {
 
   private int steeringMotorID;
 
-  private int resets;
-
   public QuailSwerveModule(
       Vec2d position,
       int driveMotorID,
@@ -49,8 +47,6 @@ public class QuailSwerveModule extends SwerveModuleBase {
     this.canOffset = canCoderOffset;
 
     this.steeringMotorID = steeringMotorID;
-
-    resets = 0;
   }
 
   public void init() {
@@ -82,12 +78,14 @@ public class QuailSwerveModule extends SwerveModuleBase {
   }
 
   /**
-   * 1. Gets Encoder Angle 2. Spins the motor so the encoder's 0 3. Sets the motor's position to 0
+   * 1. Gets Encoder Angle 
+   * 2. Spins the motor so the encoder is at 0 
+   * 3. Sets the motor's position to 0
    */
   public void reset() {
     System.out.println("Resetting steering module ID: " + this.steeringMotorID);
-    this.steeringMotor.setPosition(this.getRawAngle() * Constants.STEERING_RATIO);
-    this.currentAngle = this.getRawAngle() * Math.PI * 2;
+    this.steeringMotor.setPosition(this.getRawAngle().in(Rotation) * Constants.STEERING_RATIO);
+    this.currentAngle = this.getRawAngle().in(Radian);
     this.drivingMotor.stopMotor();
     this.steeringMotor.stopMotor();
   }
@@ -116,19 +114,28 @@ public class QuailSwerveModule extends SwerveModuleBase {
     SmartDashboard.putNumber("Module " + steeringMotorID + " target angle: ", angle.in(Rotations));
   }
 
-  // Returns the position of the canencoder attached to this module
-  public double getRawAngle() {
+  /**
+   * Gets raw angle of encoder
+   * @return angle in rotations, not bounded
+   */
+  public Angle getRawAngle() {
     double currentPos = this.canCoder.getAbsolutePosition().refresh().getValue().in(Rotation);
-    currentPos = (currentPos + 1) % 1;
-    return currentPos;
+    return Angle.ofBaseUnits(currentPos, Rotation);
   }
-
-  public double meep() {
-    return this.canCoder.getAbsolutePosition().refresh().getValue().in(Rotation);
+  
+  /**
+   * Gets normalized angle of encoder
+   * @return angle in rotations between 0 and 1
+   */
+  public Angle getNormalizedAngle() {
+    double currentPos = this.canCoder.getAbsolutePosition().refresh().getValue().in(Rotation);
+    //Normalizes angle
+    currentPos = (currentPos + 1) % 1;
+    return Angle.ofBaseUnits(currentPos, Rotation);
   }
 
   // Returns the position of the steering motor
-  public Angle getRotations() {
+  public Angle getAngle() {
     return (this.steeringMotor.getPosition().refresh().getValue().div(Constants.STEERING_RATIO));
   }
 
@@ -144,25 +151,6 @@ public class QuailSwerveModule extends SwerveModuleBase {
   public void setBrake(ControlRequest brake) {
     this.drivingMotor.setControl(brake);
   }
-
-  /*
-   * public TalonFX getDriveMotor()
-   * {
-   * return this.drivingMotor;
-   * }
-   *
-   *
-   * public TalonFX getSteeringMotor()
-   * {
-   * return this.steeringMotor;
-   * }
-   *
-   *
-   * public CANcoder getCanCoder()
-   * {
-   * return this.canCoder;
-   * }
-   */
 
   @Override
   public String toString() {

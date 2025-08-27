@@ -5,18 +5,6 @@ import static edu.wpi.first.units.Units.*;
 import edu.wpi.first.units.measure.Angle;
 
 public class Constants {
-  /*
-   * AUTHOR'S NOTE
-   *
-   * For all degree/radians/rotation unit conversions (ex. radians to degrees),
-   * use Angle objects
-   *
-   * angle.in(units)
-   * Angle.ofBaseUnits();
-   *
-   *
-   */
-
   /** The delay in milliseconds before a report gets sent to DriverStation if an action fails. */
   // public static final int MS_DELAY = 30;
 
@@ -103,49 +91,4 @@ public class Constants {
   // Factored in when moving the entire drivetrain
   public static final Angle GYRO_OFFSET = Angle.ofBaseUnits(-PI_OVER_TWO, Radian);
 
-  // The offset of each individual encoder
-  // Factored in when rotating each steering motor
-
-  //////////// ELEVATOR / ARM Constants
-
-  public static final double ELEVATOR_MANUAL_SPEED = 0.1;
-
-  // Bounds for the elevator in rotations
-  public static final double ELEVATOR_MIN_ROTATIONS = 0d;
-  public static final double ELEVATOR_MAX_ROTATIONS = 41d;
-
-  public static final double ELEVATOR_MAX_SPEED = 0.2d;
-  public static final double ARM_MAX_SPEED = 0.2d;
-
-  public static final double ARM_MAX_ROTATIONS = 0.25;
-  public static final double ARM_MIN_ROTATIONS = -0.25;
-
-  public static final double ARM_GEAR_RATIO = 81;
-
-  public static final double ARM_TOLERANCE = 0.05;
-  public static final double ELEVATOR_TOLERANCE = 0.3;
-
-  public static final double ELEVATOR_L1 = 0;
-  public static final double ELEVATOR_L2 = 9;
-  public static final double ELEVATOR_L3 = 22;
-  public static final double ELEVATOR_L4 = 41;
-
-  public static final double ELEVATOR_STOW = 0;
-  public static final double ELEVATOR_TRANSITION = 14;
-  public static final double ELEVATOR_PICKUP = 10;
-
-  public static final double ARM_STOW = 0.25;
-
-  public static final double ARM_OUT = 0;
-  public static final double ARM_DOWN = -0.25;
-  public static final double ARM_SCORE_HIGH = 0.17;
-  public static final double ARM_SCORE_LOW = 0.15;
-
-  public static final double ARM_UPPER_ELEVATOR_CLEARANCE = 0.2;
-  public static final double ARM_LOWER_ELEVATOR_CLEARANCE = -0.05;
-
-  public static final double ELEVATOR_TIME_TO_MAX_SPEED = 1;
-  public static final double ARM_TIME_TO_MAX_SPEED = 1;
-
-  public static final double CLIMBER_SPEED = 0.2;
 }

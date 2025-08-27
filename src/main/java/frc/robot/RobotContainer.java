@@ -11,9 +11,7 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.commands.Drive;
 import frc.robot.math.Constants;
-import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.Drivetrain;
-import frc.robot.subsystems.ElevatorArm;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -29,7 +27,6 @@ public class RobotContainer {
 
   // The robot's subsystems and commands are defined here...
   public final Drivetrain drivetrain = new Drivetrain(gyro);
-  public final Climber climber = new Climber();
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
   private final CommandXboxController driverController =
@@ -38,8 +35,6 @@ public class RobotContainer {
   private final CommandXboxController operatorController =
       new CommandXboxController(Constants.OPERATOR_PORT);
 
-  public final ElevatorArm elevator =
-      new ElevatorArm(Constants.ELEVATOR_IDS[0], Constants.ELEVATOR_IDS[1], Constants.ARM_MOTOR_ID);
 
   // private final CommandXboxController operatorController =
   //     new CommandXboxController(Constants.OPERATOR_PORT);
@@ -47,7 +42,6 @@ public class RobotContainer {
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
 
-    SmartDashboard.putData(elevator);
     // Configure the trigger bindings
     configureBindings();
   }
@@ -70,38 +64,6 @@ public class RobotContainer {
 
     drivetrain.setDefaultCommand(drive);
     driverController.back().onTrue(drivetrain.resetGyroCommand());
-
-    // Debugging only
-    // driverController.a().whileTrue(new DriveForward(drivetrain));
-
-    // fixme: uncomment
-    // Elevator & Arm Controls
-    operatorController.y().whileTrue(this.elevator.L4Sequence());
-    operatorController.a().whileTrue(this.elevator.L1Sequence());
-    operatorController.x().onTrue(this.elevator.L2Sequence());
-    operatorController.b().onTrue(this.elevator.L3Sequence());
-
-    operatorController.back().onTrue(this.elevator.pickupSequence());
-
-    // TODO reinstate
-    // operatorController.rightBumper().onTrue(this.elevator.setElevatorPositionStow());
-    // operatorController.leftBumper().onTrue(this.elevator.setArmPositionStow());
-
-    operatorController.povUp().whileTrue(this.elevator.elevatorUp());
-    operatorController.povDown().whileTrue(this.elevator.elevatorDown());
-    operatorController.povLeft().whileTrue(this.elevator.armDown());
-    operatorController.povRight().whileTrue(this.elevator.armUp());
-
-    operatorController.povUp().onFalse(this.elevator.stopElevatorCommand());
-    operatorController.povDown().onFalse(this.elevator.stopElevatorCommand());
-    operatorController.povLeft().onFalse(this.elevator.stopArmCommand());
-    operatorController.povRight().onFalse(this.elevator.stopArmCommand());
-
-    driverController.rightBumper().onTrue(this.climber.setSpeed(Constants.CLIMBER_SPEED));
-    driverController.rightBumper().onFalse(this.climber.setSpeed(0));
-
-    driverController.leftBumper().onTrue(this.climber.setSpeed(-Constants.CLIMBER_SPEED));
-    driverController.leftBumper().onFalse(this.climber.setSpeed(0));
 
     // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,
     // cancelling on release.
