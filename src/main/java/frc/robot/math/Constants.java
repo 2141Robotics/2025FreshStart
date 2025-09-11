@@ -57,7 +57,7 @@ public class Constants {
   public static final double BASE_SPEED = 0.08d;
 
   // The slowest speed the robot can go
-  public static final double MINIMUPATTERN_SPEED = 0.05d;
+  public static final double MINIMUM_SPEED = 0.05d;
 
   // The inverse constant of the rotation speed scale
   public static final double ROTATION_SPEED_INVERSE_SCALE = 35;
@@ -125,6 +125,8 @@ public class Constants {
   public static final LEDPattern PATTERN_BLUE = LEDPattern.solid(Color.kBlue).atBrightness(LED_BRIGHTNESS);
   public static final LEDPattern PATTERN_PURPLE = LEDPattern.solid(Color.kPurple).atBrightness(LED_BRIGHTNESS);
   public static final LEDPattern PATTERN_OFF = LEDPattern.solid(Color.kWhite).atBrightness(Percent.of(5));
+
+  public static final LEDPattern PATTERN_DLS_GREEN = LEDPattern.solid(new Color("#0F4D2A")).atBrightness(LED_BRIGHTNESS);
 
   public static final LEDPattern PATTERN_FIRE = LEDPattern.solid(Color.kDarkRed);
 

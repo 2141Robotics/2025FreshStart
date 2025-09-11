@@ -39,6 +39,7 @@ public class Robot extends TimedRobot {
     ledChooser.addOption("Orange", this.m_robotContainer.leds.setPattern(Constants.PATTERN_ORANGE));
     ledChooser.addOption("Yellow", this.m_robotContainer.leds.setPattern(Constants.PATTERN_YELLOW));
     ledChooser.addOption("Green", this.m_robotContainer.leds.setPattern(Constants.PATTERN_GREEN));
+    ledChooser.addOption("DLS Green", this.m_robotContainer.leds.setPattern(Constants.PATTERN_DLS_GREEN));
     ledChooser.addOption("Blue", this.m_robotContainer.leds.setPattern(Constants.PATTERN_BLUE));
     ledChooser.addOption("Purple", this.m_robotContainer.leds.setPattern(Constants.PATTERN_PURPLE));
     ledChooser.addOption("Up", this.m_robotContainer.leds.setPattern(Constants.PATTERN_UP));

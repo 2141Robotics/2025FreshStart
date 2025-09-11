@@ -1,0 +1,155 @@
+package frc.robot.subsystems;
+
+
+import static edu.wpi.first.units.Units.Seconds;
+
+import edu.wpi.first.units.measure.Time;
+import edu.wpi.first.wpilibj.AddressableLED;
+import edu.wpi.first.wpilibj.AddressableLEDBuffer;
+import edu.wpi.first.wpilibj.AddressableLEDBufferView;
+import edu.wpi.first.wpilibj.LEDPattern;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.math.Constants;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Random;
+
+public class LEDs extends SubsystemBase {
+
+  private final AddressableLED m_led;
+  private final AddressableLEDBuffer m_buffer;
+
+  AddressableLEDBufferView left;
+  private AddressableLEDBufferView right;
+  private AddressableLEDBufferView topleft;
+  private AddressableLEDBufferView topright;
+
+
+  Random random = new Random();
+
+  Integer length;
+  List<Integer> heat;
+
+  public LEDPattern oldPattern;
+  public LEDPattern currentPattern = Constants.PATTERN_YELLOW;
+
+  private int cyclesWhileBlinking = 0;
+  private boolean blinking;
+
+
+  public LEDs() {
+    m_led = new AddressableLED(Constants.LED_PORT);
+    m_buffer = new AddressableLEDBuffer(Constants.LED_COUNT);
+    m_led.setLength(Constants.LED_COUNT);
+    m_led.start();
+    // 288 led total
+    this.left = m_buffer.createView(0, 104);
+    this.topleft = m_buffer.createView(105, 142);
+    this.topright = m_buffer.createView(143, 180).reversed();
+    this.right = m_buffer.createView(181, 286).reversed();
+    runPattern(Constants.PATTERN_YELLOW);
+    updatePattern();
+    this.length = left.getLength();
+    heat = new ArrayList<>(Collections.nCopies(length, 0));
+  }
+
+  @Override
+  public void periodic() {
+
+    this.currentPattern = Constants.PATTERN_GREEN;
+    updatePattern();
+    m_led.setData(m_buffer);
+
+  }
+
+  public void runFire() {
+    this.fire(left, 50, 60);
+    this.fire(right, 50, 60);
+  }
+
+  public void updatePattern() {
+    if (this.currentPattern == Constants.PATTERN_FIRE) {
+    } else if (this.currentPattern != this.oldPattern || blinking) {
+      this.runPattern(currentPattern);
+    }
+  }
+
+  public void resetAnimation() {
+    this.runPattern(currentPattern);
+  }
+
+  public void fire(AddressableLEDBufferView bufferView, int flameHight, int sparks) {
+
+    for (int i = 0; i < length; i++) {
+      int cooldown = random.nextInt(((flameHight * 10) / length) + 2);
+      if (cooldown > heat.get(i)) {
+        heat.set(i, 0);
+      } else {
+        heat.set(i, heat.get(i) - cooldown);
+      }
+    }
+
+    for (int k = length - 1; k >= 2; k--) {
+      heat.set(k, (heat.get(k - 1) + 2 * heat.get(k - 1)) / 3);
+    }
+
+    if (random.nextInt(255) < sparks) {
+      Integer y = random.nextInt(7);
+      heat.set(y, random.nextInt(160, 255));
+    }
+
+    for (int j = 0; j < length; j++) {
+      int temperature = heat.get(j);
+
+      if (temperature > 220) {
+        bufferView.setRGB(j, 220, 220, temperature);
+      } else if (temperature > 40) {
+        bufferView.setRGB(j, 220, temperature, 0);
+      } else {
+        bufferView.setRGB(j, temperature, 0, 0);
+      }
+    }
+  }
+
+  public void runPattern(LEDPattern pattern) {
+
+    if (blinking) {
+      pattern =
+          pattern.blink(
+              Time.ofBaseUnits(Constants.BLINK_ON_LENGTH, Seconds),
+              Time.ofBaseUnits(Constants.BLINK_OFF_LENGTH, Seconds));
+      cyclesWhileBlinking++;
+      if (cyclesWhileBlinking > Constants.BLINK_CYCLES) {
+        blinking = false;
+        cyclesWhileBlinking = 0;
+      }
+    }
+
+    pattern.applyTo(this.left);
+    pattern.applyTo(this.right);
+
+    pattern.applyTo(this.topleft);
+    pattern.applyTo(this.topright);
+    this.oldPattern = this.currentPattern;
+  }
+
+  public Command blinkLEDs() {
+    return this.runOnce(() -> this.blink());
+  }
+
+  public Command setPattern(LEDPattern pattern) {
+    return this.runOnce(() -> this.set(pattern));
+  }
+
+  private void set(LEDPattern pattern) {
+    this.currentPattern = pattern;
+    this.runPattern(pattern);
+  }
+
+  public void blink() {
+    System.out.println("Blinking LEDS");
+    blinking = true;
+  }
+}
