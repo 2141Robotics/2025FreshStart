@@ -33,6 +33,12 @@ public class Robot extends TimedRobot {
     // autonomous chooser on the dashboard.
     m_robotContainer = new RobotContainer();
 
+    ledChooser.onChange(command -> {
+      if (command != null) {
+        command.schedule();
+      }
+    });
+
     ledChooser.setDefaultOption("Fire", this.m_robotContainer.leds.setPattern(Constants.PATTERN_FIRE));
     ledChooser.addOption("Off", this.m_robotContainer.leds.setPattern(Constants.PATTERN_OFF));
     ledChooser.addOption("Red", this.m_robotContainer.leds.setPattern(Constants.PATTERN_RED));
