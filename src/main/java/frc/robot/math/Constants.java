@@ -17,6 +17,8 @@ public class Constants {
    *
    */
 
+  public static final double robotWidth = 28;
+
   public static final double INCHES_PER_METER = 39.3701;
 
   public static final double SECONDS_TO_MS = 1000;

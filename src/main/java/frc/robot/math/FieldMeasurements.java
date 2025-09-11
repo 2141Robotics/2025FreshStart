@@ -10,13 +10,7 @@ public class FieldMeasurements {
    *
    * <p>DRIVERS -------------
    *
-   *         __________
-   *        /  B    A  \ 
-   *       /C          L\ 
-   *      /D     Reef   K\
-   *      \E            J/ 
-   *       \F          I/ 
-   *        \__H____G__/
+   * <p>__________ / B A \ /C L\ /D Reef K\ \E J/ \F I/ \__H____G__/
    *
    * <p>Center of field (0,0)
    *
@@ -34,6 +28,9 @@ public class FieldMeasurements {
 
   // Official value: 12.94"
   public static final double G_H_POLE_WIDTH = 12.94d;
+
+  public static final double CENTER_TO_G_H_TROUGH =
+      CENTER_TO_BARGE_ZONE_EDGE + BARGE_ZONE_EDGE_TO_G_H_TROUGH;
 
   // Center of field to edge of the barge zone
   public static final Translation2d CENTER_TO_BARGE_EDGE =
@@ -53,6 +50,7 @@ public class FieldMeasurements {
   // How far to the side post A is from the center of the trough
   public static final Translation2d G_H_TROUGH_TO_G = new Translation2d(G_H_POLE_WIDTH / 2, 0);
 
+  /*
   public static final Translation2d G =
       new Translation2d(-G_H_TROUGH_TO_G.getX(), -G_H_TROUGH_TO_CENTER_REEF.getY())
           .plus(CENTER_TO_CENTER_REEF);
@@ -128,4 +126,6 @@ public class FieldMeasurements {
               new Translation2d(
                       -I_J_TROUGH_TO_CENTER_REEF.getX(), -I_J_TROUGH_TO_CENTER_REEF.getY())
                   .plus(CENTER_TO_CENTER_REEF));
+
+                  */
 }

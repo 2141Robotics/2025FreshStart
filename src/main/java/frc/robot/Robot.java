@@ -38,8 +38,8 @@ public class Robot extends TimedRobot {
     m_chooser.setDefaultOption("Right Taxi", this.m_robotContainer.autos.TaxiRight());
     m_chooser.addOption("RED Score L4", this.m_robotContainer.autos.REDScoreL4());
     m_chooser.addOption("BLUEScore L4", this.m_robotContainer.autos.BLUEScoreL4());
-    m_chooser.addOption("noop", this.m_robotContainer.autos.noop());
-    m_chooser.addOption("Test Angle", this.m_robotContainer.autos.testAngles());
+    m_chooser.addOption("Do Nothing", this.m_robotContainer.autos.DoNothing());
+    m_chooser.addOption("Test Taxi", this.m_robotContainer.autos.TestTaxi());
 
     SmartDashboard.putData("Select Auto Routine", m_chooser);
   }
