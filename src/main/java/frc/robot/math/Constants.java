@@ -3,6 +3,12 @@ package frc.robot.math;
 import static edu.wpi.first.units.Units.*;
 
 import edu.wpi.first.units.measure.Angle;
+import edu.wpi.first.units.measure.Dimensionless;
+import edu.wpi.first.units.measure.Distance;
+import edu.wpi.first.units.measure.LinearVelocity;
+import edu.wpi.first.wpilibj.LEDPattern;
+import edu.wpi.first.wpilibj.LEDPattern.GradientType;
+import edu.wpi.first.wpilibj.util.Color;
 
 public class Constants {
   /** The delay in milliseconds before a report gets sent to DriverStation if an action fails. */
@@ -51,7 +57,7 @@ public class Constants {
   public static final double BASE_SPEED = 0.08d;
 
   // The slowest speed the robot can go
-  public static final double MINIMUM_SPEED = 0.05d;
+  public static final double MINIMUPATTERN_SPEED = 0.05d;
 
   // The inverse constant of the rotation speed scale
   public static final double ROTATION_SPEED_INVERSE_SCALE = 35;
@@ -80,7 +86,7 @@ public class Constants {
   // The CAN IDs of the Elevator motors
   public static final int[] ELEVATOR_IDS = new int[] {21, 22};
 
-  public static final int ARM_MOTOR_ID = 31;
+  public static final int ARPATTERN_MOTOR_ID = 31;
 
   public static final int CLIMBER_MOTOR_ID = 41;
 
@@ -90,4 +96,48 @@ public class Constants {
   // The offset of the roboRio gyro
   // Factored in when moving the entire drivetrain
   public static final Angle GYRO_OFFSET = Angle.ofBaseUnits(-PI_OVER_TWO, Radian);
+
+  //Amount of time the LEDs are on when blinking in seconds
+  public static final double BLINK_ON_LENGTH = 1;
+
+  //Amount of time the LEDs are off when blinking in seconds
+  public static final double BLINK_OFF_LENGTH = 1;
+
+  //Amount of cycles the LEDs blink for
+  public static final int BLINK_CYCLES = 5;
+
+  //The port number of the LED strip
+  public static final int LED_PORT = 4;
+  
+  //The number of LEDs on the strip
+  public static final int LED_COUNT = 288;
+
+
+  private static final Dimensionless LED_BRIGHTNESS = Percent.of(50);
+
+  private static final LinearVelocity LEDPATTERN_VELOCITY = MetersPerSecond.of(1);
+  private static final Distance LEDPATTERN_DISTANCE = Meters.of(1 / 120);
+
+  public static final LEDPattern PATTERN_RED = LEDPattern.solid(Color.kRed).atBrightness(LED_BRIGHTNESS);
+  public static final LEDPattern PATTERN_ORANGE = LEDPattern.solid(Color.kOrange).atBrightness(LED_BRIGHTNESS);
+  public static final LEDPattern PATTERN_YELLOW = LEDPattern.solid(Color.kYellow).atBrightness(LED_BRIGHTNESS);
+  public static final LEDPattern PATTERN_GREEN = LEDPattern.solid(Color.kGreen).atBrightness(LED_BRIGHTNESS);
+  public static final LEDPattern PATTERN_BLUE = LEDPattern.solid(Color.kBlue).atBrightness(LED_BRIGHTNESS);
+  public static final LEDPattern PATTERN_PURPLE = LEDPattern.solid(Color.kPurple).atBrightness(LED_BRIGHTNESS);
+  public static final LEDPattern PATTERN_OFF = LEDPattern.solid(Color.kWhite).atBrightness(Percent.of(5));
+
+  public static final LEDPattern PATTERN_FIRE = LEDPattern.solid(Color.kDarkRed);
+
+  public static final LEDPattern PATTERN_UP =
+      LEDPattern.gradient(GradientType.kDiscontinuous, Color.kPurple, Color.kDarkBlue);
+  public static final LEDPattern PATTERN_DOWN =
+      LEDPattern.gradient(GradientType.kDiscontinuous, Color.kDarkBlue, Color.kPurple);
+  public static final LEDPattern READY_SCROLL = PATTERN_UP.scrollAtAbsoluteSpeed(LEDPATTERN_VELOCITY, LEDPATTERN_DISTANCE);
+
+  /*TODO
+   * Police Lights (Flashing Red and Blue)
+   * Rainbow
+   * Wrapping gradient
+   * Dot moving back and forth with tail (sinelon)
+   */
 }

@@ -4,9 +4,13 @@
 
 package frc.robot;
 
+import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.math.Constants;
 
 /**
  * The methods in this class are called automatically corresponding to each mode, as described in
@@ -15,6 +19,8 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
  */
 public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
+
+  private final SendableChooser<Command> ledChooser = new SendableChooser<>();
 
   private final RobotContainer m_robotContainer;
 
@@ -26,6 +32,20 @@ public class Robot extends TimedRobot {
     // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
     // autonomous chooser on the dashboard.
     m_robotContainer = new RobotContainer();
+
+    ledChooser.setDefaultOption("Fire", this.m_robotContainer.leds.setPattern(Constants.PATTERN_FIRE));
+    ledChooser.addOption("Off", this.m_robotContainer.leds.setPattern(Constants.PATTERN_OFF));
+    ledChooser.addOption("Red", this.m_robotContainer.leds.setPattern(Constants.PATTERN_RED));
+    ledChooser.addOption("Orange", this.m_robotContainer.leds.setPattern(Constants.PATTERN_ORANGE));
+    ledChooser.addOption("Yellow", this.m_robotContainer.leds.setPattern(Constants.PATTERN_YELLOW));
+    ledChooser.addOption("Green", this.m_robotContainer.leds.setPattern(Constants.PATTERN_GREEN));
+    ledChooser.addOption("Blue", this.m_robotContainer.leds.setPattern(Constants.PATTERN_BLUE));
+    ledChooser.addOption("Purple", this.m_robotContainer.leds.setPattern(Constants.PATTERN_PURPLE));
+    ledChooser.addOption("Up", this.m_robotContainer.leds.setPattern(Constants.PATTERN_UP));
+    ledChooser.addOption("Down", this.m_robotContainer.leds.setPattern(Constants.PATTERN_DOWN));
+    ledChooser.addOption("Moving", this.m_robotContainer.leds.setPattern(Constants.READY_SCROLL));
+
+    SmartDashboard.putData("LED Pattern", ledChooser);
   }
 
   /**
@@ -47,6 +67,7 @@ public class Robot extends TimedRobot {
   @Override
   public void robotInit() {
     m_robotContainer.drivetrain.init();
+    RobotController.setBrownoutVoltage(5.5);
   }
 
   /** This function is called once each time the robot enters Disabled mode. */
