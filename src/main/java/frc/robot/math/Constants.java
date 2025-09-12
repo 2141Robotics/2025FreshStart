@@ -134,6 +134,8 @@ public class Constants {
   public static final LEDPattern PATTERN_POLICE_RED = LEDPattern.solid(Color.kRed);
   public static final LEDPattern PATTERN_POLICE_BLUE = LEDPattern.solid(Color.kBlue);
 
+  public static final int POLICE_BLINK_SPEED = 5; //cycles per color change
+
   public static final LEDPattern PATTERN_DOTS = LEDPattern.solid(Color.kWhite);
 
   public static final int DOTS_TRAIL_LENGTH = 10;

@@ -25,6 +25,7 @@ public class LEDs extends SubsystemBase {
   private AddressableLEDBufferView right;
   private AddressableLEDBufferView topleft;
   private AddressableLEDBufferView topright;
+  private AddressableLEDBufferView top;
   private ArrayList<AddressableLEDBufferView> segments;
 
 
@@ -39,6 +40,7 @@ public class LEDs extends SubsystemBase {
   private int cyclesWhileBlinking = 0;
   private boolean blinking;
   private int policeBlinkSpeed = 0;
+  private int policeBlinkCycles = 0;
   private boolean policeInverted = false;
 
   private int[] dots;
@@ -58,7 +60,10 @@ public class LEDs extends SubsystemBase {
 
     this.top = m_buffer.createView(105, 180);
 
-    segments = new ArrayList<AddressableLEDBufferView> {left, top, right};
+    segments = new ArrayList<>();
+    segments.add(left);
+    segments.add(top);
+    segments.add(right);
 
     dots = new int[]{0,0,0};
     dotsDecreasing = new boolean[]{false, false, true};
@@ -78,9 +83,9 @@ public class LEDs extends SubsystemBase {
       runFire();
     }else if(this.currentPattern == Constants.PATTERN_POLICE){
       runPolice();
-      else if(this.currentPattern == Constants.PATTERN_DOTS){
+    }else if(this.currentPattern == Constants.PATTERN_DOTS){
         runDots();
-      }}else{
+    }else{
       updatePattern();
     }
     m_led.setData(m_buffer);
@@ -98,7 +103,7 @@ public class LEDs extends SubsystemBase {
       }else{
         dots[i]++;
       }
-      segment.setPattern(Constants.PATTERN_OFF);
+      Constants.PATTERN_OFF.applyTo(segment);
       segment.setRGB(dots[i], 255, 255, 255);
       for(int j = 0; j < Constants.DOTS_TRAIL_LENGTH; j++){         
         int brightness = 255 - (j * (255 / Constants.DOTS_TRAIL_LENGTH));
@@ -106,10 +111,11 @@ public class LEDs extends SubsystemBase {
           segment.setRGB(dots[i]+j, brightness, brightness, brightness);
         }
         if(!dotsDecreasing[i] && dots[i]-j > 0){
-          int brightness = 255 - (j * (255 / Constants.DOTS_TRAIL_LENGTH));
+        brightness = 255 - (j * (255 / Constants.DOTS_TRAIL_LENGTH));
           segment.setRGB(dots[i]-j, brightness, brightness, brightness);
         }
       }
+    }
   }
 
   public void runPolice(){
