@@ -52,6 +52,7 @@ public class Robot extends TimedRobot {
     ledChooser.addOption("Down", this.m_robotContainer.leds.setPattern(Constants.PATTERN_DOWN));
     ledChooser.addOption("Moving", this.m_robotContainer.leds.setPattern(Constants.READY_SCROLL));
     ledChooser.addOption("Police", this.m_robotContainer.leds.setPattern(Constants.PATTERN_POLICE));
+    ledChooser.addOption("Dots", this.m_robotContainer.leds.setPattern(Constants.PATTERN_DOTS));
 
     SmartDashboard.putData("LED Pattern", ledChooser);
   }
