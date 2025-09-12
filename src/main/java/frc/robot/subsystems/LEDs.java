@@ -21,10 +21,11 @@ public class LEDs extends SubsystemBase {
   private final AddressableLED m_led;
   private final AddressableLEDBuffer m_buffer;
 
-  AddressableLEDBufferView left;
+  private AddressableLEDBufferView left;
   private AddressableLEDBufferView right;
   private AddressableLEDBufferView topleft;
   private AddressableLEDBufferView topright;
+  private ArrayList<AddressableLEDBufferView> segments;
 
 
   Random random = new Random();
@@ -37,6 +38,8 @@ public class LEDs extends SubsystemBase {
 
   private int cyclesWhileBlinking = 0;
   private boolean blinking;
+  private int policeBlinkSpeed = 0;
+  private boolean policeInverted = false;
 
 
   public LEDs() {
@@ -49,18 +52,52 @@ public class LEDs extends SubsystemBase {
     this.topleft = m_buffer.createView(105, 142);
     this.topright = m_buffer.createView(143, 180).reversed();
     this.right = m_buffer.createView(181, 286).reversed();
+
+    this.top = m_buffer.createView(105, 180);
+
+    segments = new ArrayList<AddressableLEDBufferView> {left, topleft, topright, right};
+
     runPattern(Constants.PATTERN_YELLOW);
     updatePattern();
     this.length = left.getLength();
     heat = new ArrayList<>(Collections.nCopies(length, 0));
+
+    policeBlinkCycles = 0;
   }
 
   @Override
   public void periodic() {
 
-    this.currentPattern = Constants.PATTERN_GREEN;
-    updatePattern();
+    if(this.currentPattern == Constants.PATTERN_FIRE){
+      runFire();
+    }else if(this.currentPattern == Constants.PATTERN_POLICE){
+      runPolice();
+    }else{
+      updatePattern();
+    }
     m_led.setData(m_buffer);
+
+  }
+
+  public void runPolice(){
+    if(policeBlinkCycles > Constants.POLICE_BLINK_SPEED){
+      policeBlinkCycles = 0;
+      for(AddressableLEDBufferView segment: segments){
+        int length = segment.getLength();
+        AddressableLEDBufferView segment1 = m_buffer.createView(0, length/2);
+        AddressableLEDBufferView segment2 = m_buffer.createView((length/2), length-1);
+        if(policeInverted){
+          Constants.PATTERN_POLICE_RED.applyTo(segment1);
+          Constants.PATTERN_POLICE_BLUE.applyTo(segment2);
+        }else{
+          Constants.PATTERN_POLICE_BLUE.applyTo(segment1);
+          Constants.PATTERN_POLICE_RED.applyTo(segment2);
+        }
+        policeInverted = !policeInverted;
+      }
+    }else{
+      policeBlinkCycles++;
+    }
 
   }
 
@@ -70,8 +107,7 @@ public class LEDs extends SubsystemBase {
   }
 
   public void updatePattern() {
-    if (this.currentPattern == Constants.PATTERN_FIRE) {
-    } else if (this.currentPattern != this.oldPattern || blinking) {
+    if (this.currentPattern != this.oldPattern || blinking) {
       this.runPattern(currentPattern);
     }
   }

@@ -130,6 +130,10 @@ public class Constants {
 
   public static final LEDPattern PATTERN_FIRE = LEDPattern.solid(Color.kDarkRed);
 
+  public static final LEDPattern PATTERN_POLICE = LEDPattern.solid(Color.kWhite);
+  public static final LEDPattern PATTERN_POLICE_RED = LEDPattern.solid(Color.kRed);
+  public static final LEDPattern PATTERN_POLICE_BLUE = LEDPattern.solid(Color.kBlue);
+
   public static final LEDPattern PATTERN_UP =
       LEDPattern.gradient(GradientType.kDiscontinuous, Color.kPurple, Color.kDarkBlue);
   public static final LEDPattern PATTERN_DOWN =
