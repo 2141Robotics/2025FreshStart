@@ -12,7 +12,7 @@ import edu.wpi.first.wpilibj.util.Color;
 
 public class Constants {
 
-  //************* ROBOT CONSTRUCTION CONSTANTS ***************/
+  // ************* ROBOT CONSTRUCTION CONSTANTS ***************/
 
   // Diameter of colson swerve wheels
   public static final double WHEEL_DIAMETER = 4;
@@ -24,8 +24,7 @@ public class Constants {
   // How far the shaft of the swerve module is away from the exact center of rotation
   public static final double CENTER_TO_SWERVE_DIST = 10.75d;
 
-
-  //************* CONTROLLER SETTINGS ***************/
+  // ************* CONTROLLER SETTINGS ***************/
 
   // The port of the driver controller
   public static final int DRIVER_PORT = 0;
@@ -37,7 +36,7 @@ public class Constants {
   // (The zone where we round down to 0 to combat stick drift)
   public static final double JOYSTICK_DEAD_ZONE = 0.1d;
 
-  //************* MATH CONSTANTS ***************/
+  // ************* MATH CONSTANTS ***************/
 
   /** 2π */
   public static final double TWO_PI = 2d * Math.PI;
@@ -52,8 +51,7 @@ public class Constants {
 
   public static final double METERS_TO_INCHES = 39.3701;
 
-
-  //************* MOVEMENT SETTINGS ***************/
+  // ************* MOVEMENT SETTINGS ***************/
 
   // Speed without the trigger
   public static final double BASE_SPEED = 0.08d;
@@ -76,9 +74,7 @@ public class Constants {
   // Limits change in the overall movement of the robot
   public static final double DRIVE_ACCELERATION_LIMIT = 0.003d;
 
-
-
-  //************* DEVICE CONFIG SETTINGS ***************/
+  // ************* DEVICE CONFIG SETTINGS ***************/
   /** Settings are {kF, kP, kI, kD} */
   // kV kP kI kD
   // Mainly pay attention to kP
@@ -88,8 +84,7 @@ public class Constants {
   // Factored in when moving the entire drivetrain
   public static final Angle GYRO_OFFSET = Angle.ofBaseUnits(-PI_OVER_TWO, Radian);
 
-
-  //************* DEVICE ID SETTINGS ***************/
+  // ************* DEVICE ID SETTINGS ***************/
   // The IDs of the drive motors
   public static final int[] DRIVE_MOTOR_IDS = new int[] {1, 3, 5, 7};
 
@@ -102,7 +97,7 @@ public class Constants {
   // Individual canCoder offsets that are determined by the Phoenix Tuner X
   public static final double[] CANCODER_OFFSETS = new double[] {-.83, -.92, -.52, -.27};
 
-  //************* LED SETTINGS ***************/
+  // ************* LED SETTINGS ***************/
 
   // Amount of time the LEDs are on when blinking in seconds
   public static final double BLINK_ON_LENGTH = 1;
