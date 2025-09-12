@@ -6,6 +6,7 @@ import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.Dimensionless;
 import edu.wpi.first.units.measure.Distance;
 import edu.wpi.first.units.measure.LinearVelocity;
+import edu.wpi.first.units.measure.Time;
 import edu.wpi.first.wpilibj.LEDPattern;
 import edu.wpi.first.wpilibj.LEDPattern.GradientType;
 import edu.wpi.first.wpilibj.util.Color;
@@ -158,6 +159,8 @@ public class Constants {
       LEDPattern.gradient(GradientType.kDiscontinuous, Color.kDarkBlue, Color.kPurple);
   public static final LEDPattern READY_SCROLL =
       PATTERN_UP.scrollAtAbsoluteSpeed(LEDPATTERN_VELOCITY, LEDPATTERN_DISTANCE);
+
+    public static final Time BREATHE_LOOP_TIME = Time.ofBaseUnits(1, Second);
 
   /*TODO
    * Police Lights (Flashing Red and Blue)

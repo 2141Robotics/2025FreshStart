@@ -197,7 +197,7 @@ public class LEDs extends SubsystemBase {
 
   public void runPattern(LEDPattern pattern) {
     if (breathing) {
-      pattern = pattern.breathe(Time.ofBaseUnits(1, Seconds));
+      pattern = pattern.breathe(Constants.BREATHE_LOOP_TIME);
     }
     if (blinking) {
       pattern =
