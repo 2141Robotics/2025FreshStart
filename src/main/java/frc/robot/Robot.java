@@ -36,7 +36,8 @@ public class Robot extends TimedRobot {
     ledChooser.onChange(
         command -> {
           if (command != null) {
-            command.schedule();
+            System.out.println("Scheduling");
+            this.m_robotContainer.leds.setPatternCommand(Constants.PATTERN_RED).schedule();
           }
         });
 

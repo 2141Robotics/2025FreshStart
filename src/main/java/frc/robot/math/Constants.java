@@ -160,7 +160,7 @@ public class Constants {
   public static final LEDPattern READY_SCROLL =
       PATTERN_UP.scrollAtAbsoluteSpeed(LEDPATTERN_VELOCITY, LEDPATTERN_DISTANCE);
 
-    public static final Time BREATHE_LOOP_TIME = Time.ofBaseUnits(1, Second);
+  public static final Time BREATHE_LOOP_TIME = Time.ofBaseUnits(1, Second);
 
   /*TODO
    * Police Lights (Flashing Red and Blue)

@@ -8,6 +8,7 @@ import edu.wpi.first.wpilibj.AddressableLEDBuffer;
 import edu.wpi.first.wpilibj.AddressableLEDBufferView;
 import edu.wpi.first.wpilibj.LEDPattern;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.math.Constants;
 import java.util.ArrayList;
@@ -87,6 +88,7 @@ public class LEDs extends SubsystemBase {
   @Override
   public void periodic() {
 
+    System.out.println(currentPattern);
     if (this.currentPattern == Constants.PATTERN_FIRE) {
       runFire();
     } else if (this.currentPattern == Constants.PATTERN_POLICE) {
@@ -133,14 +135,14 @@ public class LEDs extends SubsystemBase {
         int length = segment.getLength();
         AddressableLEDBufferView segment1 = m_buffer.createView(0, length / 2);
         AddressableLEDBufferView segment2 = m_buffer.createView((length / 2), length - 1);
-        if (policeInverted) {
-          Constants.PATTERN_POLICE_RED.applyTo(segment1);
-          Constants.PATTERN_POLICE_BLUE.applyTo(segment2);
-        } else {
-          Constants.PATTERN_POLICE_BLUE.applyTo(segment1);
-          Constants.PATTERN_POLICE_RED.applyTo(segment2);
-        }
-        policeInverted = !policeInverted;
+      if (policeInverted) {
+        Constants.PATTERN_POLICE_RED.applyTo(segment1);
+        Constants.PATTERN_POLICE_BLUE.applyTo(segment2);
+      } else {
+        Constants.PATTERN_POLICE_BLUE.applyTo(segment1);
+        Constants.PATTERN_POLICE_RED.applyTo(segment2);
+      }
+      policeInverted = !policeInverted;
       }
     } else {
       policeBlinkCycles++;
@@ -153,7 +155,7 @@ public class LEDs extends SubsystemBase {
   }
 
   public void updatePattern() {
-    if (this.currentPattern != this.oldPattern || blinking) {
+    if (this.currentPattern != this.oldPattern || blinking || breathing) {
       this.runPattern(currentPattern);
     }
   }
@@ -229,21 +231,19 @@ public class LEDs extends SubsystemBase {
   }
 
   public Command setPatternCommand(LEDPattern pattern) {
-    return this.runOnce(() -> this.setPattern(pattern));
-  }
+    return new InstantCommand(() -> {
+        this.currentPattern = pattern;
+        this.updatePattern(); // Ensure immediate update
+    });
 
+  }
+  
   public Command setBreatheCommand(boolean b) {
-    return this.runOnce(() -> this.setBreathe(b));
-  }
-
-  private void setPattern(LEDPattern pattern) {
-    this.currentPattern = pattern;
-    this.runPattern(pattern);
-  }
-
-  private void setBreathe(boolean b) {
-    this.breathing = b;
-  }
+    return new InstantCommand(() -> {
+        this.breathing = b;
+        this.updatePattern(); // Ensure immediate update
+    });
+}
 
   public void blink() {
     System.out.println("Blinking LEDS");
