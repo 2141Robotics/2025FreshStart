@@ -48,7 +48,10 @@ public class LEDs extends SubsystemBase {
   private int[] dots;
   private boolean[] dotsDecreasing;
 
-  public LEDs() {
+  private QuailSwerveDrive swerveDrive;
+
+  public LEDs(QuailSwerveDrive swerveDrive) {
+    this.swerveDrive = swerveDrive;
     m_led = new AddressableLED(Constants.LED_PORT);
     m_buffer = new AddressableLEDBuffer(Constants.LED_COUNT);
     m_led.setLength(Constants.LED_COUNT);
@@ -87,6 +90,9 @@ public class LEDs extends SubsystemBase {
 
   @Override
   public void periodic() {
+    if(this.currentPattern != Constants.PATTERN_POLICE){
+      swerveDrive.setMotorSound(0);
+    }
 
     System.out.println(currentPattern);
     if (this.currentPattern == Constants.PATTERN_FIRE) {
@@ -129,20 +135,21 @@ public class LEDs extends SubsystemBase {
   }
 
   public void runPolice() {
+    swerveDrive.setMotorSound(Constants.POLICE_SIREN_FREQUENCY);
     if (policeBlinkCycles > Constants.POLICE_BLINK_SPEED) {
       policeBlinkCycles = 0;
       for (AddressableLEDBufferView segment : segmentsUnifiedTop) {
         int length = segment.getLength();
         AddressableLEDBufferView segment1 = m_buffer.createView(0, length / 2);
         AddressableLEDBufferView segment2 = m_buffer.createView((length / 2), length - 1);
-      if (policeInverted) {
-        Constants.PATTERN_POLICE_RED.applyTo(segment1);
-        Constants.PATTERN_POLICE_BLUE.applyTo(segment2);
-      } else {
-        Constants.PATTERN_POLICE_BLUE.applyTo(segment1);
-        Constants.PATTERN_POLICE_RED.applyTo(segment2);
-      }
-      policeInverted = !policeInverted;
+        if (policeInverted) {
+          Constants.PATTERN_POLICE_RED.applyTo(segment1);
+          Constants.PATTERN_POLICE_BLUE.applyTo(segment2);
+        } else {
+          Constants.PATTERN_POLICE_BLUE.applyTo(segment1);
+          Constants.PATTERN_POLICE_RED.applyTo(segment2);
+        }
+        policeInverted = !policeInverted;
       }
     } else {
       policeBlinkCycles++;

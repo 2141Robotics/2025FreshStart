@@ -20,7 +20,7 @@ public class Drivetrain extends SubsystemBase {
 
   private AHRS gyro;
 
-  private QuailSwerveDrive quailSwerveDrive;
+  public QuailSwerveDrive quailSwerveDrive;
 
   private ArrayList<QuailSwerveModule> modules;
 

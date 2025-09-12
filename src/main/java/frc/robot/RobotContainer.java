@@ -35,7 +35,7 @@ public class RobotContainer {
   private final CommandXboxController operatorController =
       new CommandXboxController(Constants.OPERATOR_PORT);
 
-  public final LEDs leds = new LEDs();
+  public final LEDs leds = new LEDs(drivetrain.quailSwerveDrive);
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {

@@ -6,6 +6,7 @@ import com.ctre.phoenix6.configs.MagnetSensorConfigs;
 import com.ctre.phoenix6.configs.MotorOutputConfigs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.ControlRequest;
+import com.ctre.phoenix6.controls.MusicTone;
 import com.ctre.phoenix6.controls.PositionDutyCycle;
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
@@ -151,6 +152,11 @@ public class QuailSwerveModule extends SwerveModuleBase {
 
   public void setBrake(ControlRequest brake) {
     this.drivingMotor.setControl(brake);
+  }
+
+  public void setMotorSound(int frequency) {
+    this.drivingMotor.setControl(new MusicTone(frequency));
+    this.steeringMotor.setControl(new MusicTone(frequency));
   }
 
   @Override
