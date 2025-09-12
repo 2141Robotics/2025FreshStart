@@ -10,6 +10,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.math.Constants;
 
 /**
@@ -24,6 +25,8 @@ public class Robot extends TimedRobot {
 
   private final RobotContainer m_robotContainer;
 
+  private Command lastCommand;
+
   /**
    * This function is run when the robot is first started up and should be used for any
    * initialization code.
@@ -32,14 +35,6 @@ public class Robot extends TimedRobot {
     // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
     // autonomous chooser on the dashboard.
     m_robotContainer = new RobotContainer();
-
-    ledChooser.onChange(
-        command -> {
-          if (command != null) {
-            System.out.println("Scheduling");
-            this.m_robotContainer.leds.setPatternCommand(Constants.PATTERN_RED).schedule();
-          }
-        });
 
     ledChooser.setDefaultOption(
         "Fire", this.m_robotContainer.leds.setPatternCommand(Constants.PATTERN_FIRE));
@@ -59,7 +54,7 @@ public class Robot extends TimedRobot {
         "Blue", this.m_robotContainer.leds.setPatternCommand(Constants.PATTERN_BLUE));
     ledChooser.addOption(
         "Purple", this.m_robotContainer.leds.setPatternCommand(Constants.PATTERN_PURPLE));
-    ledChooser.addOption("Up", this.m_robotContainer.leds.setPatternCommand(Constants.PATTERN_UP));
+    /*ledChooser.addOption("Up", this.m_robotContainer.leds.setPatternCommand(Constants.PATTERN_UP));
     ledChooser.addOption(
         "Down", this.m_robotContainer.leds.setPatternCommand(Constants.PATTERN_DOWN));
     ledChooser.addOption(
@@ -71,7 +66,7 @@ public class Robot extends TimedRobot {
     ledChooser.addOption(
         "Rainbow",
         this.m_robotContainer.leds.setPatternCommand(Constants.PATTERN_RAINBOW_SCROLLING));
-
+        */
     SmartDashboard.putData("LED Pattern", ledChooser);
   }
 
@@ -88,6 +83,16 @@ public class Robot extends TimedRobot {
     // commands, running already-scheduled commands, removing finished or interrupted commands,
     // and running subsystem periodic() methods.  This must be called from the robot's periodic
     // block in order for anything in the Command-based framework to work.
+
+    // Check for changes in the selected LED pattern
+    Command selectedCommand = ledChooser.getSelected();
+    if (selectedCommand != null && !selectedCommand.equals(lastCommand)) {
+      selectedCommand.schedule();
+      System.out.println("Scheduled Command");
+      lastCommand = selectedCommand;
+    }
+    Command testCommand = new InstantCommand(() -> System.out.println("Test Command Triggered"));
+    testCommand.schedule();
     CommandScheduler.getInstance().run();
   }
 
@@ -95,6 +100,18 @@ public class Robot extends TimedRobot {
   public void robotInit() {
     m_robotContainer.drivetrain.init();
     RobotController.setBrownoutVoltage(5.5);
+
+    // Add logging for CommandScheduler actions
+    CommandScheduler.getInstance()
+        .onCommandInitialize(
+            command -> System.out.println("Command initialized: " + command.getName()));
+    CommandScheduler.getInstance()
+        .onCommandExecute(command -> System.out.println("Command executing: " + command.getName()));
+    CommandScheduler.getInstance()
+        .onCommandFinish(command -> System.out.println("Command finished: " + command.getName()));
+    CommandScheduler.getInstance()
+        .onCommandInterrupt(
+            command -> System.out.println("Command interrupted: " + command.getName()));
   }
 
   /** This function is called once each time the robot enters Disabled mode. */

@@ -90,11 +90,11 @@ public class LEDs extends SubsystemBase {
 
   @Override
   public void periodic() {
+    
     if (this.currentPattern != Constants.PATTERN_POLICE) {
       swerveDrive.setMotorSound(0);
     }
 
-    System.out.println(currentPattern);
     if (this.currentPattern == Constants.PATTERN_FIRE) {
       runFire();
     } else if (this.currentPattern == Constants.PATTERN_POLICE) {
@@ -238,11 +238,15 @@ public class LEDs extends SubsystemBase {
   }
 
   public Command setPatternCommand(LEDPattern pattern) {
-    return new InstantCommand(
-        () -> {
-          this.currentPattern = pattern;
-          this.updatePattern(); // Ensure immediate update
-        });
+    System.out.println("CHANGE" + pattern);
+    /*return new InstantCommand(
+    () -> {
+      this.currentPattern = pattern;
+      this.updatePattern(); // Ensure immediate update
+    });
+
+    */
+    return new InstantCommand(() -> System.out.println("CHANGE" + pattern));
   }
 
   public Command setBreatheCommand(boolean b) {
