@@ -41,22 +41,22 @@ public class Robot extends TimedRobot {
         });
 
     ledChooser.setDefaultOption(
-        "Fire", this.m_robotContainer.leds.setPattern(Constants.PATTERN_FIRE));
-    ledChooser.addOption("Off", this.m_robotContainer.leds.setPattern(Constants.PATTERN_OFF));
-    ledChooser.addOption("Red", this.m_robotContainer.leds.setPattern(Constants.PATTERN_RED));
-    ledChooser.addOption("Orange", this.m_robotContainer.leds.setPattern(Constants.PATTERN_ORANGE));
-    ledChooser.addOption("Yellow", this.m_robotContainer.leds.setPattern(Constants.PATTERN_YELLOW));
-    ledChooser.addOption("Green", this.m_robotContainer.leds.setPattern(Constants.PATTERN_GREEN));
+        "Fire", this.m_robotContainer.leds.setPatternCommand(Constants.PATTERN_FIRE));
+    ledChooser.addOption("Off", this.m_robotContainer.leds.setPatternCommand(Constants.PATTERN_OFF));
+    ledChooser.addOption("Red", this.m_robotContainer.leds.setPatternCommand(Constants.PATTERN_RED));
+    ledChooser.addOption("Orange", this.m_robotContainer.leds.setPatternCommand(Constants.PATTERN_ORANGE));
+    ledChooser.addOption("Yellow", this.m_robotContainer.leds.setPatternCommand(Constants.PATTERN_YELLOW));
+    ledChooser.addOption("Green", this.m_robotContainer.leds.setPatternCommand(Constants.PATTERN_GREEN));
     ledChooser.addOption(
-        "DLS Green", this.m_robotContainer.leds.setPattern(Constants.PATTERN_DLS_GREEN));
-    ledChooser.addOption("Blue", this.m_robotContainer.leds.setPattern(Constants.PATTERN_BLUE));
-    ledChooser.addOption("Purple", this.m_robotContainer.leds.setPattern(Constants.PATTERN_PURPLE));
-    ledChooser.addOption("Up", this.m_robotContainer.leds.setPattern(Constants.PATTERN_UP));
-    ledChooser.addOption("Down", this.m_robotContainer.leds.setPattern(Constants.PATTERN_DOWN));
-    ledChooser.addOption("Moving", this.m_robotContainer.leds.setPattern(Constants.READY_SCROLL));
-    ledChooser.addOption("Police", this.m_robotContainer.leds.setPattern(Constants.PATTERN_POLICE));
-    ledChooser.addOption("Dots", this.m_robotContainer.leds.setPattern(Constants.PATTERN_DOTS));
-    ledChooser.addOption("Rainbow", this.m_robotContainer.leds.setPattern(Constants.PATTERN_RAINBOW_SCROLLING));
+        "DLS Green", this.m_robotContainer.leds.setPatternCommand(Constants.PATTERN_DLS_GREEN));
+    ledChooser.addOption("Blue", this.m_robotContainer.leds.setPatternCommand(Constants.PATTERN_BLUE));
+    ledChooser.addOption("Purple", this.m_robotContainer.leds.setPatternCommand(Constants.PATTERN_PURPLE));
+    ledChooser.addOption("Up", this.m_robotContainer.leds.setPatternCommand(Constants.PATTERN_UP));
+    ledChooser.addOption("Down", this.m_robotContainer.leds.setPatternCommand(Constants.PATTERN_DOWN));
+    ledChooser.addOption("Moving", this.m_robotContainer.leds.setPatternCommand(Constants.READY_SCROLL));
+    ledChooser.addOption("Police", this.m_robotContainer.leds.setPatternCommand(Constants.PATTERN_POLICE));
+    ledChooser.addOption("Dots", this.m_robotContainer.leds.setPatternCommand(Constants.PATTERN_DOTS));
+    ledChooser.addOption("Rainbow", this.m_robotContainer.leds.setPatternCommand(Constants.PATTERN_RAINBOW_SCROLLING));
 
     SmartDashboard.putData("LED Pattern", ledChooser);
   }
@@ -88,7 +88,9 @@ public class Robot extends TimedRobot {
   public void disabledInit() {}
 
   @Override
-  public void disabledPeriodic() {}
+  public void disabledPeriodic() {
+    this.m_robotContainer.leds.setBreatheCommand(true);
+  }
 
   /** This autonomous runs the autonomous command selected by your {@link RobotContainer} class. */
   @Override
@@ -118,7 +120,9 @@ public class Robot extends TimedRobot {
 
   /** This function is called periodically during operator control. */
   @Override
-  public void teleopPeriodic() {}
+  public void teleopPeriodic() {
+    this.m_robotContainer.leds.setBreatheCommand(false);
+  }
 
   @Override
   public void testInit() {

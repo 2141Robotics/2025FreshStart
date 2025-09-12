@@ -29,6 +29,8 @@ public class LEDs extends SubsystemBase {
   private ArrayList<AddressableLEDBufferView> segmentsUnifiedTop;
   private ArrayList<AddressableLEDBufferView> segmentsSplitTop;
 
+  private boolean breathing = false;
+
   Random random = new Random();
 
   Integer length;
@@ -194,7 +196,9 @@ public class LEDs extends SubsystemBase {
   }
 
   public void runPattern(LEDPattern pattern) {
-
+    if(breathing){
+      pattern = pattern.breathe(Time.ofBaseUnits(1, Seconds));
+    }
     if (blinking) {
       pattern =
           pattern.blink(
@@ -224,14 +228,23 @@ public class LEDs extends SubsystemBase {
     return this.runOnce(() -> this.blink());
   }
 
-  public Command setPattern(LEDPattern pattern) {
-    return this.runOnce(() -> this.set(pattern));
+  public Command setPatternCommand(LEDPattern pattern) {
+    return this.runOnce(() -> this.setPattern(pattern));
   }
 
-  private void set(LEDPattern pattern) {
+  public Command setBreatheCommand(boolean b) {
+    return this.runOnce(() -> this.setBreathe(b));
+  }
+
+  private void setPattern(LEDPattern pattern) {
     this.currentPattern = pattern;
     this.runPattern(pattern);
   }
+
+  private void setBreathe(boolean b) {
+    this.breathing = b;
+  }
+
 
   public void blink() {
     System.out.println("Blinking LEDS");
