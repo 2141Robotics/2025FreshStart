@@ -59,7 +59,7 @@ public class LEDs extends SubsystemBase {
     this.right = m_buffer.createView(181, 286).reversed();
 
     this.top = m_buffer.createView(105, 180);
-    
+
     this.whole = m_buffer.createView(0, 286);
 
     segmentsUnifiedTop = new ArrayList<>();
@@ -196,7 +196,7 @@ public class LEDs extends SubsystemBase {
   }
 
   public void runPattern(LEDPattern pattern) {
-    if(breathing){
+    if (breathing) {
       pattern = pattern.breathe(Time.ofBaseUnits(1, Seconds));
     }
     if (blinking) {
@@ -211,9 +211,9 @@ public class LEDs extends SubsystemBase {
       }
     }
 
-    if(pattern == Constants.PATTERN_RAINBOW_SCROLLING){
+    if (pattern == Constants.PATTERN_RAINBOW_SCROLLING) {
       pattern.applyTo(this.whole);
-    }else{
+    } else {
 
       pattern.applyTo(this.left);
       pattern.applyTo(this.right);
@@ -244,7 +244,6 @@ public class LEDs extends SubsystemBase {
   private void setBreathe(boolean b) {
     this.breathing = b;
   }
-
 
   public void blink() {
     System.out.println("Blinking LEDS");

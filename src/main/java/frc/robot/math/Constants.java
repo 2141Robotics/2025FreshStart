@@ -149,8 +149,7 @@ public class Constants {
 
   public static final int DOTS_TRAIL_LENGTH = 10;
 
-  
-  public static final LEDPattern PATTERN_RAINBOW_SCROLLING = 
+  public static final LEDPattern PATTERN_RAINBOW_SCROLLING =
       LEDPattern.rainbow(100, 100).scrollAtAbsoluteSpeed(InchesPerSecond.of(1), Meters.of(0));
 
   public static final LEDPattern PATTERN_UP =
