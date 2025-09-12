@@ -39,7 +39,6 @@ public class LEDs extends SubsystemBase {
 
   private int cyclesWhileBlinking = 0;
   private boolean blinking;
-  private int policeBlinkSpeed = 0;
   private int policeBlinkCycles = 0;
   private boolean policeInverted = false;
 
