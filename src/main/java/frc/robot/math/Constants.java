@@ -162,7 +162,7 @@ public class Constants {
 
   public static final Time BREATHE_LOOP_TIME = Time.ofBaseUnits(1, Second);
 
-public static final int POLICE_SIREN_FREQUENCY = 10;
+  public static final int POLICE_SIREN_FREQUENCY = 10;
 
   /*TODO
    * Police Lights (Flashing Red and Blue)

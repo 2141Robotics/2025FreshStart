@@ -61,7 +61,7 @@ public class QuailSwerveDrive extends SwerveDrive<QuailSwerveModule> {
     }
   }
 
-  public void setMotorSound(int volume){
+  public void setMotorSound(int volume) {
     for (QuailSwerveModule module : this.modules) {
       module.setMotorSound(volume);
     }
