@@ -33,19 +33,22 @@ public class Robot extends TimedRobot {
     // autonomous chooser on the dashboard.
     m_robotContainer = new RobotContainer();
 
-    ledChooser.onChange(command -> {
-      if (command != null) {
-        command.schedule();
-      }
-    });
+    ledChooser.onChange(
+        command -> {
+          if (command != null) {
+            command.schedule();
+          }
+        });
 
-    ledChooser.setDefaultOption("Fire", this.m_robotContainer.leds.setPattern(Constants.PATTERN_FIRE));
+    ledChooser.setDefaultOption(
+        "Fire", this.m_robotContainer.leds.setPattern(Constants.PATTERN_FIRE));
     ledChooser.addOption("Off", this.m_robotContainer.leds.setPattern(Constants.PATTERN_OFF));
     ledChooser.addOption("Red", this.m_robotContainer.leds.setPattern(Constants.PATTERN_RED));
     ledChooser.addOption("Orange", this.m_robotContainer.leds.setPattern(Constants.PATTERN_ORANGE));
     ledChooser.addOption("Yellow", this.m_robotContainer.leds.setPattern(Constants.PATTERN_YELLOW));
     ledChooser.addOption("Green", this.m_robotContainer.leds.setPattern(Constants.PATTERN_GREEN));
-    ledChooser.addOption("DLS Green", this.m_robotContainer.leds.setPattern(Constants.PATTERN_DLS_GREEN));
+    ledChooser.addOption(
+        "DLS Green", this.m_robotContainer.leds.setPattern(Constants.PATTERN_DLS_GREEN));
     ledChooser.addOption("Blue", this.m_robotContainer.leds.setPattern(Constants.PATTERN_BLUE));
     ledChooser.addOption("Purple", this.m_robotContainer.leds.setPattern(Constants.PATTERN_PURPLE));
     ledChooser.addOption("Up", this.m_robotContainer.leds.setPattern(Constants.PATTERN_UP));

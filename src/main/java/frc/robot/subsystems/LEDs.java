@@ -1,6 +1,5 @@
 package frc.robot.subsystems;
 
-
 import static edu.wpi.first.units.Units.Seconds;
 
 import edu.wpi.first.units.measure.Time;
@@ -28,7 +27,6 @@ public class LEDs extends SubsystemBase {
   private AddressableLEDBufferView top;
   private ArrayList<AddressableLEDBufferView> segments;
 
-
   Random random = new Random();
 
   Integer length;
@@ -44,7 +42,6 @@ public class LEDs extends SubsystemBase {
 
   private int[] dots;
   private boolean[] dotsDecreasing;
-
 
   public LEDs() {
     m_led = new AddressableLED(Constants.LED_PORT);
@@ -64,8 +61,8 @@ public class LEDs extends SubsystemBase {
     segments.add(top);
     segments.add(right);
 
-    dots = new int[]{0,0,0};
-    dotsDecreasing = new boolean[]{false, false, true};
+    dots = new int[] {0, 0, 0};
+    dotsDecreasing = new boolean[] {false, false, true};
 
     runPattern(Constants.PATTERN_YELLOW);
     updatePattern();
@@ -78,65 +75,64 @@ public class LEDs extends SubsystemBase {
   @Override
   public void periodic() {
 
-    if(this.currentPattern == Constants.PATTERN_FIRE){
+    if (this.currentPattern == Constants.PATTERN_FIRE) {
       runFire();
-    }else if(this.currentPattern == Constants.PATTERN_POLICE){
+    } else if (this.currentPattern == Constants.PATTERN_POLICE) {
       runPolice();
-    }else if(this.currentPattern == Constants.PATTERN_DOTS){
-        runDots();
-    }else{
+    } else if (this.currentPattern == Constants.PATTERN_DOTS) {
+      runDots();
+    } else {
       updatePattern();
     }
     m_led.setData(m_buffer);
-
   }
 
-  public void runDots(){
-    for(int i = 0; i < segments.size(); i++){
+  public void runDots() {
+    for (int i = 0; i < segments.size(); i++) {
       AddressableLEDBufferView segment = segments.get(i);
       int length = segment.getLength();
-      if(dots[i] == 0 || dots[i] == length-1){
+      if (dots[i] == 0 || dots[i] == length - 1) {
         dotsDecreasing[i] = !dotsDecreasing[i];
-      }if(dotsDecreasing[i]){
+      }
+      if (dotsDecreasing[i]) {
         dots[i]--;
-      }else{
+      } else {
         dots[i]++;
       }
       Constants.PATTERN_OFF.applyTo(segment);
       segment.setRGB(dots[i], 255, 255, 255);
-      for(int j = 0; j < Constants.DOTS_TRAIL_LENGTH; j++){         
+      for (int j = 0; j < Constants.DOTS_TRAIL_LENGTH; j++) {
         int brightness = 255 - (j * (255 / Constants.DOTS_TRAIL_LENGTH));
-        if(dotsDecreasing[i] && dots[i]+j < length){
-          segment.setRGB(dots[i]+j, brightness, brightness, brightness);
+        if (dotsDecreasing[i] && dots[i] + j < length) {
+          segment.setRGB(dots[i] + j, brightness, brightness, brightness);
         }
-        if(!dotsDecreasing[i] && dots[i]-j > 0){
-        brightness = 255 - (j * (255 / Constants.DOTS_TRAIL_LENGTH));
-          segment.setRGB(dots[i]-j, brightness, brightness, brightness);
+        if (!dotsDecreasing[i] && dots[i] - j > 0) {
+          brightness = 255 - (j * (255 / Constants.DOTS_TRAIL_LENGTH));
+          segment.setRGB(dots[i] - j, brightness, brightness, brightness);
         }
       }
     }
   }
 
-  public void runPolice(){
-    if(policeBlinkCycles > Constants.POLICE_BLINK_SPEED){
+  public void runPolice() {
+    if (policeBlinkCycles > Constants.POLICE_BLINK_SPEED) {
       policeBlinkCycles = 0;
-      for(AddressableLEDBufferView segment: segments){
+      for (AddressableLEDBufferView segment : segments) {
         int length = segment.getLength();
-        AddressableLEDBufferView segment1 = m_buffer.createView(0, length/2);
-        AddressableLEDBufferView segment2 = m_buffer.createView((length/2), length-1);
-        if(policeInverted){
+        AddressableLEDBufferView segment1 = m_buffer.createView(0, length / 2);
+        AddressableLEDBufferView segment2 = m_buffer.createView((length / 2), length - 1);
+        if (policeInverted) {
           Constants.PATTERN_POLICE_RED.applyTo(segment1);
           Constants.PATTERN_POLICE_BLUE.applyTo(segment2);
-        }else{
+        } else {
           Constants.PATTERN_POLICE_BLUE.applyTo(segment1);
           Constants.PATTERN_POLICE_RED.applyTo(segment2);
         }
         policeInverted = !policeInverted;
       }
-    }else{
+    } else {
       policeBlinkCycles++;
     }
-
   }
 
   public void runFire() {

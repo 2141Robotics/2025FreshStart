@@ -11,14 +11,8 @@ import edu.wpi.first.wpilibj.LEDPattern.GradientType;
 import edu.wpi.first.wpilibj.util.Color;
 
 public class Constants {
-  /** The delay in milliseconds before a report gets sent to DriverStation if an action fails. */
-  // public static final int MS_DELAY = 30;
 
-  // The port of the driver controller
-  public static final int DRIVER_PORT = 0;
-
-  // The port of the operator (secondary driver) controller
-  public static final int OPERATOR_PORT = 1;
+  //************* ROBOT CONSTRUCTION CONSTANTS ***************/
 
   // Diameter of colson swerve wheels
   public static final double WHEEL_DIAMETER = 4;
@@ -27,10 +21,23 @@ public class Constants {
 
   public static final double DRIVE_RATIO = 6.75d;
 
-  /** Settings are {kF, kP, kI, kD} */
-  // kV kP kI kD
-  // Mainly pay attention to kP
-  public static final double[] PID_SETTINGS = {0.0d, 0.5d, 0.0d, 0.00d};
+  // How far the shaft of the swerve module is away from the exact center of rotation
+  public static final double CENTER_TO_SWERVE_DIST = 10.75d;
+
+
+  //************* CONTROLLER SETTINGS ***************/
+
+  // The port of the driver controller
+  public static final int DRIVER_PORT = 0;
+
+  // The port of the operator (secondary driver) controller
+  public static final int OPERATOR_PORT = 1;
+
+  // The dead zone of the joystick
+  // (The zone where we round down to 0 to combat stick drift)
+  public static final double JOYSTICK_DEAD_ZONE = 0.1d;
+
+  //************* MATH CONSTANTS ***************/
 
   /** 2π */
   public static final double TWO_PI = 2d * Math.PI;
@@ -45,13 +52,8 @@ public class Constants {
 
   public static final double METERS_TO_INCHES = 39.3701;
 
-  // How far the shaft of the swerve module is away from the exact center of
-  // rotation
-  public static final double CENTER_TO_SWERVE_DIST = 10.75d;
 
-  // The dead zone of the joystick
-  // (The zone where we round down to 0 to combat stick drift)
-  public static final double JOYSTICK_DEAD_ZONE = 0.1d;
+  //************* MOVEMENT SETTINGS ***************/
 
   // Speed without the trigger
   public static final double BASE_SPEED = 0.08d;
@@ -74,6 +76,20 @@ public class Constants {
   // Limits change in the overall movement of the robot
   public static final double DRIVE_ACCELERATION_LIMIT = 0.003d;
 
+
+
+  //************* DEVICE CONFIG SETTINGS ***************/
+  /** Settings are {kF, kP, kI, kD} */
+  // kV kP kI kD
+  // Mainly pay attention to kP
+  public static final double[] PID_SETTINGS = {0.0d, 0.5d, 0.0d, 0.00d};
+
+  // The offset of the roboRio gyro
+  // Factored in when moving the entire drivetrain
+  public static final Angle GYRO_OFFSET = Angle.ofBaseUnits(-PI_OVER_TWO, Radian);
+
+
+  //************* DEVICE ID SETTINGS ***************/
   // The IDs of the drive motors
   public static final int[] DRIVE_MOTOR_IDS = new int[] {1, 3, 5, 7};
 
@@ -83,50 +99,48 @@ public class Constants {
   // The CAN IDs of the canCoders
   public static final int[] CANCODER_IDS = new int[] {21, 22, 23, 24};
 
-  // The CAN IDs of the Elevator motors
-  public static final int[] ELEVATOR_IDS = new int[] {21, 22};
-
-  public static final int ARPATTERN_MOTOR_ID = 31;
-
-  public static final int CLIMBER_MOTOR_ID = 41;
-
   // Individual canCoder offsets that are determined by the Phoenix Tuner X
   public static final double[] CANCODER_OFFSETS = new double[] {-.83, -.92, -.52, -.27};
 
-  // The offset of the roboRio gyro
-  // Factored in when moving the entire drivetrain
-  public static final Angle GYRO_OFFSET = Angle.ofBaseUnits(-PI_OVER_TWO, Radian);
+  //************* LED SETTINGS ***************/
 
-  //Amount of time the LEDs are on when blinking in seconds
+  // Amount of time the LEDs are on when blinking in seconds
   public static final double BLINK_ON_LENGTH = 1;
 
-  //Amount of time the LEDs are off when blinking in seconds
+  // Amount of time the LEDs are off when blinking in seconds
   public static final double BLINK_OFF_LENGTH = 1;
 
-  //Amount of cycles the LEDs blink for
+  // Amount of cycles the LEDs blink for
   public static final int BLINK_CYCLES = 5;
 
-  //The port number of the LED strip
+  // The port number of the LED strip
   public static final int LED_PORT = 4;
-  
-  //The number of LEDs on the strip
-  public static final int LED_COUNT = 288;
 
+  // The number of LEDs on the strip
+  public static final int LED_COUNT = 288;
 
   private static final Dimensionless LED_BRIGHTNESS = Percent.of(50);
 
   private static final LinearVelocity LEDPATTERN_VELOCITY = MetersPerSecond.of(1);
   private static final Distance LEDPATTERN_DISTANCE = Meters.of(1 / 120);
 
-  public static final LEDPattern PATTERN_RED = LEDPattern.solid(Color.kRed).atBrightness(LED_BRIGHTNESS);
-  public static final LEDPattern PATTERN_ORANGE = LEDPattern.solid(Color.kOrange).atBrightness(LED_BRIGHTNESS);
-  public static final LEDPattern PATTERN_YELLOW = LEDPattern.solid(Color.kYellow).atBrightness(LED_BRIGHTNESS);
-  public static final LEDPattern PATTERN_GREEN = LEDPattern.solid(Color.kGreen).atBrightness(LED_BRIGHTNESS);
-  public static final LEDPattern PATTERN_BLUE = LEDPattern.solid(Color.kBlue).atBrightness(LED_BRIGHTNESS);
-  public static final LEDPattern PATTERN_PURPLE = LEDPattern.solid(Color.kPurple).atBrightness(LED_BRIGHTNESS);
-  public static final LEDPattern PATTERN_OFF = LEDPattern.solid(Color.kWhite).atBrightness(Percent.of(5));
+  public static final LEDPattern PATTERN_RED =
+      LEDPattern.solid(Color.kRed).atBrightness(LED_BRIGHTNESS);
+  public static final LEDPattern PATTERN_ORANGE =
+      LEDPattern.solid(Color.kOrange).atBrightness(LED_BRIGHTNESS);
+  public static final LEDPattern PATTERN_YELLOW =
+      LEDPattern.solid(Color.kYellow).atBrightness(LED_BRIGHTNESS);
+  public static final LEDPattern PATTERN_GREEN =
+      LEDPattern.solid(Color.kGreen).atBrightness(LED_BRIGHTNESS);
+  public static final LEDPattern PATTERN_BLUE =
+      LEDPattern.solid(Color.kBlue).atBrightness(LED_BRIGHTNESS);
+  public static final LEDPattern PATTERN_PURPLE =
+      LEDPattern.solid(Color.kPurple).atBrightness(LED_BRIGHTNESS);
+  public static final LEDPattern PATTERN_OFF =
+      LEDPattern.solid(Color.kWhite).atBrightness(Percent.of(5));
 
-  public static final LEDPattern PATTERN_DLS_GREEN = LEDPattern.solid(new Color("#0F4D2A")).atBrightness(LED_BRIGHTNESS);
+  public static final LEDPattern PATTERN_DLS_GREEN =
+      LEDPattern.solid(new Color("#0F4D2A")).atBrightness(LED_BRIGHTNESS);
 
   public static final LEDPattern PATTERN_FIRE = LEDPattern.solid(Color.kDarkRed);
 
@@ -134,7 +148,7 @@ public class Constants {
   public static final LEDPattern PATTERN_POLICE_RED = LEDPattern.solid(Color.kRed);
   public static final LEDPattern PATTERN_POLICE_BLUE = LEDPattern.solid(Color.kBlue);
 
-  public static final int POLICE_BLINK_SPEED = 5; //cycles per color change
+  public static final int POLICE_BLINK_SPEED = 5; // cycles per color change
 
   public static final LEDPattern PATTERN_DOTS = LEDPattern.solid(Color.kWhite);
 
@@ -144,7 +158,8 @@ public class Constants {
       LEDPattern.gradient(GradientType.kDiscontinuous, Color.kPurple, Color.kDarkBlue);
   public static final LEDPattern PATTERN_DOWN =
       LEDPattern.gradient(GradientType.kDiscontinuous, Color.kDarkBlue, Color.kPurple);
-  public static final LEDPattern READY_SCROLL = PATTERN_UP.scrollAtAbsoluteSpeed(LEDPATTERN_VELOCITY, LEDPATTERN_DISTANCE);
+  public static final LEDPattern READY_SCROLL =
+      PATTERN_UP.scrollAtAbsoluteSpeed(LEDPATTERN_VELOCITY, LEDPATTERN_DISTANCE);
 
   /*TODO
    * Police Lights (Flashing Red and Blue)
