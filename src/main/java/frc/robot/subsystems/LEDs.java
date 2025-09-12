@@ -41,6 +41,9 @@ public class LEDs extends SubsystemBase {
   private int policeBlinkSpeed = 0;
   private boolean policeInverted = false;
 
+  private int[] dots;
+  private boolean[] dotsDecreasing;
+
 
   public LEDs() {
     m_led = new AddressableLED(Constants.LED_PORT);
@@ -55,7 +58,10 @@ public class LEDs extends SubsystemBase {
 
     this.top = m_buffer.createView(105, 180);
 
-    segments = new ArrayList<AddressableLEDBufferView> {left, topleft, topright, right};
+    segments = new ArrayList<AddressableLEDBufferView> {left, top, right};
+
+    dots = new int[]{0,0,0};
+    dotsDecreasing = new boolean[]{false, false, true};
 
     runPattern(Constants.PATTERN_YELLOW);
     updatePattern();
@@ -72,11 +78,38 @@ public class LEDs extends SubsystemBase {
       runFire();
     }else if(this.currentPattern == Constants.PATTERN_POLICE){
       runPolice();
-    }else{
+      else if(this.currentPattern == Constants.PATTERN_DOTS){
+        runDots();
+      }}else{
       updatePattern();
     }
     m_led.setData(m_buffer);
 
+  }
+
+  public void runDots(){
+    for(int i = 0; i < segments.size(); i++){
+      AddressableLEDBufferView segment = segments.get(i);
+      int length = segment.getLength();
+      if(dots[i] == 0 || dots[i] == length-1){
+        dotsDecreasing[i] = !dotsDecreasing[i];
+      }if(dotsDecreasing[i]){
+        dots[i]--;
+      }else{
+        dots[i]++;
+      }
+      segment.setPattern(Constants.PATTERN_OFF);
+      segment.setRGB(dots[i], 255, 255, 255);
+      for(int j = 0; j < Constants.DOTS_TRAIL_LENGTH; j++){         
+        int brightness = 255 - (j * (255 / Constants.DOTS_TRAIL_LENGTH));
+        if(dotsDecreasing[i] && dots[i]+j < length){
+          segment.setRGB(dots[i]+j, brightness, brightness, brightness);
+        }
+        if(!dotsDecreasing[i] && dots[i]-j > 0){
+          int brightness = 255 - (j * (255 / Constants.DOTS_TRAIL_LENGTH));
+          segment.setRGB(dots[i]-j, brightness, brightness, brightness);
+        }
+      }
   }
 
   public void runPolice(){
