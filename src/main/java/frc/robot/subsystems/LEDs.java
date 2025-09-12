@@ -25,7 +25,9 @@ public class LEDs extends SubsystemBase {
   private AddressableLEDBufferView topleft;
   private AddressableLEDBufferView topright;
   private AddressableLEDBufferView top;
-  private ArrayList<AddressableLEDBufferView> segments;
+  private AddressableLEDBufferView whole;
+  private ArrayList<AddressableLEDBufferView> segmentsUnifiedTop;
+  private ArrayList<AddressableLEDBufferView> segmentsSplitTop;
 
   Random random = new Random();
 
@@ -55,11 +57,19 @@ public class LEDs extends SubsystemBase {
     this.right = m_buffer.createView(181, 286).reversed();
 
     this.top = m_buffer.createView(105, 180);
+    
+    this.whole = m_buffer.createView(0, 286);
 
-    segments = new ArrayList<>();
-    segments.add(left);
-    segments.add(top);
-    segments.add(right);
+    segmentsUnifiedTop = new ArrayList<>();
+    segmentsUnifiedTop.add(left);
+    segmentsUnifiedTop.add(top);
+    segmentsUnifiedTop.add(right);
+
+    segmentsSplitTop = new ArrayList<>();
+    segmentsSplitTop.add(left);
+    segmentsSplitTop.add(topleft);
+    segmentsSplitTop.add(topright);
+    segmentsSplitTop.add(right);
 
     dots = new int[] {0, 0, 0};
     dotsDecreasing = new boolean[] {false, false, true};
@@ -88,8 +98,8 @@ public class LEDs extends SubsystemBase {
   }
 
   public void runDots() {
-    for (int i = 0; i < segments.size(); i++) {
-      AddressableLEDBufferView segment = segments.get(i);
+    for (int i = 0; i < segmentsUnifiedTop.size(); i++) {
+      AddressableLEDBufferView segment = segmentsUnifiedTop.get(i);
       int length = segment.getLength();
       if (dots[i] == 0 || dots[i] == length - 1) {
         dotsDecreasing[i] = !dotsDecreasing[i];
@@ -117,7 +127,7 @@ public class LEDs extends SubsystemBase {
   public void runPolice() {
     if (policeBlinkCycles > Constants.POLICE_BLINK_SPEED) {
       policeBlinkCycles = 0;
-      for (AddressableLEDBufferView segment : segments) {
+      for (AddressableLEDBufferView segment : segmentsUnifiedTop) {
         int length = segment.getLength();
         AddressableLEDBufferView segment1 = m_buffer.createView(0, length / 2);
         AddressableLEDBufferView segment2 = m_buffer.createView((length / 2), length - 1);
@@ -197,11 +207,16 @@ public class LEDs extends SubsystemBase {
       }
     }
 
-    pattern.applyTo(this.left);
-    pattern.applyTo(this.right);
+    if(pattern == Constants.PATTERN_RAINBOW_SCROLLING){
+      pattern.applyTo(this.whole);
+    }else{
 
-    pattern.applyTo(this.topleft);
-    pattern.applyTo(this.topright);
+      pattern.applyTo(this.left);
+      pattern.applyTo(this.right);
+
+      pattern.applyTo(this.topleft);
+      pattern.applyTo(this.topright);
+    }
     this.oldPattern = this.currentPattern;
   }
 
