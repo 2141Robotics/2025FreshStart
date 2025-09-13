@@ -261,4 +261,8 @@ public class LEDs extends SubsystemBase {
     System.out.println("Blinking LEDS");
     blinking = true;
   }
+
+  public Command test() {
+    return this.runOnce(() -> System.out.println("Test Command Triggered"));
+  }
 }

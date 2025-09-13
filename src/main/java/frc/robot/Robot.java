@@ -91,8 +91,11 @@ public class Robot extends TimedRobot {
       System.out.println("Scheduled Command");
       lastCommand = selectedCommand;
     }
-    Command testCommand = new InstantCommand(() -> System.out.println("Test Command Triggered"));
+    Command testCommand = new InstantCommand(() 
+      -> System.out.println("Test Command Triggered"));
     testCommand.schedule();
+
+    m_robotContainer.leds.test().schedule();
     CommandScheduler.getInstance().run();
   }
 
