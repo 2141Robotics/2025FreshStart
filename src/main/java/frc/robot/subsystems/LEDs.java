@@ -238,15 +238,10 @@ public class LEDs extends SubsystemBase {
   }
 
   public Command setPatternCommand(LEDPattern pattern) {
-    System.out.println("CHANGE" + pattern);
-    /*return new InstantCommand(
-    () -> {
+    return new InstantCommand(() -> {
       this.currentPattern = pattern;
       this.updatePattern(); // Ensure immediate update
-    });
-
-    */
-    return new InstantCommand(() -> System.out.println("CHANGE" + pattern));
+    }).ignoringDisable(true);
   }
 
   public Command setBreatheCommand(boolean b) {
@@ -254,15 +249,11 @@ public class LEDs extends SubsystemBase {
         () -> {
           this.breathing = b;
           this.updatePattern(); // Ensure immediate update
-        });
+        }).ignoringDisable(true);
   }
 
   public void blink() {
     System.out.println("Blinking LEDS");
     blinking = true;
-  }
-
-  public Command test() {
-    return this.runOnce(() -> System.out.println("Test Command Triggered"));
   }
 }

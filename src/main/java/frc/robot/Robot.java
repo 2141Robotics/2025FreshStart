@@ -54,7 +54,7 @@ public class Robot extends TimedRobot {
         "Blue", this.m_robotContainer.leds.setPatternCommand(Constants.PATTERN_BLUE));
     ledChooser.addOption(
         "Purple", this.m_robotContainer.leds.setPatternCommand(Constants.PATTERN_PURPLE));
-    /*ledChooser.addOption("Up", this.m_robotContainer.leds.setPatternCommand(Constants.PATTERN_UP));
+    ledChooser.addOption("Up", this.m_robotContainer.leds.setPatternCommand(Constants.PATTERN_UP));
     ledChooser.addOption(
         "Down", this.m_robotContainer.leds.setPatternCommand(Constants.PATTERN_DOWN));
     ledChooser.addOption(
@@ -66,7 +66,6 @@ public class Robot extends TimedRobot {
     ledChooser.addOption(
         "Rainbow",
         this.m_robotContainer.leds.setPatternCommand(Constants.PATTERN_RAINBOW_SCROLLING));
-        */
     SmartDashboard.putData("LED Pattern", ledChooser);
   }
 
@@ -88,14 +87,9 @@ public class Robot extends TimedRobot {
     Command selectedCommand = ledChooser.getSelected();
     if (selectedCommand != null && !selectedCommand.equals(lastCommand)) {
       selectedCommand.schedule();
-      System.out.println("Scheduled Command");
       lastCommand = selectedCommand;
     }
-    Command testCommand = new InstantCommand(() 
-      -> System.out.println("Test Command Triggered"));
-    testCommand.schedule();
 
-    m_robotContainer.leds.test().schedule();
     CommandScheduler.getInstance().run();
   }
 
@@ -103,18 +97,6 @@ public class Robot extends TimedRobot {
   public void robotInit() {
     m_robotContainer.drivetrain.init();
     RobotController.setBrownoutVoltage(5.5);
-
-    // Add logging for CommandScheduler actions
-    CommandScheduler.getInstance()
-        .onCommandInitialize(
-            command -> System.out.println("Command initialized: " + command.getName()));
-    CommandScheduler.getInstance()
-        .onCommandExecute(command -> System.out.println("Command executing: " + command.getName()));
-    CommandScheduler.getInstance()
-        .onCommandFinish(command -> System.out.println("Command finished: " + command.getName()));
-    CommandScheduler.getInstance()
-        .onCommandInterrupt(
-            command -> System.out.println("Command interrupted: " + command.getName()));
   }
 
   /** This function is called once each time the robot enters Disabled mode. */
