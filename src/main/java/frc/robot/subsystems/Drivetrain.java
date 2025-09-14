@@ -91,8 +91,8 @@ public class Drivetrain extends SubsystemBase {
     }
   }
 
-  public void XLock() {
-    quailSwerveDrive.XLock();
+  public Command XLock() {
+    return this.runOnce(() -> quailSwerveDrive.XLock());
   }
 
   public void stop() {

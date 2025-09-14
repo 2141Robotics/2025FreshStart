@@ -62,6 +62,7 @@ public class RobotContainer {
 
     drivetrain.setDefaultCommand(drive);
     driverController.back().onTrue(drivetrain.resetGyroCommand());
+    driverController.x().onTrue(drivetrain.XLock());
 
     // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,
     // cancelling on release.
