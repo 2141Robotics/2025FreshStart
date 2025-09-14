@@ -77,7 +77,7 @@ public class LEDs extends SubsystemBase {
     segmentsSplitTop.add(topright);
     segmentsSplitTop.add(right);
 
-    dots = new int[] {0, 0, 0};
+    dots = new int[] {1, 1, 1};
     dotsDecreasing = new boolean[] {false, false, true};
 
     runPattern(Constants.PATTERN_YELLOW);
@@ -104,6 +104,7 @@ public class LEDs extends SubsystemBase {
     } else {
       updatePattern();
     }
+
     m_led.setData(m_buffer);
   }
 
@@ -164,6 +165,7 @@ public class LEDs extends SubsystemBase {
   public void updatePattern() {
     if (this.currentPattern != this.oldPattern || blinking || breathing) {
       this.runPattern(currentPattern);
+      System.out.println("Chaning LED Pattern");
     }
   }
 
@@ -221,7 +223,9 @@ public class LEDs extends SubsystemBase {
     }
 
     if (pattern == Constants.PATTERN_RAINBOW_SCROLLING) {
+
       pattern.applyTo(this.whole);
+
     } else {
 
       pattern.applyTo(this.left);
@@ -229,6 +233,8 @@ public class LEDs extends SubsystemBase {
 
       pattern.applyTo(this.topleft);
       pattern.applyTo(this.topright);
+
+      pattern.applyTo(this.whole);
     }
     this.oldPattern = this.currentPattern;
   }

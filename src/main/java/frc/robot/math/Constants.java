@@ -117,8 +117,9 @@ public class Constants {
 
   private static final Dimensionless LED_BRIGHTNESS = Percent.of(50);
 
-  private static final LinearVelocity LEDPATTERN_VELOCITY = MetersPerSecond.of(1);
-  private static final Distance LEDPATTERN_DISTANCE = Meters.of(1 / 120);
+  private static final Distance LEDPATTERN_DISTANCE = Meters.of(1.0 / 120);
+  
+  public static final Time BREATHE_LOOP_TIME = Time.ofBaseUnits(1, Second);
 
   public static final LEDPattern PATTERN_RED =
       LEDPattern.solid(Color.kRed).atBrightness(LED_BRIGHTNESS);
@@ -138,36 +139,32 @@ public class Constants {
   public static final LEDPattern PATTERN_DLS_GREEN =
       LEDPattern.solid(new Color("#0F4D2A")).atBrightness(LED_BRIGHTNESS);
 
+      
+  
+  public static final LEDPattern PATTERN_UP =
+  LEDPattern.gradient(GradientType.kDiscontinuous, Color.kPurple, Color.kDarkBlue);
+  public static final LEDPattern PATTERN_DOWN =
+  LEDPattern.gradient(GradientType.kDiscontinuous, Color.kDarkBlue, Color.kPurple);
+
+  public static final LEDPattern PATTERN_SCROLL =
+      PATTERN_UP.scrollAtAbsoluteSpeed(InchesPerSecond.of(4), LEDPATTERN_DISTANCE);
+
+
   public static final LEDPattern PATTERN_FIRE = LEDPattern.solid(Color.kDarkRed);
+
+  
+  public static final int POLICE_SIREN_FREQUENCY = 10; //frequency played by motors in Hz
+  public static final int POLICE_BLINK_SPEED = 5; // cycles per color change
 
   public static final LEDPattern PATTERN_POLICE = LEDPattern.solid(Color.kWhite);
   public static final LEDPattern PATTERN_POLICE_RED = LEDPattern.solid(Color.kRed);
   public static final LEDPattern PATTERN_POLICE_BLUE = LEDPattern.solid(Color.kBlue);
 
-  public static final int POLICE_BLINK_SPEED = 5; // cycles per color change
+  public static final int DOTS_TRAIL_LENGTH = 10;
 
   public static final LEDPattern PATTERN_DOTS = LEDPattern.solid(Color.kWhite);
 
-  public static final int DOTS_TRAIL_LENGTH = 10;
-
   public static final LEDPattern PATTERN_RAINBOW_SCROLLING =
-      LEDPattern.rainbow(100, 100).scrollAtAbsoluteSpeed(InchesPerSecond.of(1), Meters.of(0));
+      LEDPattern.rainbow(100, 100).scrollAtAbsoluteSpeed(InchesPerSecond.of(1), LEDPATTERN_DISTANCE);
 
-  public static final LEDPattern PATTERN_UP =
-      LEDPattern.gradient(GradientType.kDiscontinuous, Color.kPurple, Color.kDarkBlue);
-  public static final LEDPattern PATTERN_DOWN =
-      LEDPattern.gradient(GradientType.kDiscontinuous, Color.kDarkBlue, Color.kPurple);
-  public static final LEDPattern READY_SCROLL =
-      PATTERN_UP.scrollAtAbsoluteSpeed(LEDPATTERN_VELOCITY, LEDPATTERN_DISTANCE);
-
-  public static final Time BREATHE_LOOP_TIME = Time.ofBaseUnits(1, Second);
-
-  public static final int POLICE_SIREN_FREQUENCY = 10;
-
-  /*TODO
-   * Police Lights (Flashing Red and Blue)
-   * Rainbow
-   * Wrapping gradient
-   * Dot moving back and forth with tail (sinelon)
-   */
 }

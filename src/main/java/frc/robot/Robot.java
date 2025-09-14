@@ -58,7 +58,7 @@ public class Robot extends TimedRobot {
     ledChooser.addOption(
         "Down", this.m_robotContainer.leds.setPatternCommand(Constants.PATTERN_DOWN));
     ledChooser.addOption(
-        "Moving", this.m_robotContainer.leds.setPatternCommand(Constants.READY_SCROLL));
+        "Moving", this.m_robotContainer.leds.setPatternCommand(Constants.PATTERN_SCROLL));
     ledChooser.addOption(
         "Police", this.m_robotContainer.leds.setPatternCommand(Constants.PATTERN_POLICE));
     ledChooser.addOption(
