@@ -195,9 +195,13 @@ public class Constants {
 
   public static final int DOTS_TRAIL_LENGTH = 10;
 
+  //How long in cycles (20 ms intervals) it takes for a dot to travel
+  // the length of the segment one way
+  public static final double DOT_FREQUENCY_CYCLES = 10;
+
   public static final LEDPattern PATTERN_DOTS = LEDPattern.solid(Color.kWhite);
 
   public static final LEDPattern PATTERN_RAINBOW_SCROLLING =
-      LEDPattern.rainbow(100, 100)
-          .scrollAtAbsoluteSpeed(InchesPerSecond.of(1), LEDPATTERN_DISTANCE);
+      LEDPattern.rainbow(100, 100);
+          //.scrollAtAbsoluteSpeed(InchesPerSecond.of(1), LEDPATTERN_DISTANCE);
 }
