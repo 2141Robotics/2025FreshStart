@@ -114,10 +114,14 @@ public class Constants {
   // The number of LEDs on the strip
   public static final int LED_COUNT = 288;
 
+  // The offsets for the different LED strips
+  // Note: The top LED strip is counted as one and is therefore given only one offset at 105
+  public static final int[] LED_STRIP_OFFSETS = new int[] {0, 105, 181};
+
   private static final Dimensionless LED_BRIGHTNESS = Percent.of(50);
 
   private static final Distance LEDPATTERN_DISTANCE = Meters.of(1.0 / 120);
-  
+
   public static final Time BREATHE_LOOP_TIME = Time.ofBaseUnits(1, Second);
 
   public static final LEDPattern PATTERN_RED =
@@ -132,28 +136,58 @@ public class Constants {
       LEDPattern.solid(Color.kBlue).atBrightness(LED_BRIGHTNESS);
   public static final LEDPattern PATTERN_PURPLE =
       LEDPattern.solid(Color.kPurple).atBrightness(LED_BRIGHTNESS);
-  public static final LEDPattern PATTERN_OFF =
-      LEDPattern.solid(Color.kWhite).atBrightness(Percent.of(5));
+  public static final LEDPattern PATTERN_OFF = LEDPattern.kOff;
+
+  //   public static final LEDPattern PATTERN_DLS_GREEN =
+  //       LEDPattern.solid(new Color("#0F4D2A")).atBrightness(LED_BRIGHTNESS);
 
   public static final LEDPattern PATTERN_DLS_GREEN =
-      LEDPattern.solid(new Color("#0F4D2A")).atBrightness(LED_BRIGHTNESS);
+      LEDPattern.solid(new Color(15, 77, 42)).atBrightness(LED_BRIGHTNESS);
 
-      
-  
   public static final LEDPattern PATTERN_UP =
-  LEDPattern.gradient(GradientType.kDiscontinuous, Color.kPurple, Color.kDarkBlue);
+      LEDPattern.gradient(GradientType.kDiscontinuous, Color.kPurple, Color.kDarkBlue);
   public static final LEDPattern PATTERN_DOWN =
-  LEDPattern.gradient(GradientType.kDiscontinuous, Color.kDarkBlue, Color.kPurple);
+      LEDPattern.gradient(GradientType.kDiscontinuous, Color.kDarkBlue, Color.kPurple);
 
   public static final LEDPattern PATTERN_SCROLL =
       PATTERN_UP.scrollAtAbsoluteSpeed(InchesPerSecond.of(4), LEDPATTERN_DISTANCE);
 
-
   public static final LEDPattern PATTERN_FIRE = LEDPattern.solid(Color.kDarkRed);
 
-  
-  public static final int POLICE_SIREN_FREQUENCY = 10; //frequency played by motors in Hz
-  public static final int POLICE_BLINK_SPEED = 5; // cycles per color change
+  public static final int POLICE_SIREN_FREQUENCY = 100; // frequency played by motors in Hz
+  public static final int POLICE_BLINK_SPEED = 3; // cycles per color change
+
+  // 1 Seg1 On Seg2 Off
+  // 2 Seg1 Off Seg2 Off
+  // 3 Seg1 On Seg2 Off
+  // 4 Seg1 Off Seg2 On
+  // 5 Seg1 Off Seg2 Off
+  // 6 Seg1 Off Seg2 On
+  // 7 Seg1 On Seg2 Off
+  // 8 Seg1 Off Seg2 On
+  // 9 Seg1 On Seg2 Off
+  // 10 Seg1 Off Seg2 On
+  public static final boolean[][] POLICE_PATTERN = {
+    {true, false},
+    {false, false},
+    {true, false},
+    {false, true},
+    {false, false},
+    {false, true},
+    {true, false},
+    {true, false},
+    {false, true},
+    {false, true},
+    {true, false},
+    {true, false},
+    {false, true},
+    {false, true}
+  };
+
+  // The Police pattern is broken into eight sections
+  // Blue + White + Blue + Blue + Red + Red + White + Red
+  // This stat shortens the white segments by that many LEDs
+  public static final int POLICE_WHITE_LENGTH_DIFFERENCE = 1;
 
   public static final LEDPattern PATTERN_POLICE = LEDPattern.solid(Color.kWhite);
   public static final LEDPattern PATTERN_POLICE_RED = LEDPattern.solid(Color.kRed);
@@ -164,6 +198,6 @@ public class Constants {
   public static final LEDPattern PATTERN_DOTS = LEDPattern.solid(Color.kWhite);
 
   public static final LEDPattern PATTERN_RAINBOW_SCROLLING =
-      LEDPattern.rainbow(100, 100).scrollAtAbsoluteSpeed(InchesPerSecond.of(1), LEDPATTERN_DISTANCE);
-
+      LEDPattern.rainbow(100, 100)
+          .scrollAtAbsoluteSpeed(InchesPerSecond.of(1), LEDPATTERN_DISTANCE);
 }

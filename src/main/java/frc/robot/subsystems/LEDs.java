@@ -90,7 +90,7 @@ public class LEDs extends SubsystemBase {
 
   @Override
   public void periodic() {
-    
+
     if (this.currentPattern != Constants.PATTERN_POLICE) {
       swerveDrive.setMotorSound(0);
     }
@@ -137,23 +137,66 @@ public class LEDs extends SubsystemBase {
 
   public void runPolice() {
     swerveDrive.setMotorSound(Constants.POLICE_SIREN_FREQUENCY);
-    if (policeBlinkCycles > Constants.POLICE_BLINK_SPEED) {
+    if (policeBlinkCycles >= Constants.POLICE_PATTERN.length) {
       policeBlinkCycles = 0;
-      for (AddressableLEDBufferView segment : segmentsUnifiedTop) {
-        int length = segment.getLength();
-        AddressableLEDBufferView segment1 = m_buffer.createView(0, length / 2);
-        AddressableLEDBufferView segment2 = m_buffer.createView((length / 2), length - 1);
-        if (policeInverted) {
-          Constants.PATTERN_POLICE_RED.applyTo(segment1);
-          Constants.PATTERN_POLICE_BLUE.applyTo(segment2);
-        } else {
-          Constants.PATTERN_POLICE_BLUE.applyTo(segment1);
-          Constants.PATTERN_POLICE_RED.applyTo(segment2);
-        }
-        policeInverted = !policeInverted;
+    }
+
+    int startIndex = 0;
+    for (AddressableLEDBufferView segment : segmentsUnifiedTop) {
+      int length = segment.getLength();
+      int offset = Constants.LED_STRIP_OFFSETS[startIndex];
+      startIndex++;
+      int odd = 0;
+      if (length % 2 == 1) {
+        odd = 1;
       }
-    } else {
-      policeBlinkCycles++;
+      AddressableLEDBufferView blue1 =
+          m_buffer.createView(
+              offset, offset + length / 8 + Constants.POLICE_WHITE_LENGTH_DIFFERENCE);
+      AddressableLEDBufferView white1 =
+          m_buffer.createView(
+              Constants.POLICE_WHITE_LENGTH_DIFFERENCE + offset + length / 8,
+              offset - Constants.POLICE_WHITE_LENGTH_DIFFERENCE + length / 4);
+      AddressableLEDBufferView blue2 =
+          m_buffer.createView(
+              offset - Constants.POLICE_WHITE_LENGTH_DIFFERENCE + length / 4,
+              offset + length / 2 + odd);
+      AddressableLEDBufferView red1 =
+          m_buffer.createView(
+              offset + length / 2,
+              offset + ((3 * length) / 4) + Constants.POLICE_WHITE_LENGTH_DIFFERENCE);
+      AddressableLEDBufferView white2 =
+          m_buffer.createView(
+              offset + Constants.POLICE_WHITE_LENGTH_DIFFERENCE + (3 * length) / 4,
+              offset + ((7 * length) / 8) - Constants.POLICE_WHITE_LENGTH_DIFFERENCE);
+      AddressableLEDBufferView red2 =
+          m_buffer.createView(
+              offset - Constants.POLICE_WHITE_LENGTH_DIFFERENCE + (7 * length) / 8,
+              offset + length - 1);
+
+      Constants.PATTERN_POLICE.applyTo(white1);
+      Constants.PATTERN_POLICE.applyTo(white2);
+
+      if (Constants.POLICE_PATTERN[policeBlinkCycles][0]) {
+
+        Constants.PATTERN_POLICE_RED.applyTo(red1);
+        Constants.PATTERN_POLICE_BLUE.applyTo(blue1);
+
+      } else {
+
+        Constants.PATTERN_OFF.applyTo(red1);
+        Constants.PATTERN_OFF.applyTo(blue1);
+      }
+      if (Constants.POLICE_PATTERN[policeBlinkCycles][1]) {
+
+        Constants.PATTERN_POLICE_RED.applyTo(red2);
+        Constants.PATTERN_POLICE_BLUE.applyTo(blue2);
+
+      } else {
+
+        Constants.PATTERN_OFF.applyTo(red2);
+        Constants.PATTERN_OFF.applyTo(blue2);
+      }
     }
   }
 
@@ -233,8 +276,6 @@ public class LEDs extends SubsystemBase {
 
       pattern.applyTo(this.topleft);
       pattern.applyTo(this.topright);
-
-      pattern.applyTo(this.whole);
     }
     this.oldPattern = this.currentPattern;
   }
@@ -244,18 +285,21 @@ public class LEDs extends SubsystemBase {
   }
 
   public Command setPatternCommand(LEDPattern pattern) {
-    return new InstantCommand(() -> {
-      this.currentPattern = pattern;
-      this.updatePattern(); // Ensure immediate update
-    }).ignoringDisable(true);
+    return new InstantCommand(
+            () -> {
+              this.currentPattern = pattern;
+              this.updatePattern(); // Ensure immediate update
+            })
+        .ignoringDisable(true);
   }
 
   public Command setBreatheCommand(boolean b) {
     return new InstantCommand(
-        () -> {
-          this.breathing = b;
-          this.updatePattern(); // Ensure immediate update
-        }).ignoringDisable(true);
+            () -> {
+              this.breathing = b;
+              this.updatePattern(); // Ensure immediate update
+            })
+        .ignoringDisable(true);
   }
 
   public void blink() {
