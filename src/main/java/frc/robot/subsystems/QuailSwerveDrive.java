@@ -19,10 +19,10 @@ public class QuailSwerveDrive extends SwerveDrive<QuailSwerveModule> {
   private Orchestra orchestra;
 
   /**
-   * @param minSpeed minimum movement speed (0 to 1)
-   * @param maxSpeed maximum movement speed (0 to 1)
-   * @param maxRotation maximum rotational speed (0 to 1)
-   * @param gyroscope the swerve drive's gyroscope
+   * @param minSpeed           minimum movement speed (0 to 1)
+   * @param maxSpeed           maximum movement speed (0 to 1)
+   * @param maxRotation        maximum rotational speed (0 to 1)
+   * @param gyroscope          the swerve drive's gyroscope
    * @param QuailSwerveModules the swerve drive's wheel modules
    */
   public QuailSwerveDrive(List<QuailSwerveModule> modules) {
@@ -36,9 +36,9 @@ public class QuailSwerveDrive extends SwerveDrive<QuailSwerveModule> {
     this.setBrake(new StaticBrake());
   }
 
-  public void initMusic(){
-    
-    for(QuailSwerveModule module : this.modules){
+  public void initMusic() {
+
+    for (QuailSwerveModule module : this.modules) {
       orchestra.addInstrument(module.getSteerMotor());
       orchestra.addInstrument(module.getDriveMotor());
     }

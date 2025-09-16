@@ -11,10 +11,13 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.math.Constants;
+import frc.robot.subsystems.Patterns.Aurora;
+import frc.robot.subsystems.Patterns.Dots;
+import frc.robot.subsystems.Patterns.Fire;
+import frc.robot.subsystems.Patterns.Particles;
+import frc.robot.subsystems.Patterns.Police;
+
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Random;
 
 public class LEDs extends SubsystemBase {
 
@@ -32,20 +35,11 @@ public class LEDs extends SubsystemBase {
 
   private boolean breathing = false;
 
-  Random random = new Random();
-
-  Integer length;
-  List<Integer> heat;
-
   public LEDPattern oldPattern;
   public LEDPattern currentPattern = Constants.PATTERN_YELLOW;
 
   private int cyclesWhileBlinking = 0;
   private boolean blinking;
-  private int policeBlinkCycles = 0;
-
-  private double[] dots;
-  private boolean[] dotsDecreasing;
 
   private QuailSwerveDrive swerveDrive;
 
@@ -76,17 +70,8 @@ public class LEDs extends SubsystemBase {
     segmentsSplitTop.add(topright);
     segmentsSplitTop.add(right);
 
-    dots = new double[] {(1.0 * segmentsUnifiedTop.get(0).getLength()) / Constants.DOT_FREQUENCY_CYCLES, 
-      (1.0 * segmentsUnifiedTop.get(1).getLength()) / Constants.DOT_FREQUENCY_CYCLES, 
-      (1.0 * segmentsUnifiedTop.get(2).getLength()) / Constants.DOT_FREQUENCY_CYCLES};
-    dotsDecreasing = new boolean[] {false, false, true};
-
     runPattern(Constants.PATTERN_YELLOW);
     updatePattern();
-    this.length = left.getLength();
-    heat = new ArrayList<>(Collections.nCopies(length, 0));
-
-    policeBlinkCycles = 0;
   }
 
   @Override
@@ -97,119 +82,22 @@ public class LEDs extends SubsystemBase {
     }
 
     if (this.currentPattern == Constants.PATTERN_FIRE) {
-      runFire();
+      Fire.fire(left, 50, 60, left.getLength());
+      Fire.fire(right, 50, 60, right.getLength());
     } else if (this.currentPattern == Constants.PATTERN_POLICE) {
-      runPolice();
+      swerveDrive.setMotorSound(Constants.POLICE_SIREN_FREQUENCY);
+      Police.runPolice(segmentsUnifiedTop, m_buffer);
     } else if (this.currentPattern == Constants.PATTERN_DOTS) {
-      runDots();
+      Dots.runDots();
+    } else if (this.currentPattern == Constants.PATTERN_AURORA) {
+      Aurora.runAurora(this.whole);
+    } else if (this.currentPattern == Constants.PATTERN_PARTICLES) {
+      Particles.runParticles(segmentsUnifiedTop);
     } else {
       updatePattern();
     }
 
     m_led.setData(m_buffer);
-  }
-
-  public void runDots() {
-    for (int i = 0; i < segmentsUnifiedTop.size(); i++) {
-      AddressableLEDBufferView segment = segmentsUnifiedTop.get(i);
-      int length = segment.getLength();
-      if (dots[i] <= 0 || dots[i] >= length - 1) {
-        dotsDecreasing[i] = !dotsDecreasing[i];
-      }
-      if (dotsDecreasing[i]) {
-        dots[i] -= length/Constants.DOT_FREQUENCY_CYCLES;
-      } else {
-        dots[i] += length/Constants.DOT_FREQUENCY_CYCLES;
-      }
-      Constants.PATTERN_DOTS_BACKGROUND.applyTo(segment);
-      segment.setRGB((int)dots[i], 255, 255, 255);
-      for (int j = 0; j < Constants.DOTS_TRAIL_LENGTH; j++) {
-        int brightness = 255 - (j * (255 / Constants.DOTS_TRAIL_LENGTH));
-        if (dotsDecreasing[i] && dots[i] + j < length) {
-          segment.setRGB((int)dots[i] + j, 
-            (int) Constants.DOT_COLOR.red * brightness, 
-            (int) Constants.DOT_COLOR.blue * brightness, 
-            (int) Constants.DOT_COLOR.green * brightness);
-        }
-        if (!dotsDecreasing[i] && dots[i] - j > 0) {
-          brightness = 255 - (j * (255 / Constants.DOTS_TRAIL_LENGTH));
-          segment.setRGB((int)dots[i] - j,
-            (int) Constants.DOT_COLOR.red * brightness, 
-            (int) Constants.DOT_COLOR.blue * brightness, 
-            (int) Constants.DOT_COLOR.green * brightness);
-        }
-      }
-    }
-  }
-
-  public void runPolice() {
-    swerveDrive.setMotorSound(Constants.POLICE_SIREN_FREQUENCY);
-    if (policeBlinkCycles >= Constants.POLICE_PATTERN.length) {
-      policeBlinkCycles = 0;
-    }
-
-    int startIndex = 0;
-    for (AddressableLEDBufferView segment : segmentsUnifiedTop) {
-      int length = segment.getLength();
-      int offset = Constants.LED_STRIP_OFFSETS[startIndex];
-      startIndex++;
-      int odd = 0;
-      if (length % 2 == 1) {
-        odd = 1;
-      }
-      AddressableLEDBufferView blue1 =
-          m_buffer.createView(
-              offset, offset + length / 8 + Constants.POLICE_WHITE_LENGTH_DIFFERENCE);
-      AddressableLEDBufferView white1 =
-          m_buffer.createView(
-              Constants.POLICE_WHITE_LENGTH_DIFFERENCE + offset + length / 8,
-              offset - Constants.POLICE_WHITE_LENGTH_DIFFERENCE + length / 4);
-      AddressableLEDBufferView blue2 =
-          m_buffer.createView(
-              offset - Constants.POLICE_WHITE_LENGTH_DIFFERENCE + length / 4,
-              offset + length / 2 + odd);
-      AddressableLEDBufferView red1 =
-          m_buffer.createView(
-              offset + length / 2,
-              offset + ((3 * length) / 4) + Constants.POLICE_WHITE_LENGTH_DIFFERENCE);
-      AddressableLEDBufferView white2 =
-          m_buffer.createView(
-              offset + Constants.POLICE_WHITE_LENGTH_DIFFERENCE + (3 * length) / 4,
-              offset + ((7 * length) / 8) - Constants.POLICE_WHITE_LENGTH_DIFFERENCE);
-      AddressableLEDBufferView red2 =
-          m_buffer.createView(
-              offset - Constants.POLICE_WHITE_LENGTH_DIFFERENCE + (7 * length) / 8,
-              offset + length - 1);
-
-      Constants.PATTERN_POLICE.applyTo(white1);
-      Constants.PATTERN_POLICE.applyTo(white2);
-
-      if (Constants.POLICE_PATTERN[policeBlinkCycles][0]) {
-
-        Constants.PATTERN_POLICE_RED.applyTo(red1);
-        Constants.PATTERN_POLICE_BLUE.applyTo(blue1);
-
-      } else {
-
-        Constants.PATTERN_OFF.applyTo(red1);
-        Constants.PATTERN_OFF.applyTo(blue1);
-      }
-      if (Constants.POLICE_PATTERN[policeBlinkCycles][1]) {
-
-        Constants.PATTERN_POLICE_RED.applyTo(red2);
-        Constants.PATTERN_POLICE_BLUE.applyTo(blue2);
-
-      } else {
-
-        Constants.PATTERN_OFF.applyTo(red2);
-        Constants.PATTERN_OFF.applyTo(blue2);
-      }
-    }
-  }
-
-  public void runFire() {
-    this.fire(left, 50, 60);
-    this.fire(right, 50, 60);
   }
 
   public void updatePattern() {
@@ -223,48 +111,14 @@ public class LEDs extends SubsystemBase {
     this.runPattern(currentPattern);
   }
 
-  public void fire(AddressableLEDBufferView bufferView, int flameHight, int sparks) {
-
-    for (int i = 0; i < length; i++) {
-      int cooldown = random.nextInt(((flameHight * 10) / length) + 2);
-      if (cooldown > heat.get(i)) {
-        heat.set(i, 0);
-      } else {
-        heat.set(i, heat.get(i) - cooldown);
-      }
-    }
-
-    for (int k = length - 1; k >= 2; k--) {
-      heat.set(k, (heat.get(k - 1) + 2 * heat.get(k - 1)) / 3);
-    }
-
-    if (random.nextInt(255) < sparks) {
-      Integer y = random.nextInt(7);
-      heat.set(y, random.nextInt(160, 255));
-    }
-
-    for (int j = 0; j < length; j++) {
-      int temperature = heat.get(j);
-
-      if (temperature > 220) {
-        bufferView.setRGB(j, 220, 220, temperature);
-      } else if (temperature > 40) {
-        bufferView.setRGB(j, 220, temperature, 0);
-      } else {
-        bufferView.setRGB(j, temperature, 0, 0);
-      }
-    }
-  }
-
   public void runPattern(LEDPattern pattern) {
     if (breathing) {
       pattern = pattern.breathe(Constants.BREATHE_LOOP_TIME);
     }
     if (blinking) {
-      pattern =
-          pattern.blink(
-              Time.ofBaseUnits(Constants.BLINK_ON_LENGTH, Seconds),
-              Time.ofBaseUnits(Constants.BLINK_OFF_LENGTH, Seconds));
+      pattern = pattern.blink(
+          Time.ofBaseUnits(Constants.BLINK_ON_LENGTH, Seconds),
+          Time.ofBaseUnits(Constants.BLINK_OFF_LENGTH, Seconds));
       cyclesWhileBlinking++;
       if (cyclesWhileBlinking > Constants.BLINK_CYCLES) {
         blinking = false;
@@ -293,19 +147,19 @@ public class LEDs extends SubsystemBase {
 
   public Command setPatternCommand(LEDPattern pattern) {
     return new InstantCommand(
-            () -> {
-              this.currentPattern = pattern;
-              this.updatePattern(); // Ensure immediate update
-            })
+        () -> {
+          this.currentPattern = pattern;
+          this.updatePattern(); // Ensure immediate update
+        })
         .ignoringDisable(true);
   }
 
   public Command setBreatheCommand(boolean b) {
     return new InstantCommand(
-            () -> {
-              this.breathing = b;
-              this.updatePattern(); // Ensure immediate update
-            })
+        () -> {
+          this.breathing = b;
+          this.updatePattern(); // Ensure immediate update
+        })
         .ignoringDisable(true);
   }
 
