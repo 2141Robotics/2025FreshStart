@@ -4,6 +4,8 @@
 
 package frc.robot;
 
+import static edu.wpi.first.units.Units.Celsius;
+
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -35,9 +37,8 @@ public class Robot extends TimedRobot {
     // autonomous chooser on the dashboard.
     m_robotContainer = new RobotContainer();
 
+    
     ledChooser.setDefaultOption(
-        "Fire", this.m_robotContainer.leds.setPatternCommand(Constants.PATTERN_FIRE));
-    ledChooser.addOption(
         "Off", this.m_robotContainer.leds.setPatternCommand(Constants.PATTERN_OFF));
     ledChooser.addOption(
         "Red", this.m_robotContainer.leds.setPatternCommand(Constants.PATTERN_RED));
@@ -53,7 +54,8 @@ public class Robot extends TimedRobot {
         "Blue", this.m_robotContainer.leds.setPatternCommand(Constants.PATTERN_BLUE));
     ledChooser.addOption(
         "Purple", this.m_robotContainer.leds.setPatternCommand(Constants.PATTERN_PURPLE));
-    ledChooser.addOption("Up", this.m_robotContainer.leds.setPatternCommand(Constants.PATTERN_UP));
+    ledChooser.addOption(
+      "Up", this.m_robotContainer.leds.setPatternCommand(Constants.PATTERN_UP));
     ledChooser.addOption(
         "Down", this.m_robotContainer.leds.setPatternCommand(Constants.PATTERN_DOWN));
     ledChooser.addOption(
@@ -63,8 +65,14 @@ public class Robot extends TimedRobot {
     ledChooser.addOption(
         "Dots", this.m_robotContainer.leds.setPatternCommand(Constants.PATTERN_DOTS));
     ledChooser.addOption(
-        "Rainbow",
-        this.m_robotContainer.leds.setPatternCommand(Constants.PATTERN_RAINBOW_SCROLLING));
+        "Rainbow", this.m_robotContainer.leds.
+        setPatternCommand(Constants.PATTERN_RAINBOW_SCROLLING));
+        ledChooser.addOption(
+       "Fire", this.m_robotContainer.leds.setPatternCommand(Constants.PATTERN_FIRE));
+    ledChooser.addOption(
+        "Particles", this.m_robotContainer.leds.setPatternCommand(Constants.PATTERN_PARTICLES));
+    ledChooser.addOption(
+        "Aurora", this.m_robotContainer.leds.setPatternCommand(Constants.PATTERN_AURORA));
     SmartDashboard.putData("LED Pattern", ledChooser);
   }
 

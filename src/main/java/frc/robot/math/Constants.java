@@ -216,6 +216,9 @@ public class Constants {
           //.scrollAtAbsoluteSpeed(InchesPerSecond.of(1), LEDPATTERN_DISTANCE);
 
 
+    public static final LEDPattern PATTERN_PARTICLES = LEDPattern.solid(Color.kWhite);
+
+    public static final LEDPattern PATTERN_AURORA = LEDPattern.solid(Color.kWhite);
    // ************* MUSIC SETTINGS ***************/
 
    public static final String SONG_NAME = "src/main/deploy/Gold_On_The_Ceiling.chrp";
