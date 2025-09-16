@@ -88,7 +88,7 @@ public class LEDs extends SubsystemBase {
       swerveDrive.setMotorSound(Constants.POLICE_SIREN_FREQUENCY);
       Police.runPolice(segmentsUnifiedTop, m_buffer);
     } else if (this.currentPattern == Constants.PATTERN_DOTS) {
-      Dots.runDots();
+      Dots.runDots(segmentsUnifiedTop);
     } else if (this.currentPattern == Constants.PATTERN_AURORA) {
       Aurora.runAurora(this.whole);
     } else if (this.currentPattern == Constants.PATTERN_PARTICLES) {
@@ -103,7 +103,7 @@ public class LEDs extends SubsystemBase {
   public void updatePattern() {
     if (this.currentPattern != this.oldPattern || blinking || breathing) {
       this.runPattern(currentPattern);
-      System.out.println("Chaning LED Pattern");
+      System.out.println("Changing LED Pattern");
     }
   }
 

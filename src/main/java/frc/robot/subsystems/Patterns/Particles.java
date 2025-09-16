@@ -4,7 +4,6 @@ import edu.wpi.first.wpilibj.AddressableLEDBufferView;
 import frc.robot.math.Constants;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.Random;
 
 public class Particles {
@@ -13,10 +12,11 @@ public class Particles {
     private static final ArrayList<Particle> particles = new ArrayList<>();
 
     public static void runParticles(ArrayList<AddressableLEDBufferView> segments) {
+        ArrayList<Particle> newParticles = new ArrayList<>();
+        ArrayList<Particle> particlesToRemove = new ArrayList<>();
+
         // Move particles and handle collisions
-        Iterator<Particle> iterator = particles.iterator();
-        while (iterator.hasNext()) {
-            Particle particle = iterator.next();
+        for (Particle particle : particles) {
             particle.move();
 
             // Check for collisions
@@ -24,17 +24,28 @@ public class Particles {
                 if (particle != other && particle.collidesWith(other)) {
                     particle.explode(segments);
                     other.explode(segments);
-                    iterator.remove();
-                    particles.remove(other);
+                    particlesToRemove.add(particle);
+                    particlesToRemove.add(other);
                     break;
                 }
             }
 
             // Remove particles that go out of bounds
             if (!particle.isInBounds()) {
-                iterator.remove();
+                particlesToRemove.add(particle);
+            }
+
+            // Randomly split
+            if (random.nextDouble() < Constants.PARTICLE_SPLIT_CHANCE) {
+                newParticles.add(new Particle(particle.segment, -particle.direction));
             }
         }
+
+        // Remove particles marked for removal
+        particles.removeAll(particlesToRemove);
+
+        // Add new particles
+        particles.addAll(newParticles);
 
         // Randomly spawn new particles
         if (random.nextDouble() < Constants.PARTICLE_SPAWN_CHANCE) {
@@ -62,10 +73,6 @@ public class Particles {
 
         public void move() {
             position += direction;
-            // Randomly split
-            if (random.nextDouble() < Constants.PARTICLE_SPLIT_CHANCE) {
-                particles.add(new Particle(segment, -direction));
-            }
         }
 
         public boolean collidesWith(Particle other) {

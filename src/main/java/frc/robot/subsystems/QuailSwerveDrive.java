@@ -16,7 +16,7 @@ public class QuailSwerveDrive extends SwerveDrive<QuailSwerveModule> {
   /** A list of all of the swerve modules on the drivetrain. */
   private final List<QuailSwerveModule> modules;
 
-  private Orchestra orchestra;
+  public Orchestra orchestra;
 
   /**
    * @param minSpeed           minimum movement speed (0 to 1)

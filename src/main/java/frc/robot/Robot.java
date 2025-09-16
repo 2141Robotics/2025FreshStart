@@ -4,8 +4,6 @@
 
 package frc.robot;
 
-import static edu.wpi.first.units.Units.Celsius;
-
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -162,6 +160,8 @@ public class Robot extends TimedRobot {
 
   @Override
   public void testInit() {
+    m_robotContainer.drivetrain.
+    quailSwerveDrive.orchestra.play();
     // Cancels all running commands at the start of test mode.
     CommandScheduler.getInstance().cancelAll();
   }

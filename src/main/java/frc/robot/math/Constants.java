@@ -150,7 +150,7 @@ public class Constants {
 
     public static final LEDPattern PATTERN_FIRE = LEDPattern.solid(Color.kDarkRed);
 
-    public static final int POLICE_SIREN_FREQUENCY = 100; // frequency played by motors in Hz
+    public static final int POLICE_SIREN_FREQUENCY = 40; // frequency played by motors in Hz
     public static final int POLICE_BLINK_SPEED = 3; // cycles per color change
 
     // 1 Seg1 On Seg2 Off
@@ -169,17 +169,31 @@ public class Constants {
     // 14 Seg1 Off Seg2 On
     public static final boolean[][] POLICE_PATTERN = {
             { true, false },
+            { true, false },
+            { false, false },
             { false, false },
             { true, false },
+            { true, false },
+            { false, true },
             { false, true },
             { false, false },
-            { false, true },
-            { true, false },
-            { true, false },
+            { false, false },
             { false, true },
             { false, true },
             { true, false },
             { true, false },
+            { true, false },
+            { true, false },
+            { false, true },
+            { false, true },
+            { false, true },
+            { false, true },
+            { true, false },
+            { true, false },
+            { true, false },
+            { true, false },
+            { false, true },
+            { false, true },
             { false, true },
             { false, true }
     };
@@ -207,8 +221,8 @@ public class Constants {
     public static final LEDPattern PATTERN_DOTS_BACKGROUND = LEDPattern.solid(Color.kWhite)
             .atBrightness(Percent.of(30));
 
-    public static final LEDPattern PATTERN_RAINBOW_SCROLLING = LEDPattern.rainbow(255, 255);
-    // .scrollAtAbsoluteSpeed(InchesPerSecond.of(1), LEDPATTERN_DISTANCE);
+    public static final LEDPattern PATTERN_RAINBOW_SCROLLING = LEDPattern.rainbow(255, 255).
+    scrollAtAbsoluteSpeed(InchesPerSecond.of(1), LEDPATTERN_DISTANCE);
 
     public static final LEDPattern PATTERN_PARTICLES = LEDPattern.solid(Color.kWhite);
 

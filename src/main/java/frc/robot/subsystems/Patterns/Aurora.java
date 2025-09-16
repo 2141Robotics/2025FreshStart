@@ -1,7 +1,6 @@
 package frc.robot.subsystems.Patterns;
 
 import edu.wpi.first.wpilibj.AddressableLEDBufferView;
-import frc.robot.math.Constants;
 
 public class Aurora {
 
@@ -18,10 +17,10 @@ public class Aurora {
 
         cycles++;
 
-        for (int i = 0; i < Constants.LED_COUNT; i++) {
+        for (int i = 0; i < buffer.getLength(); i++) { // Use buffer.getLength() instead of Constants.LED_COUNT
 
             // Position along strip, scaled
-            double x = (double) i / Constants.LED_COUNT;
+            double x = (double) i / buffer.getLength();
 
             // Wave movement using sine functions
             double wave1 = Math.sin(10 * x - cycles * 0.1);
