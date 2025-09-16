@@ -62,6 +62,9 @@ public class QuailSwerveModule extends SwerveModuleBase {
     TalonFXConfiguration steeringTalonConfig =
         new TalonFXConfiguration().withMotorOutput(motorConfig);
 
+    driveTalonConfig.Audio.withAllowMusicDurDisable(true);
+    steeringTalonConfig.Audio.withAllowMusicDurDisable(true);
+
     // PID tunes the steering motor
     steeringTalonConfig.Slot0.kV = Constants.PID_SETTINGS[0];
     steeringTalonConfig.Slot0.kP = Constants.PID_SETTINGS[1];
@@ -157,6 +160,14 @@ public class QuailSwerveModule extends SwerveModuleBase {
   public void setMotorSound(int frequency) {
     this.drivingMotor.setControl(new MusicTone(frequency));
     this.steeringMotor.setControl(new MusicTone(frequency));
+  }
+
+  public TalonFX getDriveMotor() {
+    return this.drivingMotor;
+  }
+
+  public TalonFX getSteerMotor() {
+    return this.steeringMotor;
   }
 
   @Override

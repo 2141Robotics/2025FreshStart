@@ -164,9 +164,13 @@ public class Constants {
   // 5 Seg1 Off Seg2 Off
   // 6 Seg1 Off Seg2 On
   // 7 Seg1 On Seg2 Off
-  // 8 Seg1 Off Seg2 On
-  // 9 Seg1 On Seg2 Off
+  // 8 Seg1 On Seg2 Off
+  // 9 Seg1 Off Seg2 On
   // 10 Seg1 Off Seg2 On
+  // 11 Seg1 On Seg2 Off
+  // 12 Seg1 On Seg2 Off
+  // 13 Seg1 Off Seg2 On
+  // 14 Seg1 Off Seg2 On
   public static final boolean[][] POLICE_PATTERN = {
     {true, false},
     {false, false},
@@ -199,9 +203,21 @@ public class Constants {
   // the length of the segment one way
   public static final double DOT_FREQUENCY_CYCLES = 10;
 
+  //The color of the dots themselves
+  public static final Color DOT_COLOR = Color.kWhite;
+  //Just an object to refer to, this has no effect on the actual color
   public static final LEDPattern PATTERN_DOTS = LEDPattern.solid(Color.kWhite);
+  //The color of the background
+  public static final LEDPattern PATTERN_DOTS_BACKGROUND = 
+    LEDPattern.solid(Color.kWhite).atBrightness(Percent.of(30));
 
   public static final LEDPattern PATTERN_RAINBOW_SCROLLING =
-      LEDPattern.rainbow(100, 100);
+      LEDPattern.rainbow(255, 255);
           //.scrollAtAbsoluteSpeed(InchesPerSecond.of(1), LEDPATTERN_DISTANCE);
+
+
+   // ************* MUSIC SETTINGS ***************/
+
+   public static final String SONG_NAME = "src/main/deploy/Gold_On_The_Ceiling.chrp";
+   //public static final String SONG_NAME = "src/main/deploy/Let_It_All_Work_Out.chrp";
 }

@@ -2,6 +2,7 @@ package frc.robot.subsystems;
 
 import static edu.wpi.first.units.Units.Radians;
 
+import com.ctre.phoenix6.Orchestra;
 import com.ctre.phoenix6.controls.ControlRequest;
 import com.ctre.phoenix6.controls.StaticBrake;
 import com.mineinjava.quail.RobotMovement;
@@ -15,6 +16,8 @@ public class QuailSwerveDrive extends SwerveDrive<QuailSwerveModule> {
   /** A list of all of the swerve modules on the drivetrain. */
   private final List<QuailSwerveModule> modules;
 
+  private Orchestra orchestra;
+
   /**
    * @param minSpeed minimum movement speed (0 to 1)
    * @param maxSpeed maximum movement speed (0 to 1)
@@ -25,11 +28,21 @@ public class QuailSwerveDrive extends SwerveDrive<QuailSwerveModule> {
   public QuailSwerveDrive(List<QuailSwerveModule> modules) {
     super(modules);
     this.modules = modules;
+    orchestra = new Orchestra();
   }
 
   public void initModules() {
     this.modules.forEach(m -> m.init());
     this.setBrake(new StaticBrake());
+  }
+
+  public void initMusic(){
+    
+    for(QuailSwerveModule module : this.modules){
+      orchestra.addInstrument(module.getSteerMotor());
+      orchestra.addInstrument(module.getDriveMotor());
+    }
+    orchestra.loadMusic(Constants.SONG_NAME);
   }
 
   public void reset() {

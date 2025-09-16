@@ -121,16 +121,22 @@ public class LEDs extends SubsystemBase {
       } else {
         dots[i] += length/Constants.DOT_FREQUENCY_CYCLES;
       }
-      Constants.PATTERN_OFF.applyTo(segment);
+      Constants.PATTERN_DOTS_BACKGROUND.applyTo(segment);
       segment.setRGB((int)dots[i], 255, 255, 255);
       for (int j = 0; j < Constants.DOTS_TRAIL_LENGTH; j++) {
         int brightness = 255 - (j * (255 / Constants.DOTS_TRAIL_LENGTH));
         if (dotsDecreasing[i] && dots[i] + j < length) {
-          segment.setRGB((int)dots[i] + j, brightness, brightness, brightness);
+          segment.setRGB((int)dots[i] + j, 
+            (int) Constants.DOT_COLOR.red * brightness, 
+            (int) Constants.DOT_COLOR.blue * brightness, 
+            (int) Constants.DOT_COLOR.green * brightness);
         }
         if (!dotsDecreasing[i] && dots[i] - j > 0) {
           brightness = 255 - (j * (255 / Constants.DOTS_TRAIL_LENGTH));
-          segment.setRGB((int)dots[i] - j, brightness, brightness, brightness);
+          segment.setRGB((int)dots[i] - j,
+            (int) Constants.DOT_COLOR.red * brightness, 
+            (int) Constants.DOT_COLOR.blue * brightness, 
+            (int) Constants.DOT_COLOR.green * brightness);
         }
       }
     }
