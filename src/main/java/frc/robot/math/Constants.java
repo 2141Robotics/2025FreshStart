@@ -224,3 +224,28 @@ public class Constants {
    public static final String SONG_NAME = "src/main/deploy/Gold_On_The_Ceiling.chrp";
    //public static final String SONG_NAME = "src/main/deploy/Let_It_All_Work_Out.chrp";
 }
+for (int i = 0; i < length; i++) {
+            // Position along strip, scaled
+            double x = (double) i / length;
+
+            // Wave movement using sine functions
+            double wave1 = Math.sin(10 * x - t); 
+            double wave2 = Math.sin(7 * x + t * 0.6);
+
+            // Combine waves for complexity
+            double intensity = (wave1 + wave2) / 2.0;
+
+            // Scale to [0,1] range
+            intensity = (intensity + 1) / 2.0;
+
+            // Aurora color mix (green-blue blend)
+            int r = 0;
+            int g = (int)(200 * intensity);
+            int b = (int)(255 * (0.3 + 0.7 * intensity));
+
+            // Dim background so it looks "glowing"
+            g = Math.min(255, g + 20);
+            b = Math.min(255, b + 20);
+
+            buffer.setRGB(i, r, g, b);
+        }
