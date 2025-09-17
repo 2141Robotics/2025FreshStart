@@ -251,7 +251,7 @@ public class Constants {
 
   // ************* MUSIC SETTINGS ***************/
 
-  public static final String SONG_NAME = "src/main/deploy/Gold_On_The_Ceiling.chrp";
+  public static final String SONG_NAME = "src/main/deploy/Barbra Streisand.chrp";
   // public static final String SONG_NAME =
   // "src/main/deploy/Let_It_All_Work_Out.chrp";
 }
