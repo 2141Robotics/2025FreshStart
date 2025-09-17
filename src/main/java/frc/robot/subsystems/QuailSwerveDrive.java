@@ -19,10 +19,10 @@ public class QuailSwerveDrive extends SwerveDrive<QuailSwerveModule> {
   public Orchestra orchestra;
 
   /**
-   * @param minSpeed           minimum movement speed (0 to 1)
-   * @param maxSpeed           maximum movement speed (0 to 1)
-   * @param maxRotation        maximum rotational speed (0 to 1)
-   * @param gyroscope          the swerve drive's gyroscope
+   * @param minSpeed minimum movement speed (0 to 1)
+   * @param maxSpeed maximum movement speed (0 to 1)
+   * @param maxRotation maximum rotational speed (0 to 1)
+   * @param gyroscope the swerve drive's gyroscope
    * @param QuailSwerveModules the swerve drive's wheel modules
    */
   public QuailSwerveDrive(List<QuailSwerveModule> modules) {

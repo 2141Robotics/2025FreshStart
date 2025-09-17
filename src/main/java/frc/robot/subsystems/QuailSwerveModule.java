@@ -29,10 +29,7 @@ public class QuailSwerveModule extends SwerveModuleBase {
   /** The can coder measuring the module's absolute rotaiton. */
   private final CANcoder canCoder;
 
-  /**
-   * The can coder's rotational offset. This value must be manually set through
-   * phoenix tuner.
-   */
+  /** The can coder's rotational offset. This value must be manually set through phoenix tuner. */
   private final double canOffset;
 
   private int steeringMotorID;
@@ -57,11 +54,13 @@ public class QuailSwerveModule extends SwerveModuleBase {
 
     System.out.println("Initializing Swerve modue [sid: ]" + this.steeringMotorID);
     // Reset the steering motor.
-    MotorOutputConfigs motorConfig = new MotorOutputConfigs().withInverted(InvertedValue.CounterClockwise_Positive);
+    MotorOutputConfigs motorConfig =
+        new MotorOutputConfigs().withInverted(InvertedValue.CounterClockwise_Positive);
 
     TalonFXConfiguration driveTalonConfig = new TalonFXConfiguration().withMotorOutput(motorConfig);
 
-    TalonFXConfiguration steeringTalonConfig = new TalonFXConfiguration().withMotorOutput(motorConfig);
+    TalonFXConfiguration steeringTalonConfig =
+        new TalonFXConfiguration().withMotorOutput(motorConfig);
 
     driveTalonConfig.Audio.withAllowMusicDurDisable(true);
     steeringTalonConfig.Audio.withAllowMusicDurDisable(true);
@@ -83,8 +82,7 @@ public class QuailSwerveModule extends SwerveModuleBase {
   }
 
   /**
-   * 1. Gets Encoder Angle 2. Spins the motor so the encoder is at 0 3. Sets the
-   * motor's position to
+   * 1. Gets Encoder Angle 2. Spins the motor so the encoder is at 0 3. Sets the motor's position to
    * 0
    */
   public void reset() {

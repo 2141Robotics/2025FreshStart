@@ -16,7 +16,6 @@ import frc.robot.subsystems.Patterns.Dots;
 import frc.robot.subsystems.Patterns.Fire;
 import frc.robot.subsystems.Patterns.Particles;
 import frc.robot.subsystems.Patterns.Police;
-
 import java.util.ArrayList;
 
 public class LEDs extends SubsystemBase {
@@ -116,9 +115,10 @@ public class LEDs extends SubsystemBase {
       pattern = pattern.breathe(Constants.BREATHE_LOOP_TIME);
     }
     if (blinking) {
-      pattern = pattern.blink(
-          Time.ofBaseUnits(Constants.BLINK_ON_LENGTH, Seconds),
-          Time.ofBaseUnits(Constants.BLINK_OFF_LENGTH, Seconds));
+      pattern =
+          pattern.blink(
+              Time.ofBaseUnits(Constants.BLINK_ON_LENGTH, Seconds),
+              Time.ofBaseUnits(Constants.BLINK_OFF_LENGTH, Seconds));
       cyclesWhileBlinking++;
       if (cyclesWhileBlinking > Constants.BLINK_CYCLES) {
         blinking = false;
@@ -147,19 +147,19 @@ public class LEDs extends SubsystemBase {
 
   public Command setPatternCommand(LEDPattern pattern) {
     return new InstantCommand(
-        () -> {
-          this.currentPattern = pattern;
-          this.updatePattern(); // Ensure immediate update
-        })
+            () -> {
+              this.currentPattern = pattern;
+              this.updatePattern(); // Ensure immediate update
+            })
         .ignoringDisable(true);
   }
 
   public Command setBreatheCommand(boolean b) {
     return new InstantCommand(
-        () -> {
-          this.breathing = b;
-          this.updatePattern(); // Ensure immediate update
-        })
+            () -> {
+              this.breathing = b;
+              this.updatePattern(); // Ensure immediate update
+            })
         .ignoringDisable(true);
   }
 
