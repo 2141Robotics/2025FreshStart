@@ -17,6 +17,7 @@ import frc.robot.subsystems.Patterns.Fire;
 import frc.robot.subsystems.Patterns.Particles;
 import frc.robot.subsystems.Patterns.Police;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class LEDs extends SubsystemBase {
@@ -71,6 +72,8 @@ public class LEDs extends SubsystemBase {
     segmentsSplitTop.add(topleft);
     segmentsSplitTop.add(topright);
     segmentsSplitTop.add(right);
+
+    heat = new ArrayList<>(Collections.nCopies(left.getLength(), 0));
 
     runPattern(Constants.PATTERN_YELLOW);
     updatePattern();

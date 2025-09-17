@@ -13,8 +13,6 @@ public class Fire {
   public static List<Integer> fire(
       AddressableLEDBufferView bufferView, int flameHight, int sparks, int length, List<Integer>heat) {
 
-    heat = new ArrayList<>(Collections.nCopies(length, 0));
-
     for (int i = 0; i < length; i++) {
       int cooldown = random.nextInt(((flameHight * 10) / length) + 2);
       if (cooldown > heat.get(i)) {
