@@ -14,24 +14,30 @@ public class Particles {
     ArrayList<Particle> newParticles = new ArrayList<>();
     ArrayList<Particle> particlesToRemove = new ArrayList<>();
 
+    // Render the background
+    for (AddressableLEDBufferView segment : segments) {
+      for (int i = 0; i < segment.getLength(); i++) {
+        segment.setLED(i, Constants.PARTICLE_BACKGROUND_COLOR);
+      }
+    }
+
     // Move particles and handle collisions
     for (Particle particle : particles) {
+      // Random chance for the particle to disappear
+      if (random.nextDouble() < Constants.PARTICLE_DISAPPEAR_CHANCE) {
+        particlesToRemove.add(particle);
+        continue;
+      }
+
       particle.move();
 
       // Check for collisions
       for (Particle other : particles) {
         if (particle != other && particle.collidesWith(other)) {
           particle.explode(segments);
-          other.explode(segments);
-          particlesToRemove.add(particle);
-          particlesToRemove.add(other);
-          break;
+          particle.bounce();
+          other.bounce();
         }
-      }
-
-      // Remove particles that go out of bounds
-      if (!particle.isInBounds()) {
-        particlesToRemove.add(particle);
       }
 
       // Randomly split
@@ -44,14 +50,15 @@ public class Particles {
     particles.removeAll(particlesToRemove);
 
     // Add new particles
-    particles.addAll(newParticles);
-
-    // Randomly spawn new particles
-    if (random.nextDouble() < Constants.PARTICLE_SPAWN_CHANCE) {
+    if (random.nextDouble() < Constants.PARTICLE_SPAWN_CHANCE 
+      && particles.size() < Constants.PARTICLE_MAX_COUNT) {
       int segmentIndex = random.nextInt(segments.size());
       AddressableLEDBufferView segment = segments.get(segmentIndex);
       particles.add(new Particle(segment, random.nextBoolean() ? 1 : -1));
     }
+
+    // Add newly split particles
+    particles.addAll(newParticles);
 
     // Render particles
     for (Particle particle : particles) {
@@ -62,7 +69,7 @@ public class Particles {
   private static class Particle {
     private final AddressableLEDBufferView segment;
     private int position;
-    private final int direction;
+    private int direction;
 
     public Particle(AddressableLEDBufferView segment, int direction) {
       this.segment = segment;
@@ -72,6 +79,11 @@ public class Particles {
 
     public void move() {
       position += direction;
+
+      // Bounce if hitting the end of the segment
+      if (position < 0 || position >= segment.getLength()) {
+        bounce();
+      }
     }
 
     public boolean collidesWith(Particle other) {
@@ -80,16 +92,21 @@ public class Particles {
 
     public void explode(ArrayList<AddressableLEDBufferView> segments) {
       for (AddressableLEDBufferView segment : segments) {
-        segment.setLED(position, Constants.PARTICLE_EXPLOSION_COLOR);
+        if (position >= 0 && position < segment.getLength()) {
+          segment.setLED(position, Constants.PARTICLE_EXPLOSION_COLOR);
+        }
       }
     }
 
-    public boolean isInBounds() {
-      return position >= 0 && position < segment.getLength();
+    public void bounce() {
+      direction = -direction; // Reverse direction
+      position = Math.max(0, Math.min(position, segment.getLength() - 1)); // Clamp position
     }
 
     public void render() {
-      segment.setLED(position, Constants.PARTICLE_COLOR);
+      if (position >= 0 && position < segment.getLength()) { // Ensure position is valid
+        segment.setLED(position, Constants.PARTICLE_COLOR);
+      }
     }
   }
 }

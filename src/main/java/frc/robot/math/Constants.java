@@ -150,9 +150,9 @@ public class Constants {
   // LEDPattern.solid(new Color("#0F4D2A")).atBrightness(LED_BRIGHTNESS);
 
   public static final LEDPattern PATTERN_DLS_GREEN =
-      LEDPattern.solid(new Color(15/255.0, 77/255.0, 42/255.0)).atBrightness(LED_BRIGHTNESS);
-//   public static final LEDPattern PATTERN_DLS_GREEN =
-//      LEDPattern.solid(new Color("#0f4d2a")).atBrightness(LED_BRIGHTNESS);
+      LEDPattern.solid(new Color(15 / 255.0, 77 / 255.0, 42 / 255.0)).atBrightness(LED_BRIGHTNESS);
+  //   public static final LEDPattern PATTERN_DLS_GREEN =
+  //      LEDPattern.solid(new Color("#0f4d2a")).atBrightness(LED_BRIGHTNESS);
 
   public static final LEDPattern PATTERN_UP =
       LEDPattern.gradient(GradientType.kDiscontinuous, Color.kPurple, Color.kDarkBlue);
@@ -160,7 +160,7 @@ public class Constants {
       LEDPattern.gradient(GradientType.kDiscontinuous, Color.kDarkBlue, Color.kPurple);
 
   public static final LEDPattern PATTERN_SCROLL =
-      PATTERN_UP.scrollAtAbsoluteSpeed(InchesPerSecond.of(4), LEDPATTERN_DISTANCE);
+  LEDPattern.gradient(GradientType.kContinuous, Color.kDarkBlue, Color.kPurple).scrollAtAbsoluteSpeed(InchesPerSecond.of(20), LEDPATTERN_DISTANCE);
 
   public static final LEDPattern PATTERN_FIRE = LEDPattern.solid(Color.kDarkRed);
 
@@ -225,7 +225,7 @@ public class Constants {
 
   // How long in cycles (20 ms intervals) it takes for a dot to travel
   // the length of the segment one way
-  public static final double DOT_FREQUENCY_CYCLES = 10;
+  public static final double DOT_FREQUENCY_CYCLES = 110;
 
   // The color of the dots themselves
   public static final Color DOT_COLOR = Color.kWhite;
@@ -233,21 +233,24 @@ public class Constants {
   public static final LEDPattern PATTERN_DOTS = LEDPattern.solid(Color.kWhite);
   // The color of the background
   public static final LEDPattern PATTERN_DOTS_BACKGROUND =
-      LEDPattern.solid(Color.kWhite).atBrightness(Percent.of(30));
+      LEDPattern.kOff;
 
   public static final LEDPattern PATTERN_RAINBOW_SCROLLING =
       LEDPattern.rainbow(255, 255)
-          .scrollAtAbsoluteSpeed(InchesPerSecond.of(1), LEDPATTERN_DISTANCE);
+      .scrollAtAbsoluteSpeed(InchesPerSecond.of(40), LEDPATTERN_DISTANCE);
 
   public static final LEDPattern PATTERN_PARTICLES = LEDPattern.solid(Color.kWhite);
 
   public static final LEDPattern PATTERN_AURORA = LEDPattern.solid(Color.kWhite);
 
   // Particle settings
-  public static final double PARTICLE_SPAWN_CHANCE = 0.05; // 5% chance per cycle
-  public static final double PARTICLE_SPLIT_CHANCE = 0.02; // 2% chance per move
+  public static final double PARTICLE_SPAWN_CHANCE = 0.08;
+  public static final double PARTICLE_SPLIT_CHANCE = 0.0;
+  public static final double PARTICLE_DISAPPEAR_CHANCE = 0.01;
+  public static final int PARTICLE_MAX_COUNT = 7;
   public static final Color PARTICLE_COLOR = Color.kWhite;
-  public static final Color PARTICLE_EXPLOSION_COLOR = Color.kOrange;
+  public static final Color PARTICLE_BACKGROUND_COLOR = Color.kBlack; // Background is completely off
+  public static final Color PARTICLE_EXPLOSION_COLOR = Color.kBlack;
 
   // ************* MUSIC SETTINGS ***************/
 

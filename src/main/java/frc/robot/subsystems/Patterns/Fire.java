@@ -8,12 +8,10 @@ import java.util.Random;
 
 public class Fire {
 
-  private static List<Integer> heat;
-
   private static Random random = new Random();
 
-  public static void fire(
-      AddressableLEDBufferView bufferView, int flameHight, int sparks, int length) {
+  public static List<Integer> fire(
+      AddressableLEDBufferView bufferView, int flameHight, int sparks, int length, List<Integer>heat) {
 
     heat = new ArrayList<>(Collections.nCopies(length, 0));
 
@@ -46,5 +44,7 @@ public class Fire {
         bufferView.setRGB(j, temperature, 0, 0);
       }
     }
+    return heat;
   }
+
 }

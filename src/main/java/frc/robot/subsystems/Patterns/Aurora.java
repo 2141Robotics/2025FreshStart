@@ -10,7 +10,6 @@ public class Aurora {
    * Aurora pattern with smooth, flowing colors Uses all LEDs as one
    *
    * @param buffer
-   * @param cycles
    */
   public static void runAurora(AddressableLEDBufferView buffer) {
 
@@ -24,8 +23,8 @@ public class Aurora {
       double x = (double) i / buffer.getLength();
 
       // Wave movement using sine functions
-      double wave1 = Math.sin(10 * x - cycles * 0.1);
-      double wave2 = Math.sin(7 * x + cycles * 0.06);
+      double wave1 = Math.sin(10 * x - cycles * 0.05);
+      double wave2 = Math.sin(7 * x + cycles * 0.01);
 
       // Combine waves for complexity
       double intensity = (wave1 + wave2) / 2.0;
@@ -35,8 +34,8 @@ public class Aurora {
 
       // Aurora color mix (green-blue blend)
       int r = 0;
-      int g = (int) (200 * intensity);
-      int b = (int) (255 * (0.3 + 0.7 * intensity));
+      int g = (int) (255 * (0.8 + 0.2*intensity));
+      int b = (int) (100 * (intensity));
 
       // Dim background so it looks "glowing"
       g = Math.min(255, g + 20);

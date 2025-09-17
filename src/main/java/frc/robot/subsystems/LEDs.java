@@ -17,6 +17,7 @@ import frc.robot.subsystems.Patterns.Fire;
 import frc.robot.subsystems.Patterns.Particles;
 import frc.robot.subsystems.Patterns.Police;
 import java.util.ArrayList;
+import java.util.List;
 
 public class LEDs extends SubsystemBase {
 
@@ -39,6 +40,8 @@ public class LEDs extends SubsystemBase {
 
   private int cyclesWhileBlinking = 0;
   private boolean blinking;
+
+  private List<Integer> heat;
 
   private QuailSwerveDrive swerveDrive;
 
@@ -81,8 +84,8 @@ public class LEDs extends SubsystemBase {
     }
 
     if (this.currentPattern == Constants.PATTERN_FIRE) {
-      Fire.fire(left, 50, 60, left.getLength());
-      Fire.fire(right, 50, 60, right.getLength());
+      heat = Fire.fire(left, 50, 60, left.getLength(), heat);
+      heat = Fire.fire(right, 50, 60, right.getLength(), heat);
     } else if (this.currentPattern == Constants.PATTERN_POLICE) {
       swerveDrive.setMotorSound(Constants.POLICE_SIREN_FREQUENCY);
       Police.runPolice(segmentsUnifiedTop, m_buffer);
@@ -100,9 +103,10 @@ public class LEDs extends SubsystemBase {
   }
 
   public void updatePattern() {
-    if (this.currentPattern != this.oldPattern || blinking || breathing) {
+    if (this.currentPattern != this.oldPattern || blinking || breathing ||
+    currentPattern.equals(Constants.PATTERN_RAINBOW_SCROLLING)||
+    currentPattern.equals(Constants.PATTERN_SCROLL)) {
       this.runPattern(currentPattern);
-      System.out.println("Changing LED Pattern");
     }
   }
 
