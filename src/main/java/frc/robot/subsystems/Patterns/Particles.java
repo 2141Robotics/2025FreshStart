@@ -70,8 +70,12 @@ public class Particles {
     private final AddressableLEDBufferView segment;
     private int position;
     private int direction;
+    private int r, g, b;
 
     public Particle(AddressableLEDBufferView segment, int direction) {
+      this.r = random.nextInt(0,255);
+      this.g = random.nextInt(0,255);
+      this.b = random.nextInt(0,255);
       this.segment = segment;
       this.direction = direction;
       this.position = direction > 0 ? 0 : segment.getLength() - 1;
@@ -105,7 +109,7 @@ public class Particles {
 
     public void render() {
       if (position >= 0 && position < segment.getLength()) { // Ensure position is valid
-        segment.setLED(position, Constants.PARTICLE_COLOR);
+        segment.setRGB(position, r,g,b);
       }
     }
   }

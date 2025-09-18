@@ -73,7 +73,7 @@ public class LEDs extends SubsystemBase {
     segmentsSplitTop.add(topright);
     segmentsSplitTop.add(right);
 
-    heat = new ArrayList<>(Collections.nCopies(left.getLength(), 0));
+    heat = new ArrayList<>(Collections.nCopies(right.getLength(), 0));
 
     runPattern(Constants.PATTERN_YELLOW);
     updatePattern();

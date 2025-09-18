@@ -34,12 +34,16 @@ public class Aurora {
 
       // Aurora color mix (green-blue blend)
       int r = 0;
-      int g = (int) (255 * (0.8 + 0.2*intensity));
-      int b = (int) (100 * (intensity));
+      int g = (int) (255 * (0.9 + 0.1*intensity));
+      int b = (int) (55 * (intensity));
 
       // Dim background so it looks "glowing"
       g = Math.min(255, g + 20);
       b = Math.min(255, b + 20);
+
+      r *= 0.2;
+      g *= 0.2;
+      b *= 0.2;
 
       buffer.setRGB(i, r, g, b);
     }

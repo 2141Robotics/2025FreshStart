@@ -130,7 +130,7 @@ public class Constants {
 
   private static final Distance LEDPATTERN_DISTANCE = Meters.of(1.0 / 120);
 
-  public static final Time BREATHE_LOOP_TIME = Time.ofBaseUnits(1, Second);
+  public static final Time BREATHE_LOOP_TIME = Time.ofBaseUnits(4, Second);
 
   public static final LEDPattern PATTERN_RED =
       LEDPattern.solid(Color.kRed).atBrightness(LED_BRIGHTNESS);
@@ -244,10 +244,10 @@ public class Constants {
   public static final LEDPattern PATTERN_AURORA = LEDPattern.solid(Color.kWhite);
 
   // Particle settings
-  public static final double PARTICLE_SPAWN_CHANCE = 0.08;
+  public static final double PARTICLE_SPAWN_CHANCE = 0.4;
   public static final double PARTICLE_SPLIT_CHANCE = 0.0;
-  public static final double PARTICLE_DISAPPEAR_CHANCE = 0.01;
-  public static final int PARTICLE_MAX_COUNT = 7;
+  public static final double PARTICLE_DISAPPEAR_CHANCE = 0.001;
+  public static final int PARTICLE_MAX_COUNT = 25;
   public static final Color PARTICLE_COLOR = Color.kWhite;
   public static final Color PARTICLE_BACKGROUND_COLOR = Color.kBlack; // Background is completely off
   public static final Color PARTICLE_EXPLOSION_COLOR = Color.kBlack;
