@@ -5,34 +5,56 @@ package frc.robot.subsystems;
 
 import static edu.wpi.first.units.Units.*;
 
+import com.ctre.phoenix6.controls.CoastOut;
+import com.ctre.phoenix6.controls.ControlRequest;
+import com.ctre.phoenix6.controls.StaticBrake;
 import com.mineinjava.quail.RobotMovement;
+import com.mineinjava.quail.localization.KalmanFilterLocalizer;
+import com.mineinjava.quail.localization.SwerveOdometry;
+import com.mineinjava.quail.util.MiniPID;
+import com.mineinjava.quail.util.geometry.Pose2d;
 import com.mineinjava.quail.util.geometry.Vec2d;
 import com.studica.frc.AHRS;
-
-import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.networktables.NetworkTableInstance;
-import edu.wpi.first.networktables.StructArrayPublisher;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.util.sendable.SendableBuilder;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.math.Constants;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.networktables.StructArrayPublisher;
+import edu.wpi.first.networktables.StructPublisher;
+
 import java.util.ArrayList;
 
 public class Drivetrain extends SubsystemBase {
 
   private AHRS gyro;
 
-  public QuailSwerveDrive quailSwerveDrive;
+  private QuailSwerveDrive quailSwerveDrive;
 
   private ArrayList<QuailSwerveModule> modules;
-  
+
   private SwerveModuleState[] desiredStates;
   private SwerveModuleState[] actualStates;
- 
+
   private StructArrayPublisher<SwerveModuleState> actualPublisher;
   private StructArrayPublisher<SwerveModuleState> desiredPublisher;
+  private StructPublisher<edu.wpi.first.math.geometry.Pose2d> positionPublisher;
+
+  public Boolean HAS_LIMELIGHT = false;
+
+  private edu.wpi.first.math.geometry.Pose2d position;
+
+  public SwerveOdometry odometry;
+  public MiniPID pidcontroller;
+  private KalmanFilterLocalizer kalmanFilter = 
+    new KalmanFilterLocalizer(new Pose2d(0, 0, 0), Constants.LOOPTIME);
 
   /** Creates a new ExampleSubsystem. */
   public Drivetrain(AHRS gyro) {
@@ -72,24 +94,31 @@ public class Drivetrain extends SubsystemBase {
 
     this.quailSwerveDrive = new QuailSwerveDrive(modules);
 
-    desiredStates =  new SwerveModuleState[] {
-      new SwerveModuleState(),
-      new SwerveModuleState(),
-      new SwerveModuleState(),
-      new SwerveModuleState()
+    this.odometry = new SwerveOdometry(quailSwerveDrive);
+
+    desiredStates = new SwerveModuleState[] {
+        new SwerveModuleState(),
+        new SwerveModuleState(),
+        new SwerveModuleState(),
+        new SwerveModuleState()
     };
 
-    actualStates =  new SwerveModuleState[] {
-      new SwerveModuleState(),
-      new SwerveModuleState(),
-      new SwerveModuleState(),
-      new SwerveModuleState()
+    actualStates = new SwerveModuleState[] {
+        new SwerveModuleState(),
+        new SwerveModuleState(),
+        new SwerveModuleState(),
+        new SwerveModuleState()
     };
-    
+
     actualPublisher = NetworkTableInstance.getDefault()
-      .getStructArrayTopic("Actual State", SwerveModuleState.struct).publish();
+        .getStructArrayTopic("Actual State", SwerveModuleState.struct).publish();
     desiredPublisher = NetworkTableInstance.getDefault()
-      .getStructArrayTopic("Desired State", SwerveModuleState.struct).publish();
+        .getStructArrayTopic("Desired State", SwerveModuleState.struct).publish();
+
+   positionPublisher = NetworkTableInstance.getDefault()
+        .getStructTopic("Position", edu.wpi.first.math.geometry.Pose2d.struct).publish();
+
+    position = new edu.wpi.first.math.geometry.Pose2d();
   }
 
   /**
@@ -104,6 +133,7 @@ public class Drivetrain extends SubsystemBase {
   public void reset() {
     quailSwerveDrive.reset();
     resetGyro();
+    setMotorBreaking(new StaticBrake());
     System.out.println("RESET DRIVETRAIN");
   }
 
@@ -117,7 +147,27 @@ public class Drivetrain extends SubsystemBase {
     if (canDrive()) {
       quailSwerveDrive.drive(robotMovement, this.gyro.getAngle());
       // System.out.println("GYRO " + this.gyro.getAngle());
+    } else {
+      System.out.println("cannot drive, calibrating gyro");
     }
+  }
+
+  public Command disableMotorBreakingCommand() {
+    return this.runOnce(
+        () -> {
+          this.setMotorBreaking(new CoastOut());
+        });
+  }
+
+  public Command enableMotorBreakingCommand() {
+    return this.runOnce(
+        () -> {
+          this.setMotorBreaking(new StaticBrake());
+        });
+  }
+
+  public void setMotorBreaking(ControlRequest controlRequest) {
+    quailSwerveDrive.setBrake(controlRequest);
   }
 
   public Command XLock() {
@@ -159,7 +209,8 @@ public class Drivetrain extends SubsystemBase {
   }
 
   /**
-   * An example method querying a boolean state of the subsystem (for example, a digital sensor).
+   * An example method querying a boolean state of the subsystem (for example, a
+   * digital sensor).
    *
    * @return value of some boolean subsystem state, such as a digital sensor.
    */
@@ -186,6 +237,9 @@ public class Drivetrain extends SubsystemBase {
     }
     desiredPublisher.set(desiredStates);
     actualPublisher.set(actualStates);
+    positionPublisher.set(position);
+
+    // this.updateOdometry();
   }
 
   @Override
@@ -196,5 +250,108 @@ public class Drivetrain extends SubsystemBase {
   @Override
   public void initSendable(SendableBuilder builder) {
     super.initSendable(builder);
+  }
+
+  public void updateOdometry() {
+    ArrayList<Vec2d> moduleSpeeds = this.quailSwerveDrive.getModuleSpeeds();
+    RobotMovement velocity = this.odometry.calculateFastOdometry(moduleSpeeds);
+    // System.out.println("velocity: "+ velocity.translation.getLength());
+
+    this.odometry.updateDeltaPoseEstimate(velocity.translation.scale(0.02));
+    this.odometry.setAngle(this.gyro.getAngle() * Math.PI * 2);
+
+    double[] LL2pos = NetworkTableInstance.getDefault()
+        .getTable("limelight-two")
+        .getEntry("botpose")
+        .getDoubleArray(new double[6]);
+
+    double[] LL3pos = NetworkTableInstance.getDefault()
+        .getTable("limelight-three")
+        .getEntry("botpose")
+        .getDoubleArray(new double[6]);
+
+    SmartDashboard.putNumberArray("Limelight 2 Pos", LL2pos);
+    SmartDashboard.putNumberArray("Limelight 3 Pos", LL3pos);
+
+    double LX = 0;
+    double LY = 0;
+    double LATENCY = 0;
+
+    if (LL3pos.length >= 7) {
+      LX = LL3pos[1] * Constants.INCHES_TO_METERS;
+      LY = -LL3pos[0] * Constants.INCHES_TO_METERS;
+      LATENCY = LL3pos[6];
+      if (LL3pos[0] != 0) {
+        NetworkTableInstance.getDefault()
+            .getTable("limelight-three")
+            .getEntry("ledMode")
+            .setNumber(3);
+      } else {
+        NetworkTableInstance.getDefault()
+            .getTable("limelight-three")
+            .getEntry("ledMode")
+            .setNumber(1);
+      }
+    }
+    if (LL2pos.length >= 7) {
+      if (true) {
+        LX = LL2pos[1] * Constants.INCHES_TO_METERS;
+        LY = -LL2pos[0] * Constants.INCHES_TO_METERS;
+        LATENCY = LL2pos[6];
+      }
+      if (LL2pos[0] != 0) {
+        NetworkTableInstance.getDefault()
+            .getTable("limelight-two")
+            .getEntry("ledMode")
+            .setNumber(3);
+      } else {
+        NetworkTableInstance.getDefault()
+            .getTable("limelight-two")
+            .getEntry("ledMode")
+            .setNumber(1);
+      }
+    }
+
+    if (DriverStation.getAlliance().orElse(Alliance.Red) == Alliance.Blue) {
+      LY = -LY; // invert y
+      LX = -LX;
+    }
+
+    SmartDashboard.putNumber("LX", LX);
+    SmartDashboard.putNumber("LY", LY);
+
+    double w = Constants.KALMAN_FILTER_W;
+    if ((LX == 0) && (LY == 0)) {
+      w = 0;
+      this.HAS_LIMELIGHT = false;
+    } else {
+      this.HAS_LIMELIGHT = true;
+    }
+
+    this.kalmanFilter.update(
+        new Pose2d(LX, LY, 0),
+        new Pose2d(
+            velocity.translation.rotate(-this.gyro.getAngle(), true).rotate(Math.PI / 2, false), 0),
+        LATENCY,
+        w,
+        0,
+        Timer.getFPGATimestamp() * Constants.SECONDS_TO_MS);
+
+    SmartDashboard.putNumber("KFx", this.kalmanFilter.getPose().x);
+    SmartDashboard.putNumber("KFy", this.kalmanFilter.getPose().y);
+
+    SmartDashboard.putNumber("Ox", this.odometry.x);
+    SmartDashboard.putNumber("Oy", this.odometry.y);
+
+    this.odometry.setPose(
+        new Pose2d(this.kalmanFilter.getPose().vec(), this.gyro.getAngle() * Math.PI / 180));
+    this.kalmanFilter.setHeading(this.gyro.getAngle() * Math.PI / 180);
+
+    position = new edu.wpi.first.math.geometry.
+          Pose2d(this.odometry.x, this.odometry.y, new Rotation2d(this.odometry.theta));
+  }
+
+  public QuailSwerveDrive getQuailSwerveDrive() {
+    return this.quailSwerveDrive;
   }
 }

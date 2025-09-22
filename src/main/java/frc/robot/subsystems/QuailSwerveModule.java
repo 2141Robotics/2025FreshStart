@@ -32,7 +32,10 @@ public class QuailSwerveModule extends SwerveModuleBase {
   /** The can coder measuring the module's absolute rotaiton. */
   private final CANcoder canCoder;
 
-  /** The can coder's rotational offset. This value must be manually set through phoenix tuner. */
+  /**
+   * The can coder's rotational offset. This value must be manually set through
+   * phoenix tuner.
+   */
   private final double canOffset;
 
   private int steeringMotorID;
@@ -60,13 +63,11 @@ public class QuailSwerveModule extends SwerveModuleBase {
 
     System.out.println("Initializing Swerve modue [sid: ]" + this.steeringMotorID);
     // Reset the steering motor.
-    MotorOutputConfigs motorConfig =
-        new MotorOutputConfigs().withInverted(InvertedValue.CounterClockwise_Positive);
+    MotorOutputConfigs motorConfig = new MotorOutputConfigs().withInverted(InvertedValue.CounterClockwise_Positive);
 
     TalonFXConfiguration driveTalonConfig = new TalonFXConfiguration().withMotorOutput(motorConfig);
 
-    TalonFXConfiguration steeringTalonConfig =
-        new TalonFXConfiguration().withMotorOutput(motorConfig);
+    TalonFXConfiguration steeringTalonConfig = new TalonFXConfiguration().withMotorOutput(motorConfig);
 
     driveTalonConfig.Audio.withAllowMusicDurDisable(true);
     steeringTalonConfig.Audio.withAllowMusicDurDisable(true);
@@ -92,7 +93,8 @@ public class QuailSwerveModule extends SwerveModuleBase {
   }
 
   /**
-   * 1. Gets Encoder Angle 2. Spins the motor so the encoder is at 0 3. Sets the motor's position to
+   * 1. Gets Encoder Angle 2. Spins the motor so the encoder is at 0 3. Sets the
+   * motor's position to
    * 0
    */
   public void reset() {
@@ -183,7 +185,6 @@ public class QuailSwerveModule extends SwerveModuleBase {
         + "]";
   }
 
-  
   /**
    * @return The desired state of the module, based on passed in values
    */
@@ -193,11 +194,22 @@ public class QuailSwerveModule extends SwerveModuleBase {
   }
 
   /**
-   * @return The actual state of the module, based on the can coder and driving motor
-   * NOTE: speed is based on last set speed, not actual speed
+   * @return The actual state of the module, based on the can coder and driving
+   *         motor
+   *         NOTE: speed is based on last set speed, not actual speed
    */
   public SwerveModuleState getActualState() {
     Rotation2d r = new Rotation2d(getNormalizedAngle().in(Radian));
     return new SwerveModuleState(this.speed, r);
+  }
+
+  public Vec2d getCurrentMovement() {
+    return new Vec2d(
+        this.canCoder.getAbsolutePosition().getValueAsDouble() * Math.PI * 2,
+        this.drivingMotor.getVelocity().refresh().getValueAsDouble()
+            * Math.PI
+            * Constants.WHEEL_DIAMETER
+            / Constants.DRIVE_RATIO,
+        false);
   }
 }
