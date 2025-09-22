@@ -50,8 +50,8 @@ public class Particles {
     particles.removeAll(particlesToRemove);
 
     // Add new particles
-    if (random.nextDouble() < Constants.PARTICLE_SPAWN_CHANCE 
-      && particles.size() < Constants.PARTICLE_MAX_COUNT) {
+    if (random.nextDouble() < Constants.PARTICLE_SPAWN_CHANCE
+        && particles.size() < Constants.PARTICLE_MAX_COUNT) {
       int segmentIndex = random.nextInt(segments.size());
       AddressableLEDBufferView segment = segments.get(segmentIndex);
       particles.add(new Particle(segment, random.nextBoolean() ? 1 : -1));
@@ -73,9 +73,9 @@ public class Particles {
     private int r, g, b;
 
     public Particle(AddressableLEDBufferView segment, int direction) {
-      this.r = random.nextInt(0,255);
-      this.g = random.nextInt(0,255);
-      this.b = random.nextInt(0,255);
+      this.r = random.nextInt(0, 255);
+      this.g = random.nextInt(0, 255);
+      this.b = random.nextInt(0, 255);
       this.segment = segment;
       this.direction = direction;
       this.position = direction > 0 ? 0 : segment.getLength() - 1;
@@ -109,7 +109,7 @@ public class Particles {
 
     public void render() {
       if (position >= 0 && position < segment.getLength()) { // Ensure position is valid
-        segment.setRGB(position, r,g,b);
+        segment.setRGB(position, r, g, b);
       }
     }
   }

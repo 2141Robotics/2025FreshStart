@@ -1,8 +1,6 @@
 package frc.robot.subsystems.Patterns;
 
 import edu.wpi.first.wpilibj.AddressableLEDBufferView;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
@@ -11,7 +9,11 @@ public class Fire {
   private static Random random = new Random();
 
   public static List<Integer> fire(
-      AddressableLEDBufferView bufferView, int flameHight, int sparks, int length, List<Integer>heat) {
+      AddressableLEDBufferView bufferView,
+      int flameHight,
+      int sparks,
+      int length,
+      List<Integer> heat) {
 
     for (int i = 0; i < length; i++) {
       int cooldown = random.nextInt(((flameHight * 10) / length) + 2);
@@ -44,5 +46,4 @@ public class Fire {
     }
     return heat;
   }
-
 }

@@ -14,8 +14,11 @@ import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.SensorDirectionValue;
 import com.mineinjava.quail.SwerveModuleBase;
 import com.mineinjava.quail.util.geometry.Vec2d;
+
+import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.units.measure.Angle;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.math.Constants;
 
 public class QuailSwerveModule extends SwerveModuleBase {
@@ -33,6 +36,9 @@ public class QuailSwerveModule extends SwerveModuleBase {
   private final double canOffset;
 
   private int steeringMotorID;
+
+  private Angle angle;
+  private double speed;
 
   public QuailSwerveModule(
       Vec2d position,
@@ -79,6 +85,10 @@ public class QuailSwerveModule extends SwerveModuleBase {
     encoderConfig.SensorDirection = SensorDirectionValue.CounterClockwise_Positive;
 
     this.canCoder.getConfigurator().apply(encoderConfig);
+
+    this.angle = getRawAngle();
+    this.speed = 0;
+    this.reset();
   }
 
   /**
@@ -93,34 +103,15 @@ public class QuailSwerveModule extends SwerveModuleBase {
     this.steeringMotor.stopMotor();
   }
 
-  /*
-   * public Vec2d getCurrentMovement() {
-   * double angle = this.canCoder.getAbsolutePosition().refresh().getValue() * (2
-   * * Math.PI);
-   * double velocity = this.drivingMotor.getVelocity().refresh().getValue();
-   * double rotationsPerSecond = velocity / 6.75;
-   * double inchesPerSecond = rotationsPerSecond * Constants.WHEEL_DIAMETER *
-   * Math.PI;
-   * SmartDashboard.putNumber("Module" + this.canCoder.getDeviceID(),
-   * inchesPerSecond);
-   *
-   * return new Vec2d(angle, inchesPerSecond, false);
-   *
-   * }
-   */
-
   /** Input in radians Create an angle object Set position */
   @Override
   public void setRawAngle(double angleInRad) {
-    Angle angle = Angle.ofBaseUnits(angleInRad, Radian);
+    angle = Angle.ofBaseUnits(angleInRad, Radian);
     this.steeringMotor.setControl(new PositionDutyCycle(angle.times(Constants.STEERING_RATIO)));
-    SmartDashboard.putNumber("Module " + steeringMotorID + " target angle: ", angle.in(Rotations));
   }
 
   /**
-   * Gets raw angle of encoder
-   *
-   * @return angle in rotations, not bounded
+   * @return angle in rotations of the encoder, not bounded
    */
   public Angle getRawAngle() {
     double currentPos = this.canCoder.getAbsolutePosition().refresh().getValue().in(Rotation);
@@ -128,9 +119,7 @@ public class QuailSwerveModule extends SwerveModuleBase {
   }
 
   /**
-   * Gets normalized angle of encoder
-   *
-   * @return angle in rotations between 0 and 1
+   * @return the true angle of the encoder in rotations, bounded 0 to 1
    */
   public Angle getNormalizedAngle() {
     double currentPos = this.canCoder.getAbsolutePosition().refresh().getValue().in(Rotation);
@@ -139,18 +128,29 @@ public class QuailSwerveModule extends SwerveModuleBase {
     return Angle.ofBaseUnits(currentPos, Rotation);
   }
 
-  // Returns the position of the steering motor
-  public Angle getAngle() {
+  /**
+   * @return the true angle of the motor in rotations, not bounded
+   */
+  public Angle getTrueAngle() {
     return (this.steeringMotor.getPosition().refresh().getValue().div(Constants.STEERING_RATIO));
+  }
+
+  /**
+   * @return Desired angle of the module, bounded between 0 and 2π
+   */
+  public Angle getDesiredAngleNormalized() {
+    double angleInRad = MathUtil.angleModulus(angle.in(Radian)) + Math.PI;
+    return Angle.ofBaseUnits(angleInRad, Radian);
   }
 
   @Override
   public void setRawSpeed(double speed) {
+    this.speed = speed;
     this.drivingMotor.set(speed);
   }
 
-  public void setRawSteeringSpeed(double speed) {
-    this.steeringMotor.set(speed);
+  public double getDesiredSpeed() {
+    return this.speed;
   }
 
   public void setBrake(ControlRequest brake) {
@@ -181,5 +181,23 @@ public class QuailSwerveModule extends SwerveModuleBase {
         + ", Cancoder ID = "
         + this.canCoder.getDeviceID()
         + "]";
+  }
+
+  
+  /**
+   * @return The desired state of the module, based on passed in values
+   */
+  public SwerveModuleState getDesiredState() {
+    Rotation2d r = new Rotation2d(this.angle.in(Radian));
+    return new SwerveModuleState(this.speed, r);
+  }
+
+  /**
+   * @return The actual state of the module, based on the can coder and driving motor
+   * NOTE: speed is based on last set speed, not actual speed
+   */
+  public SwerveModuleState getActualState() {
+    Rotation2d r = new Rotation2d(getNormalizedAngle().in(Radian));
+    return new SwerveModuleState(this.speed, r);
   }
 }

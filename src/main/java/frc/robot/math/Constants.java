@@ -160,7 +160,8 @@ public class Constants {
       LEDPattern.gradient(GradientType.kDiscontinuous, Color.kDarkBlue, Color.kPurple);
 
   public static final LEDPattern PATTERN_SCROLL =
-  LEDPattern.gradient(GradientType.kContinuous, Color.kDarkBlue, Color.kPurple).scrollAtAbsoluteSpeed(InchesPerSecond.of(20), LEDPATTERN_DISTANCE);
+      LEDPattern.gradient(GradientType.kContinuous, Color.kDarkBlue, Color.kPurple)
+          .scrollAtAbsoluteSpeed(InchesPerSecond.of(20), LEDPATTERN_DISTANCE);
 
   public static final LEDPattern PATTERN_FIRE = LEDPattern.solid(Color.kDarkRed);
 
@@ -232,12 +233,11 @@ public class Constants {
   // Just an object to refer to, this has no effect on the actual color
   public static final LEDPattern PATTERN_DOTS = LEDPattern.solid(Color.kWhite);
   // The color of the background
-  public static final LEDPattern PATTERN_DOTS_BACKGROUND =
-      LEDPattern.kOff;
+  public static final LEDPattern PATTERN_DOTS_BACKGROUND = LEDPattern.kOff;
 
   public static final LEDPattern PATTERN_RAINBOW_SCROLLING =
       LEDPattern.rainbow(255, 255)
-      .scrollAtAbsoluteSpeed(InchesPerSecond.of(40), LEDPATTERN_DISTANCE);
+          .scrollAtAbsoluteSpeed(InchesPerSecond.of(40), LEDPATTERN_DISTANCE);
 
   public static final LEDPattern PATTERN_PARTICLES = LEDPattern.solid(Color.kWhite);
 
@@ -249,7 +249,8 @@ public class Constants {
   public static final double PARTICLE_DISAPPEAR_CHANCE = 0.001;
   public static final int PARTICLE_MAX_COUNT = 25;
   public static final Color PARTICLE_COLOR = Color.kWhite;
-  public static final Color PARTICLE_BACKGROUND_COLOR = Color.kBlack; // Background is completely off
+  public static final Color PARTICLE_BACKGROUND_COLOR =
+      Color.kBlack; // Background is completely off
   public static final Color PARTICLE_EXPLOSION_COLOR = Color.kBlack;
 
   // ************* MUSIC SETTINGS ***************/

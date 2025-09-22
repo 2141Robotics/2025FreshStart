@@ -106,9 +106,11 @@ public class LEDs extends SubsystemBase {
   }
 
   public void updatePattern() {
-    if (this.currentPattern != this.oldPattern || blinking || breathing ||
-    currentPattern.equals(Constants.PATTERN_RAINBOW_SCROLLING)||
-    currentPattern.equals(Constants.PATTERN_SCROLL)) {
+    if (this.currentPattern != this.oldPattern
+        || blinking
+        || breathing
+        || currentPattern.equals(Constants.PATTERN_RAINBOW_SCROLLING)
+        || currentPattern.equals(Constants.PATTERN_SCROLL)) {
       this.runPattern(currentPattern);
     }
   }

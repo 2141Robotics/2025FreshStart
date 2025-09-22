@@ -8,6 +8,10 @@ import static edu.wpi.first.units.Units.*;
 import com.mineinjava.quail.RobotMovement;
 import com.mineinjava.quail.util.geometry.Vec2d;
 import com.studica.frc.AHRS;
+
+import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.networktables.StructArrayPublisher;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -23,6 +27,12 @@ public class Drivetrain extends SubsystemBase {
   public QuailSwerveDrive quailSwerveDrive;
 
   private ArrayList<QuailSwerveModule> modules;
+  
+  private SwerveModuleState[] desiredStates;
+  private SwerveModuleState[] actualStates;
+ 
+  private StructArrayPublisher<SwerveModuleState> actualPublisher;
+  private StructArrayPublisher<SwerveModuleState> desiredPublisher;
 
   /** Creates a new ExampleSubsystem. */
   public Drivetrain(AHRS gyro) {
@@ -61,6 +71,25 @@ public class Drivetrain extends SubsystemBase {
             Constants.CANCODER_OFFSETS[3]));
 
     this.quailSwerveDrive = new QuailSwerveDrive(modules);
+
+    desiredStates =  new SwerveModuleState[] {
+      new SwerveModuleState(),
+      new SwerveModuleState(),
+      new SwerveModuleState(),
+      new SwerveModuleState()
+    };
+
+    actualStates =  new SwerveModuleState[] {
+      new SwerveModuleState(),
+      new SwerveModuleState(),
+      new SwerveModuleState(),
+      new SwerveModuleState()
+    };
+    
+    actualPublisher = NetworkTableInstance.getDefault()
+      .getStructArrayTopic("Actual State", SwerveModuleState.struct).publish();
+    desiredPublisher = NetworkTableInstance.getDefault()
+      .getStructArrayTopic("Desired State", SwerveModuleState.struct).publish();
   }
 
   /**
@@ -145,13 +174,18 @@ public class Drivetrain extends SubsystemBase {
     // This method will be called once per scheduler run
     for (int i = 0; i < 4; i++) {
       SmartDashboard.putNumber(
-          "Module " + (i + 1) + " raw angle:", this.modules.get(i).getRawAngle().in(Rotation));
-      SmartDashboard.putNumber(
           "Module " + (i + 1) + " normalized angle:",
           this.modules.get(i).getNormalizedAngle().in(Rotation));
       SmartDashboard.putNumber(
-          "Module " + (i + 1) + " angle:", this.modules.get(i).getAngle().in(Rotation));
+          "Module " + (i + 1) + " target angle:",
+          this.modules.get(i).getDesiredAngleNormalized().in(Rotation));
+      SmartDashboard.putNumber(
+          "Module " + (i + 1) + " speed:", this.modules.get(i).getDesiredSpeed());
+
+      desiredStates[i] = this.modules.get(i).getDesiredState();
     }
+    desiredPublisher.set(desiredStates);
+    actualPublisher.set(actualStates);
   }
 
   @Override
