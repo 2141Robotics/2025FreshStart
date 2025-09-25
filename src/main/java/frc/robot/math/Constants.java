@@ -101,6 +101,20 @@ public class Constants {
     // Factored in when moving the entire drivetrain
     public static final Angle GYRO_OFFSET = Angle.ofBaseUnits(-PI_OVER_TWO, Radian);
 
+    // public static final Angle[] X_LOCK_POSITIONS = new Angle[]{
+    //     Angle.ofBaseUnits(135, Degree),
+    //     Angle.ofBaseUnits(45, Degree),
+    //     Angle.ofBaseUnits(-45, Degree),
+    //     Angle.ofBaseUnits(-135, Degree)
+    // };
+
+    public static final Angle[] X_LOCK_POSITIONS = new Angle[]{
+        Angle.ofBaseUnits(0, Degree),
+        Angle.ofBaseUnits(0, Degree),
+        Angle.ofBaseUnits(0, Degree),
+        Angle.ofBaseUnits(0, Degree)
+    };
+
     // ************* DEVICE ID SETTINGS ***************/
     // The IDs of the drive motors
     public static final int[] DRIVE_MOTOR_IDS = new int[] { 1, 3, 5, 7 };

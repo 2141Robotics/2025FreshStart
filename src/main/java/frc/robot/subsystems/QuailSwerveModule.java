@@ -14,7 +14,6 @@ import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.SensorDirectionValue;
 import com.mineinjava.quail.SwerveModuleBase;
 import com.mineinjava.quail.util.geometry.Vec2d;
-
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
@@ -32,15 +31,11 @@ public class QuailSwerveModule extends SwerveModuleBase {
   /** The can coder measuring the module's absolute rotaiton. */
   private final CANcoder canCoder;
 
-  /**
-   * The can coder's rotational offset. This value must be manually set through
-   * phoenix tuner.
-   */
+  /** The can coder's rotational offset. This value must be manually set through phoenix tuner. */
   private final double canOffset;
 
   private int steeringMotorID;
 
-  private Angle angle;
   private double speed;
 
   public QuailSwerveModule(
@@ -63,11 +58,13 @@ public class QuailSwerveModule extends SwerveModuleBase {
 
     System.out.println("Initializing Swerve modue [sid: ]" + this.steeringMotorID);
     // Reset the steering motor.
-    MotorOutputConfigs motorConfig = new MotorOutputConfigs().withInverted(InvertedValue.CounterClockwise_Positive);
+    MotorOutputConfigs motorConfig =
+        new MotorOutputConfigs().withInverted(InvertedValue.CounterClockwise_Positive);
 
     TalonFXConfiguration driveTalonConfig = new TalonFXConfiguration().withMotorOutput(motorConfig);
 
-    TalonFXConfiguration steeringTalonConfig = new TalonFXConfiguration().withMotorOutput(motorConfig);
+    TalonFXConfiguration steeringTalonConfig =
+        new TalonFXConfiguration().withMotorOutput(motorConfig);
 
     driveTalonConfig.Audio.withAllowMusicDurDisable(true);
     steeringTalonConfig.Audio.withAllowMusicDurDisable(true);
@@ -87,19 +84,16 @@ public class QuailSwerveModule extends SwerveModuleBase {
 
     this.canCoder.getConfigurator().apply(encoderConfig);
 
-    this.angle = getRawAngle();
+    this.currentAngle = getRawAngle().in(Radian);
     this.speed = 0;
     this.reset();
   }
 
-  /**
-   * 1. Gets Encoder Angle 2. Spins the motor so the encoder is at 0 3. Sets the
-   * motor's position to
-   * 0
-   */
+  /** Stops module and recalibrates then spins the motor to 0 */
   public void reset() {
     System.out.println("Resetting steering module ID: " + this.steeringMotorID);
     this.steeringMotor.setPosition(this.getRawAngle().in(Rotation) * Constants.STEERING_RATIO);
+    this.steeringMotor.setControl(new PositionDutyCycle(0));
     this.currentAngle = this.getRawAngle().in(Radian);
     this.drivingMotor.stopMotor();
     this.steeringMotor.stopMotor();
@@ -108,7 +102,8 @@ public class QuailSwerveModule extends SwerveModuleBase {
   /** Input in radians Create an angle object Set position */
   @Override
   public void setRawAngle(double angleInRad) {
-    angle = Angle.ofBaseUnits(angleInRad, Radian);
+    currentAngle = angleInRad;
+    Angle angle = Angle.ofBaseUnits(currentAngle, Radian);
     this.steeringMotor.setControl(new PositionDutyCycle(angle.times(Constants.STEERING_RATIO)));
   }
 
@@ -116,8 +111,7 @@ public class QuailSwerveModule extends SwerveModuleBase {
    * @return angle in rotations of the encoder, not bounded
    */
   public Angle getRawAngle() {
-    double currentPos = this.canCoder.getAbsolutePosition().refresh().getValue().in(Rotation);
-    return Angle.ofBaseUnits(currentPos, Rotation);
+    return this.canCoder.getAbsolutePosition().refresh().getValue();
   }
 
   /**
@@ -126,7 +120,7 @@ public class QuailSwerveModule extends SwerveModuleBase {
   public Angle getNormalizedAngle() {
     double currentPos = this.canCoder.getAbsolutePosition().refresh().getValue().in(Rotation);
     // Normalizes angle
-    currentPos = (currentPos + 1) % 1;
+    currentPos = currentPos % 1d;
     return Angle.ofBaseUnits(currentPos, Rotation);
   }
 
@@ -141,7 +135,7 @@ public class QuailSwerveModule extends SwerveModuleBase {
    * @return Desired angle of the module, bounded between 0 and 2π
    */
   public Angle getDesiredAngleNormalized() {
-    double angleInRad = MathUtil.angleModulus(angle.in(Radian)) + Math.PI;
+    double angleInRad = MathUtil.angleModulus(currentAngle) + Math.PI;
     return Angle.ofBaseUnits(angleInRad, Radian);
   }
 
@@ -189,18 +183,22 @@ public class QuailSwerveModule extends SwerveModuleBase {
    * @return The desired state of the module, based on passed in values
    */
   public SwerveModuleState getDesiredState() {
-    Rotation2d r = new Rotation2d(this.angle.in(Radian));
+    Rotation2d r = new Rotation2d(this.currentAngle);
     return new SwerveModuleState(this.speed, r);
   }
 
   /**
-   * @return The actual state of the module, based on the can coder and driving
-   *         motor
-   *         NOTE: speed is based on last set speed, not actual speed
+   * @return The actual state of the module, based on the can coder and driving motor NOTE: speed is
+   *     based on last set speed, not actual speed
    */
   public SwerveModuleState getActualState() {
-    Rotation2d r = new Rotation2d(getNormalizedAngle().in(Radian));
-    return new SwerveModuleState(this.speed, r);
+    Rotation2d r = new Rotation2d(getRawAngle().in(Degree));
+    return new SwerveModuleState(
+        this.drivingMotor.getVelocity().refresh().getValueAsDouble()
+            * Math.PI
+            * Constants.WHEEL_DIAMETER
+            / Constants.DRIVE_RATIO,
+        r);
   }
 
   public Vec2d getCurrentMovement() {

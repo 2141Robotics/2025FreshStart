@@ -15,7 +15,11 @@ import com.mineinjava.quail.util.MiniPID;
 import com.mineinjava.quail.util.geometry.Pose2d;
 import com.mineinjava.quail.util.geometry.Vec2d;
 import com.studica.frc.AHRS;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.networktables.StructArrayPublisher;
+import edu.wpi.first.networktables.StructPublisher;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -25,11 +29,6 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.math.Constants;
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.kinematics.SwerveModuleState;
-import edu.wpi.first.networktables.StructArrayPublisher;
-import edu.wpi.first.networktables.StructPublisher;
-
 import java.util.ArrayList;
 
 public class Drivetrain extends SubsystemBase {
@@ -53,8 +52,8 @@ public class Drivetrain extends SubsystemBase {
 
   public SwerveOdometry odometry;
   public MiniPID pidcontroller;
-  private KalmanFilterLocalizer kalmanFilter = 
-    new KalmanFilterLocalizer(new Pose2d(0, 0, 0), Constants.LOOPTIME);
+  private KalmanFilterLocalizer kalmanFilter =
+      new KalmanFilterLocalizer(new Pose2d(0, 0, 0), Constants.LOOPTIME);
 
   /** Creates a new ExampleSubsystem. */
   public Drivetrain(AHRS gyro) {
@@ -96,27 +95,35 @@ public class Drivetrain extends SubsystemBase {
 
     this.odometry = new SwerveOdometry(quailSwerveDrive);
 
-    desiredStates = new SwerveModuleState[] {
-        new SwerveModuleState(),
-        new SwerveModuleState(),
-        new SwerveModuleState(),
-        new SwerveModuleState()
-    };
+    desiredStates =
+        new SwerveModuleState[] {
+          new SwerveModuleState(),
+          new SwerveModuleState(),
+          new SwerveModuleState(),
+          new SwerveModuleState()
+        };
 
-    actualStates = new SwerveModuleState[] {
-        new SwerveModuleState(),
-        new SwerveModuleState(),
-        new SwerveModuleState(),
-        new SwerveModuleState()
-    };
+    actualStates =
+        new SwerveModuleState[] {
+          new SwerveModuleState(),
+          new SwerveModuleState(),
+          new SwerveModuleState(),
+          new SwerveModuleState()
+        };
 
-    actualPublisher = NetworkTableInstance.getDefault()
-        .getStructArrayTopic("Actual State", SwerveModuleState.struct).publish();
-    desiredPublisher = NetworkTableInstance.getDefault()
-        .getStructArrayTopic("Desired State", SwerveModuleState.struct).publish();
+    actualPublisher =
+        NetworkTableInstance.getDefault()
+            .getStructArrayTopic("Actual State", SwerveModuleState.struct)
+            .publish();
+    desiredPublisher =
+        NetworkTableInstance.getDefault()
+            .getStructArrayTopic("Desired State", SwerveModuleState.struct)
+            .publish();
 
-   positionPublisher = NetworkTableInstance.getDefault()
-        .getStructTopic("Position", edu.wpi.first.math.geometry.Pose2d.struct).publish();
+    positionPublisher =
+        NetworkTableInstance.getDefault()
+            .getStructTopic("Position", edu.wpi.first.math.geometry.Pose2d.struct)
+            .publish();
 
     position = new edu.wpi.first.math.geometry.Pose2d();
   }
@@ -190,27 +197,12 @@ public class Drivetrain extends SubsystemBase {
     this.gyro.reset();
   }
 
-  /**
-   * Example command factory method.
-   *
-   * @return a command
-   */
-  public Command ExampleCommand() {
-    // Inline construction of command goes here.
-    // Subsystem::RunOnce implicitly requires `this` subsystem.
-    return runOnce(
-        () -> {
-          /* one-time action goes here */
-        });
-  }
-
   public Command resetGyroCommand() {
     return this.runOnce(() -> this.resetGyro());
   }
 
   /**
-   * An example method querying a boolean state of the subsystem (for example, a
-   * digital sensor).
+   * An example method querying a boolean state of the subsystem (for example, a digital sensor).
    *
    * @return value of some boolean subsystem state, such as a digital sensor.
    */
@@ -234,6 +226,7 @@ public class Drivetrain extends SubsystemBase {
           "Module " + (i + 1) + " speed:", this.modules.get(i).getDesiredSpeed());
 
       desiredStates[i] = this.modules.get(i).getDesiredState();
+      actualStates[i] = this.modules.get(i).getActualState();
     }
     desiredPublisher.set(desiredStates);
     actualPublisher.set(actualStates);
@@ -260,15 +253,17 @@ public class Drivetrain extends SubsystemBase {
     this.odometry.updateDeltaPoseEstimate(velocity.translation.scale(0.02));
     this.odometry.setAngle(this.gyro.getAngle() * Math.PI * 2);
 
-    double[] LL2pos = NetworkTableInstance.getDefault()
-        .getTable("limelight-two")
-        .getEntry("botpose")
-        .getDoubleArray(new double[6]);
+    double[] LL2pos =
+        NetworkTableInstance.getDefault()
+            .getTable("limelight-two")
+            .getEntry("botpose")
+            .getDoubleArray(new double[6]);
 
-    double[] LL3pos = NetworkTableInstance.getDefault()
-        .getTable("limelight-three")
-        .getEntry("botpose")
-        .getDoubleArray(new double[6]);
+    double[] LL3pos =
+        NetworkTableInstance.getDefault()
+            .getTable("limelight-three")
+            .getEntry("botpose")
+            .getDoubleArray(new double[6]);
 
     SmartDashboard.putNumberArray("Limelight 2 Pos", LL2pos);
     SmartDashboard.putNumberArray("Limelight 3 Pos", LL3pos);
@@ -347,8 +342,9 @@ public class Drivetrain extends SubsystemBase {
         new Pose2d(this.kalmanFilter.getPose().vec(), this.gyro.getAngle() * Math.PI / 180));
     this.kalmanFilter.setHeading(this.gyro.getAngle() * Math.PI / 180);
 
-    position = new edu.wpi.first.math.geometry.
-          Pose2d(this.odometry.x, this.odometry.y, new Rotation2d(this.odometry.theta));
+    position =
+        new edu.wpi.first.math.geometry.Pose2d(
+            this.odometry.x, this.odometry.y, new Rotation2d(this.odometry.theta));
   }
 
   public QuailSwerveDrive getQuailSwerveDrive() {

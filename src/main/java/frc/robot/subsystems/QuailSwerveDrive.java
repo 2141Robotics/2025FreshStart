@@ -1,5 +1,6 @@
 package frc.robot.subsystems;
 
+import static edu.wpi.first.units.Units.Radian;
 import static edu.wpi.first.units.Units.Radians;
 
 import com.ctre.phoenix6.Orchestra;
@@ -8,9 +9,7 @@ import com.ctre.phoenix6.controls.StaticBrake;
 import com.mineinjava.quail.RobotMovement;
 import com.mineinjava.quail.SwerveDrive;
 import com.mineinjava.quail.util.geometry.Vec2d;
-
 import frc.robot.math.Constants;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,10 +22,10 @@ public class QuailSwerveDrive extends SwerveDrive<QuailSwerveModule> {
   public Orchestra orchestra;
 
   /**
-   * @param minSpeed           minimum movement speed (0 to 1)
-   * @param maxSpeed           maximum movement speed (0 to 1)
-   * @param maxRotation        maximum rotational speed (0 to 1)
-   * @param gyroscope          the swerve drive's gyroscope
+   * @param minSpeed minimum movement speed (0 to 1)
+   * @param maxSpeed maximum movement speed (0 to 1)
+   * @param maxRotation maximum rotational speed (0 to 1)
+   * @param gyroscope the swerve drive's gyroscope
    * @param QuailSwerveModules the swerve drive's wheel modules
    */
   public QuailSwerveDrive(List<QuailSwerveModule> modules) {
@@ -62,7 +61,13 @@ public class QuailSwerveDrive extends SwerveDrive<QuailSwerveModule> {
   }
 
   public void XLock() {
-    XLockModules();
+    // Commented out because it doesnt work for some reason,
+    // manually implemented instead
+    // XLockModules();
+    for (int i = 0; i < Constants.X_LOCK_POSITIONS.length; i++) {
+      modules.get(i).reset();
+      //modules.get(i).setRawAngle(Constants.X_LOCK_POSITIONS[i].in(Radian));
+    }
   }
 
   public void stop() {
